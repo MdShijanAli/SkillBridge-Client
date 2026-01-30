@@ -15,6 +15,7 @@ export const fetchLists = async ({ endpoint, queryString }: ApiParams) => {
   console.log("Fetching URL:", url.toString());
   const res = await fetch(url.toString(), {
     cache: "no-store",
+
     headers: {
       Cookie: cookieStore.toString(),
     },
@@ -34,21 +35,26 @@ export const fetchDetails = async ({ endpoint }: ApiParams) => {
 };
 
 export const storeItem = async ({ endpoint, data }: ApiParams) => {
-  const cookieStore = await cookies();
-  const res = await fetch(`${endpoint}`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Cookie: cookieStore.toString(),
-    },
-    body: JSON.stringify(data),
-  });
-  return res.json();
+  try {
+    const cookieStore = await cookies();
+    const res = await fetch(`${endpoint}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Cookie: cookieStore.toString(),
+      },
+      body: JSON.stringify(data),
+    });
+    return res.json();
+  } catch (error) {
+    console.error("Error in storeItem:", error);
+    throw error;
+  }
 };
 
-export const updateItem = async ({ endpoint, id, data }: ApiParams) => {
+export const updateItem = async ({ endpoint, data }: ApiParams) => {
   const cookieStore = await cookies();
-  const url = `${endpoint}/${id}`;
+  const url = `${endpoint}`;
   console.log("Fetching URL:", url);
   const res = await fetch(url, {
     method: "PUT",

@@ -11,12 +11,15 @@ import { Category } from "@/lib/types";
 import { Edit, Eye, Trash2 } from "lucide-react";
 import { useState } from "react";
 import ViewModal from "./view-modal";
+import FormModal from "./form-modal";
 
 export default function Categories() {
   const [showDetailModal, setShowDetailModal] = useState(false);
+  const [showFormModal, setShowFormModal] = useState(false);
   const [selectedCategoryId, setSelectedCategoryId] = useState<
     string | number | null
   >(null);
+  const [editData, setEditData] = useState<Category | null>();
 
   const handleDelete = (category: Category) => {
     // Implement delete logic here
@@ -27,7 +30,8 @@ export default function Categories() {
     setSelectedCategoryId(category.id);
   };
   const handleEdit = (category: Category) => {
-    // Implement edit logic here
+    setShowFormModal(true);
+    setEditData(category);
   };
 
   const categoryActions: ActionItem<Category>[] = [
@@ -79,6 +83,7 @@ export default function Categories() {
         description="Manage all categories in the system."
         searchPlaceholder="Search categories by name..."
         addNewButton={true}
+        addNewHandler={() => setShowFormModal(true)}
         endpoint={apiRoutes.categories.getAll}
         columns={categoryColumns}
         getRowKey={(item) => item.id}
@@ -89,6 +94,13 @@ export default function Categories() {
           open={showDetailModal}
           onClose={setShowDetailModal}
           categoryId={selectedCategoryId}
+        />
+      )}
+      {showFormModal && (
+        <FormModal
+          open={showFormModal}
+          onClose={() => setShowFormModal(false)}
+          editData={editData}
         />
       )}
     </div>
