@@ -12,30 +12,25 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Link from "next/link";
 import { useState } from "react";
+import { User as UserType } from "@/lib/types";
+import { Roles } from "@/constants/roles";
 
 interface NavbarProps {
   isLoggedIn?: boolean;
-  userRole?: "student" | "tutor" | "admin";
-  userName?: string;
-  userAvatar?: string;
+  userData?: UserType;
 }
 
-const Navbar = ({
-  isLoggedIn = false,
-  userRole = "student",
-  userName = "User",
-  userAvatar,
-}: NavbarProps) => {
+const Navbar = ({ isLoggedIn = false, userData }: NavbarProps) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const getDashboardLink = () => {
-    switch (userRole) {
-      case "admin":
-        return "/admin";
-      case "tutor":
+    switch (userData?.role) {
+      case Roles.ADMIN:
+        return "/admin/dashboard";
+      case Roles.TUTOR:
         return "/tutor/dashboard";
       default:
-        return "/dashboard";
+        return "/student/dashboard";
     }
   };
 
@@ -85,15 +80,17 @@ const Navbar = ({
                     className="flex items-center gap-2 px-2"
                   >
                     <Avatar className="h-8 w-8">
-                      <AvatarImage src={userAvatar} alt={userName} />
+                      <AvatarImage src={userData?.image} alt={userData?.name} />
                       <AvatarFallback className="bg-primary text-primary-foreground text-xs">
-                        {userName
+                        {userData?.name
                           .split(" ")
                           .map((n) => n[0])
                           .join("")}
                       </AvatarFallback>
                     </Avatar>
-                    <span className="text-sm font-medium">{userName}</span>
+                    <span className="text-sm font-medium">
+                      {userData?.name}
+                    </span>
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-48">
