@@ -21,7 +21,7 @@ import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 const navigationItems = [
-  { name: "Dashboard", href: "/admin", icon: LayoutDashboard },
+  { name: "Dashboard", href: "/admin/dashboard", icon: LayoutDashboard },
   { name: "Users", href: "/admin/users", icon: Users, badge: "12" },
   { name: "Tutors", href: "/admin/tutors", icon: GraduationCap },
   { name: "Bookings", href: "/admin/bookings", icon: Calendar, badge: "5" },
@@ -58,7 +58,7 @@ export function AdminSidebar({
         {/* Logo & Toggle */}
         <div className="h-16 flex items-center justify-between px-4 border-b border-border/50">
           {!collapsed && (
-            <Link href="/admin" className="flex items-center gap-2 group">
+            <Link href="/" className="flex items-center gap-2 group">
               <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-cyan-400 flex items-center justify-center">
                 <GraduationCap className="w-5 h-5 text-white" />
               </div>
@@ -155,7 +155,7 @@ export function AdminSidebar({
         >
           {/* Mobile Header */}
           <div className="h-16 flex items-center justify-between px-4 border-b border-border/50">
-            <Link href="/admin" className="flex items-center gap-2">
+            <Link href="/" className="flex items-center gap-2">
               <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-cyan-400 flex items-center justify-center">
                 <GraduationCap className="w-5 h-5 text-white" />
               </div>
