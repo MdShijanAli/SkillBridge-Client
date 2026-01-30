@@ -1,5 +1,5 @@
 import { apiRoutes } from "@/api/apiRoutes";
-import { BaseTableList } from "@/components/ui/BaseTableList";
+import { BaseTableList } from "@/components/table/BaseTableList";
 import { User } from "@/lib/types";
 
 const userColumns = [

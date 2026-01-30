@@ -1,6 +1,4 @@
-import { env } from "@/env";
-
-const baseUrl = env.API_URL || "http://localhost:5000/api";
+const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
 
 const createUrl = (path: string) => `${baseUrl}/${path}`;
 
