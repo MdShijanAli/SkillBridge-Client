@@ -37,9 +37,9 @@ export default function DeleteModal({
       title={title}
       onSubmit={onConfirm}
       isSubmitting={isDeleting}
-      submitButtonText={submitButtonText || t("delete")}
+      submitButtonText={submitButtonText || "Delete"}
       submitButtonVariant={submitButtonVariant || "destructive"}
-      closeButtonText={t("cancel")}
+      closeButtonText={"Cancel"}
       size="md"
     >
       <div className="space-y-4">

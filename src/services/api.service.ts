@@ -22,9 +22,9 @@ export const fetchLists = async ({ endpoint, queryString }: ApiParams) => {
   return res.json();
 };
 
-export const fetchDetails = async ({ endpoint, id }: ApiParams) => {
+export const fetchDetails = async ({ endpoint }: ApiParams) => {
   const cookieStore = await cookies();
-  const url = `${endpoint}/${id}`;
+  const url = `${endpoint}`;
   console.log("Fetching URL:", url);
   const res = await fetch(url, {
     cache: "no-store",

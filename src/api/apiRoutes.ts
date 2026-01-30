@@ -19,9 +19,9 @@ export const apiRoutes = {
 
   categories: {
     getAll: createUrl("categories"),
-    getById: (id: string) => createUrl(`categories/${id}`),
+    getById: (id: number) => createUrl(`categories/${id}`),
     create: createUrl("categories"),
-    update: (id: string) => createUrl(`categories/${id}`),
-    delete: (id: string) => createUrl(`categories/${id}`),
+    update: (id: number) => createUrl(`categories/${id}`),
+    delete: (id: number) => createUrl(`categories/${id}`),
   },
 };

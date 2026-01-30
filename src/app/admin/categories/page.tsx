@@ -9,14 +9,22 @@ import {
 } from "@/components/table/DropdownMenuActions";
 import { Category } from "@/lib/types";
 import { Edit, Eye, Trash2 } from "lucide-react";
+import { useState } from "react";
+import ViewModal from "./view-modal";
 
 export default function Categories() {
+  const [showDetailModal, setShowDetailModal] = useState(false);
+  const [selectedCategoryId, setSelectedCategoryId] = useState<
+    string | number | null
+  >(null);
+
   const handleDelete = (category: Category) => {
     // Implement delete logic here
   };
 
-  const handleVieew = (category: Category) => {
-    // Implement view logic here
+  const handleView = (category: Category) => {
+    setShowDetailModal(true);
+    setSelectedCategoryId(category.id);
   };
   const handleEdit = (category: Category) => {
     // Implement edit logic here
@@ -26,7 +34,7 @@ export default function Categories() {
     {
       label: "View Category",
       icon: Eye,
-      onClick: handleVieew,
+      onClick: handleView,
     },
     {
       label: "Edit Category",
@@ -65,14 +73,24 @@ export default function Categories() {
     },
   ];
   return (
-    <BaseTableList<Category>
-      tableName="Categories"
-      description="Manage all categories in the system."
-      searchPlaceholder="Search categories by name..."
-      addNewButton={true}
-      endpoint={apiRoutes.categories.getAll}
-      columns={categoryColumns}
-      getRowKey={(item) => item.id}
-    />
+    <div>
+      <BaseTableList<Category>
+        tableName="Categories"
+        description="Manage all categories in the system."
+        searchPlaceholder="Search categories by name..."
+        addNewButton={true}
+        endpoint={apiRoutes.categories.getAll}
+        columns={categoryColumns}
+        getRowKey={(item) => item.id}
+      />
+
+      {showDetailModal && selectedCategoryId !== null && (
+        <ViewModal
+          open={showDetailModal}
+          onClose={setShowDetailModal}
+          categoryId={selectedCategoryId}
+        />
+      )}
+    </div>
   );
 }
