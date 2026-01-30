@@ -86,7 +86,7 @@ export function BaseTable<T>({
   if (isLoading) {
     return (
       <div className="w-full overflow-x-auto">
-        <div className="rounded-md border">
+        <div className="rounded-md border flex justify-center items-center h-48">
           <Spinner className="m-4" />
         </div>
       </div>

@@ -11,6 +11,8 @@ import {
   CardHeader,
   CardTitle,
 } from "../ui/card";
+import { RefreshCcw } from "lucide-react";
+import { Button } from "../ui/button";
 
 interface Pagination {
   currentPage: number;
@@ -125,6 +127,14 @@ export function BaseTableList<T = any>({
                 onChange={handleSearch}
                 className="border px-3 py-1 rounded-md text-sm"
               />
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={() => fetchData(1, search)}
+                className="cursor-pointer"
+              >
+                <RefreshCcw className="w-3 h-3" />
+              </Button>
               {addNewButton && (
                 <button
                   onClick={addNewHandler}

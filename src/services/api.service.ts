@@ -67,9 +67,9 @@ export const updateItem = async ({ endpoint, data }: ApiParams) => {
   return res.json();
 };
 
-export const deleteItem = async ({ endpoint, id }: ApiParams) => {
+export const deleteItem = async ({ endpoint }: ApiParams) => {
   const cookieStore = await cookies();
-  const url = `${endpoint}/${id}`;
+  const url = `${endpoint}`;
   console.log("Fetching URL:", url);
   const res = await fetch(url, {
     method: "DELETE",
