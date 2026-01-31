@@ -16,7 +16,7 @@ import DeleteModal from "@/components/modals/delete-modal";
 import { deleteItem } from "@/services/api.service";
 import { toast } from "sonner";
 
-export default async function Categories() {
+export default function Categories() {
   const [showDetailModal, setShowDetailModal] = useState(false);
   const [showFormModal, setShowFormModal] = useState(false);
   const [selectedCategoryId, setSelectedCategoryId] = useState<

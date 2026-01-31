@@ -79,7 +79,7 @@ export default function FormModal({
       onSubmit={form.handleSubmit}
       isSubmitting={isSubmitting}
       submitButtonText={editData ? "Update Category" : "Create Category"}
-      size="2xl"
+      size="xl"
       closeButtonText="Cancel"
     >
       <div className="grid gap-6">

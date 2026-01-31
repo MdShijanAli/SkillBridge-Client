@@ -51,6 +51,9 @@ export default function FormModal({
       phone: editData?.phone || "",
       role: editData?.role || "",
     },
+    validators: {
+      onSubmit: UserSchema,
+    },
     onSubmit: async ({ value }) => {
       setIsSubmitting(true);
       console.log("Form Values:", value);
