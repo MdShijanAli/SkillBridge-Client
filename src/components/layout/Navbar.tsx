@@ -30,11 +30,11 @@ const Navbar = ({ isLoggedIn = false, userData }: NavbarProps) => {
   const getDashboardLink = () => {
     switch (userData?.role) {
       case Roles.ADMIN:
-        return "/admin/dashboard";
+        return "/admin";
       case Roles.TUTOR:
-        return "/tutor/dashboard";
+        return "/tutor";
       default:
-        return "/student/dashboard";
+        return "/student";
     }
   };
 
@@ -121,7 +121,10 @@ const Navbar = ({ isLoggedIn = false, userData }: NavbarProps) => {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-48">
                   <DropdownMenuItem asChild>
-                    <Link href={getDashboardLink()} className="cursor-pointer">
+                    <Link
+                      href={`${getDashboardLink()}/dashboard`}
+                      className="cursor-pointer"
+                    >
                       <User className="w-4 h-4 mr-2" />
                       Dashboard
                     </Link>
@@ -199,7 +202,9 @@ const Navbar = ({ isLoggedIn = false, userData }: NavbarProps) => {
                 {isLoggedIn ? (
                   <>
                     <Button variant="outline" asChild className="w-full">
-                      <Link href={getDashboardLink()}>Dashboard</Link>
+                      <Link href={`${getDashboardLink()}/dashboard`}>
+                        Dashboard
+                      </Link>
                     </Button>
                     <Button
                       variant="ghost"

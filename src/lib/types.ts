@@ -10,6 +10,8 @@ export interface User {
   name: string;
   phone: string;
   profileImage?: string | null;
+  location?: string;
+  bio?: string | null;
   role: keyof Roles;
   createdAt: string;
   updatedAt: string;
