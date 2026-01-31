@@ -1,38 +1,15 @@
-"use client";
+import AdminDashboardLayout from "@/components/layout/AdminDashboardLayout";
+import { userService } from "@/services/user.service";
 
-import { useState } from "react";
-import { AdminSidebar } from "@/components/admin/AdminSidebar";
-import { AdminTopbar } from "@/components/admin/AdminTopbar";
-
-export default function AdminLayout({
+export default async function AdminLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
+  const api = userService;
+  const { data } = await api.getSession();
+  const { user } = data || {};
   return (
-    <div className="min-h-screen bg-background">
-      <AdminSidebar
-        collapsed={sidebarCollapsed}
-        onToggle={() => setSidebarCollapsed(!sidebarCollapsed)}
-        mobileOpen={mobileMenuOpen}
-        onMobileClose={() => setMobileMenuOpen(false)}
-      />
-
-      {/* Main Content */}
-      <div
-        className="transition-all duration-300"
-        style={{
-          marginLeft: sidebarCollapsed ? "5rem" : "16rem",
-        }}
-      >
-        <AdminTopbar onMobileMenuOpen={() => setMobileMenuOpen(true)} />
-
-        {/* Page Content */}
-        <main className="p-3">{children}</main>
-      </div>
-    </div>
+    <AdminDashboardLayout userData={user}>{children}</AdminDashboardLayout>
   );
 }

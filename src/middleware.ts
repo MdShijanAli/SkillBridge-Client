@@ -7,6 +7,8 @@ export async function middleware(request: NextRequest) {
 
   const { data } = await userService.getSession();
 
+  console.log("Middleware session data:", data);
+
   if (!data || !data.session) {
     return NextResponse.redirect(new URL("/login", request.url));
   }

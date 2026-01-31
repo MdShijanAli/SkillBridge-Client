@@ -23,13 +23,41 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useTheme } from "next-themes";
+import { authClient } from "@/lib/auth-client";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+import { Roles } from "@/constants/roles";
 
 interface AdminTopbarProps {
   onMobileMenuOpen: () => void;
+  userData?: any;
 }
 
-export function AdminTopbar({ onMobileMenuOpen }: AdminTopbarProps) {
+export function AdminTopbar({ onMobileMenuOpen, userData }: AdminTopbarProps) {
   const { theme, setTheme } = useTheme();
+  const router = useRouter();
+
+  const handleLogout = async () => {
+    try {
+      await authClient.signOut({
+        fetchOptions: {
+          onSuccess: () => {
+            router.push("/login"); // redirect to login page
+          },
+        },
+      });
+    } catch (error) {
+      console.error("Logout failed:", error);
+      toast.error("Failed to log out. Please try again.");
+    }
+  };
+
+  console.log("AdminTopbar userData:", userData);
+
+  if (userData?.role !== Roles.ADMIN) {
+    handleLogout();
+    return null;
+  }
 
   return (
     <header className="sticky top-0 z-30 h-16 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-border/50">
@@ -104,11 +132,21 @@ export function AdminTopbar({ onMobileMenuOpen }: AdminTopbarProps) {
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" size="sm" className="gap-2">
                 <Avatar className="w-8 h-8">
-                  <AvatarImage src="https://api.dicebear.com/7.x/avataaars/svg?seed=Admin" />
-                  <AvatarFallback>AD</AvatarFallback>
+                  <AvatarImage
+                    src={
+                      userData?.image ||
+                      "https://api.dicebear.com/7.x/avataaars/svg?seed=Admin"
+                    }
+                  />
+                  <AvatarFallback className="bg-primary text-primary-foreground text-xs">
+                    {userData?.name
+                      .split(" ")
+                      .map((n) => n[0])
+                      .join("")}
+                  </AvatarFallback>
                 </Avatar>
                 <span className="hidden md:inline text-sm font-medium">
-                  Admin
+                  {userData?.name || "Admin User"}
                 </span>
               </Button>
             </DropdownMenuTrigger>
@@ -128,7 +166,10 @@ export function AdminTopbar({ onMobileMenuOpen }: AdminTopbarProps) {
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem className="text-destructive cursor-pointer">
+              <DropdownMenuItem
+                onClick={handleLogout}
+                className="text-destructive cursor-pointer"
+              >
                 <LogOut className="w-4 h-4 mr-2" />
                 Log out
               </DropdownMenuItem>

@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
@@ -9,10 +8,6 @@ import {
   GraduationCap,
   Calendar,
   Tag,
-  BarChart3,
-  MessageSquare,
-  Shield,
-  Settings,
   ChevronLeft,
   X,
 } from "lucide-react";
@@ -23,13 +18,8 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 const navigationItems = [
   { name: "Dashboard", href: "/admin/dashboard", icon: LayoutDashboard },
   { name: "Users", href: "/admin/users", icon: Users, badge: "12" },
-  { name: "Tutors", href: "/admin/tutors", icon: GraduationCap },
   { name: "Bookings", href: "/admin/bookings", icon: Calendar, badge: "5" },
   { name: "Categories", href: "/admin/categories", icon: Tag },
-  { name: "Analytics", href: "/admin/analytics", icon: BarChart3 },
-  { name: "Messages", href: "/admin/messages", icon: MessageSquare },
-  { name: "Reports", href: "/admin/reports", icon: Shield },
-  { name: "Settings", href: "/admin/settings", icon: Settings },
 ];
 
 interface AdminSidebarProps {
@@ -37,6 +27,7 @@ interface AdminSidebarProps {
   onToggle: () => void;
   mobileOpen: boolean;
   onMobileClose: () => void;
+  userData?: any;
 }
 
 export function AdminSidebar({
@@ -44,6 +35,7 @@ export function AdminSidebar({
   onToggle,
   mobileOpen,
   onMobileClose,
+  userData,
 }: AdminSidebarProps) {
   const pathname = usePathname();
 
@@ -122,15 +114,20 @@ export function AdminSidebar({
           <div className="p-4 border-t border-border/50">
             <div className="flex items-center gap-3 p-3 rounded-lg bg-secondary/30">
               <Avatar className="w-10 h-10">
-                <AvatarImage src="https://api.dicebear.com/7.x/avataaars/svg?seed=Admin" />
+                <AvatarImage
+                  src={
+                    userData?.image ||
+                    "https://api.dicebear.com/7.x/avataaars/svg?seed=Admin"
+                  }
+                />
                 <AvatarFallback>AD</AvatarFallback>
               </Avatar>
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-medium text-foreground truncate">
-                  Admin User
+                  {userData?.name || "Admin User"}
                 </p>
                 <p className="text-xs text-muted-foreground truncate">
-                  admin@skillbridge.com
+                  {userData?.email || ""}
                 </p>
               </div>
             </div>
