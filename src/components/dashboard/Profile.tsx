@@ -88,12 +88,6 @@ const Profile = ({ userData }: { userData: UserType }) => {
                           .join("")}
                       </AvatarFallback>
                     </Avatar>
-                    <button
-                      type="button"
-                      className="absolute bottom-0 right-0 w-8 h-8 rounded-full bg-primary flex items-center justify-center"
-                    >
-                      <Camera className="w-4 h-4 text-primary-foreground" />
-                    </button>
                   </div>
                   <div>
                     <h3 className="font-semibold text-foreground">

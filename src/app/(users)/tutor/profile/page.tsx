@@ -1,5 +1,6 @@
 import Profile from "@/components/dashboard/Profile";
 import { userService } from "@/services/user.service";
+import TutorProfile from "./tutor-profile";
 
 export default async function TutorProfilePage() {
   const api = userService;
@@ -7,7 +8,7 @@ export default async function TutorProfilePage() {
   const { user } = data || {};
   return (
     <div>
-      <Profile userData={user} />
+      <TutorProfile userData={user} />
     </div>
   );
 }
