@@ -28,6 +28,7 @@ interface UserDialogProps {
   open: boolean;
   onClose: () => void;
   editData?: User | null;
+  setRefreshKey?: (prev: (prev: number) => number) => void;
 }
 
 const UserSchema = z.object({
@@ -41,6 +42,7 @@ export default function FormModal({
   open,
   onClose,
   editData,
+  setRefreshKey,
 }: UserDialogProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -67,6 +69,7 @@ export default function FormModal({
           toast.success("User updated successfully");
         }
         console.log("Response:", response);
+        setRefreshKey?.((prev) => prev + 1);
         onClose();
       } catch (error) {
         toast.error("An error occurred. Please try again.");

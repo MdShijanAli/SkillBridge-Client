@@ -42,6 +42,7 @@ export default function Users() {
   const [editData, setEditData] = useState<User | null>();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [refreshKey, setRefreshKey] = useState(0);
 
   const handleChangeStatus = (user: User) => {
     console.log("Change status for user:", user);
@@ -82,6 +83,7 @@ export default function Users() {
       );
       setShowChangeStatusModal(false);
       setShowChangeBannedModal(false);
+      setRefreshKey((prev) => prev + 1);
     } catch (error: any) {
       console.error("Error changing user status:", error);
       toast.error(
@@ -105,6 +107,7 @@ export default function Users() {
       console.log("Delete Response:", response);
       toast.success("User deleted successfully.");
       setShowDeleteModal(false);
+      setRefreshKey((prev) => prev + 1);
     } catch (error: any) {
       console.error("Error deleting user:", error);
       toast.error(error.message || "Failed to delete user. Please try again.");
@@ -227,6 +230,7 @@ export default function Users() {
         endpoint={apiRoutes.users.getAll}
         columns={userColumns}
         getRowKey={(item) => item.id}
+        key={refreshKey}
       />
 
       <DeleteModal
@@ -260,6 +264,7 @@ export default function Users() {
           open={showFormModal}
           onClose={() => setShowFormModal(false)}
           editData={editData}
+          setRefreshKey={setRefreshKey}
         />
       )}
 
