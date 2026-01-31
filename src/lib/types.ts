@@ -4,13 +4,15 @@ export interface User {
   firstName?: string | null;
   id: string;
   image?: string | null;
-  isActive: boolean;
-  isBanned: boolean;
+  is_active: boolean;
+  is_banned: boolean;
   lastName?: string | null;
   name: string;
   phone: string;
   profileImage?: string | null;
   role: keyof Roles;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface Roles {

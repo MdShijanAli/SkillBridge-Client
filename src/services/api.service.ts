@@ -79,3 +79,18 @@ export const deleteItem = async ({ endpoint }: ApiParams) => {
   });
   return res.json();
 };
+
+export const changeStatus = async ({ endpoint, data }: ApiParams) => {
+  const cookieStore = await cookies();
+  const url = `${endpoint}`;
+  console.log("Fetching URL:", url);
+  const res = await fetch(url, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+      Cookie: cookieStore.toString(),
+    },
+    body: JSON.stringify(data),
+  });
+  return res.json();
+};
