@@ -29,3 +29,19 @@ export interface Category {
   createdAt: string;
   updatedAt: string;
 }
+
+export interface Booking {
+  id: string;
+  tutorId: string;
+  tutorName: string;
+  tutorAvatar: string;
+  studentId: string;
+  studentName: string;
+  studentAvatar: string;
+  subject: string;
+  date: string;
+  time: string;
+  duration: number;
+  status: "confirmed" | "completed" | "cancelled";
+  price: number;
+}

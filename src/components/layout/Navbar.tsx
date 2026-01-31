@@ -14,6 +14,9 @@ import Link from "next/link";
 import { useState } from "react";
 import { User as UserType } from "@/lib/types";
 import { Roles } from "@/constants/roles";
+import { authClient } from "@/lib/auth-client";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 interface NavbarProps {
   isLoggedIn?: boolean;
@@ -22,6 +25,7 @@ interface NavbarProps {
 
 const Navbar = ({ isLoggedIn = false, userData }: NavbarProps) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const router = useRouter();
 
   const getDashboardLink = () => {
     switch (userData?.role) {
@@ -33,6 +37,28 @@ const Navbar = ({ isLoggedIn = false, userData }: NavbarProps) => {
         return "/student/dashboard";
     }
   };
+
+  const handleLogout = async () => {
+    try {
+      await authClient.signOut({
+        fetchOptions: {
+          onSuccess: () => {
+            router.push("/login"); // redirect to login page
+          },
+        },
+      });
+    } catch (error) {
+      console.error("Logout failed:", error);
+      toast.error("Failed to log out. Please try again.");
+    }
+  };
+
+  console.log("AdminTopbar userData:", userData);
+
+  if (userData?.role !== Roles.STUDENT && userData?.role !== Roles.TUTOR) {
+    handleLogout();
+    return null;
+  }
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-xl border-b border-border/50">
@@ -110,14 +136,12 @@ const Navbar = ({ isLoggedIn = false, userData }: NavbarProps) => {
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem asChild>
-                    <Link
-                      href="/login"
-                      className="cursor-pointer text-destructive"
-                    >
-                      <LogOut className="w-4 h-4 mr-2" />
-                      Logout
-                    </Link>
+                  <DropdownMenuItem
+                    onClick={handleLogout}
+                    className="text-destructive cursor-pointer"
+                  >
+                    <LogOut className="w-4 h-4 mr-2" />
+                    Log out
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
