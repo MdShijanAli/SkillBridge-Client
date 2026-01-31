@@ -79,9 +79,9 @@ export function BaseTable<T>({
     (item) => !checkboxCondition || checkboxCondition(item),
   );
   const isAllSelected =
-    selectableItems.length > 0 &&
+    selectableItems?.length > 0 &&
     selectableItems.every((item) => internalSelected.includes(getRowKey(item)));
-  const isSomeSelected = internalSelected.length > 0 && !isAllSelected;
+  const isSomeSelected = internalSelected?.length > 0 && !isAllSelected;
 
   if (isLoading) {
     return (
@@ -93,7 +93,7 @@ export function BaseTable<T>({
     );
   }
 
-  if (!data || data.length === 0) {
+  if (!data || data?.length === 0) {
     return (
       <div className="w-full overflow-x-auto">
         <div className="rounded-md border">
@@ -115,7 +115,7 @@ export function BaseTable<T>({
             <TableBody>
               <TableRow>
                 <TableCell
-                  colSpan={columns.length + (enableCheckbox ? 1 : 0)}
+                  colSpan={columns?.length + (enableCheckbox ? 1 : 0)}
                   className="h-24 text-center"
                 >
                   {emptyMessage}
@@ -143,7 +143,7 @@ export function BaseTable<T>({
                     className={
                       isSomeSelected ? "data-[state=checked]:bg-primary" : ""
                     }
-                    disabled={selectableItems.length === 0}
+                    disabled={selectableItems?.length === 0}
                   />
                 </TableHead>
               )}

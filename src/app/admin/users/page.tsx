@@ -16,6 +16,7 @@ import { Edit, Eye, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import ViewModal from "./view-modal";
+import FormModal from "./form-modal";
 
 const UserRolesStyle = (role: string) => {
   switch (role) {
@@ -204,7 +205,7 @@ export default function Users() {
         tableName="Users"
         description="Manage all users in the system."
         searchPlaceholder="Search users by name or email..."
-        addNewButton={true}
+        addNewButton={false}
         endpoint={apiRoutes.users.getAll}
         columns={userColumns}
         getRowKey={(item) => item.id}
@@ -236,13 +237,13 @@ export default function Users() {
         />
       )}
 
-      {/* {showFormModal && (
+      {showFormModal && (
         <FormModal
           open={showFormModal}
           onClose={() => setShowFormModal(false)}
           editData={editData}
         />
-      )} */}
+      )}
     </div>
   );
 }

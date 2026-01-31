@@ -21,7 +21,7 @@ import {
 interface CategoryDialogProps {
   open: boolean;
   onClose: () => void;
-  editData?: Category;
+  editData?: Category | null;
 }
 
 const CategorySchema = z.object({
