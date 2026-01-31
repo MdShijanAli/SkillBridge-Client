@@ -1,8 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import { BaseModal } from "@/components/modals/base-modal";
@@ -35,12 +34,11 @@ export default function FormModal({
   editData,
 }: CategoryDialogProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isEditing, setIsEditing] = useState(false);
 
   const form = useForm({
     defaultValues: {
-      name: "",
-      description: "",
+      name: editData?.name || "",
+      description: editData?.description || "",
     },
     validators: {
       onSubmit: CategorySchema,
@@ -50,7 +48,7 @@ export default function FormModal({
       console.log("Form Values:", value);
       try {
         let response;
-        if (isEditing && editData?.id) {
+        if (editData?.id) {
           response = await updateItem({
             endpoint: apiRoutes.categories.update(editData.id),
             data: value,
@@ -73,33 +71,14 @@ export default function FormModal({
     },
   });
 
-  useEffect(() => {
-    if (!open) return;
-
-    if (editData) {
-      setIsEditing(true);
-      console.log("Edit Data:", editData);
-      form.reset({
-        name: editData.name ?? "",
-        description: editData.description ?? "",
-      });
-    } else {
-      setIsEditing(false);
-      form.reset({
-        name: "",
-        description: "",
-      });
-    }
-  }, [editData, open]);
-
   return (
     <BaseModal
       open={open}
       onOpenChange={onClose}
-      title={isEditing ? "Edit Category" : "Create Category"}
+      title={editData ? "Edit Category" : "Create Category"}
       onSubmit={form.handleSubmit}
       isSubmitting={isSubmitting}
-      submitButtonText={isEditing ? "Update Category" : "Create Category"}
+      submitButtonText={editData ? "Update Category" : "Create Category"}
       size="2xl"
       closeButtonText="Cancel"
     >
