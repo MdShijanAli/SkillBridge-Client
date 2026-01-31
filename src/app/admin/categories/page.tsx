@@ -13,8 +13,10 @@ import { useState } from "react";
 import ViewModal from "./view-modal";
 import FormModal from "./form-modal";
 import DeleteModal from "@/components/modals/delete-modal";
-import { deleteItem } from "@/services/api.service";
+import { changeStatus, deleteItem } from "@/services/api.service";
 import { toast } from "sonner";
+import { Badge } from "@/components/ui/badge";
+import { Switch } from "@/components/ui/switch";
 
 export default function Categories() {
   const [showDetailModal, setShowDetailModal] = useState(false);
@@ -25,6 +27,12 @@ export default function Categories() {
   const [editData, setEditData] = useState<Category | null>();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [refreshKey, setRefreshKey] = useState(0);
+  const [showChangeStatusModal, setShowChangeStatusModal] = useState(false);
+  const [isChangingStatus, setIsChangingStatus] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState<Category | null>(
+    null,
+  );
 
   const handleDelete = (category: Category) => {
     setShowDeleteModal(true);
@@ -48,11 +56,47 @@ export default function Categories() {
       });
       console.log("Delete Response:", response);
       setShowDeleteModal(false);
+      setRefreshKey((prev) => prev + 1);
     } catch (error) {
       console.error("Error deleting category:", error);
       toast.error("Failed to delete category. Please try again.");
     } finally {
       setIsDeleting(false);
+    }
+  };
+
+  const handleChangeStatus = (category: Category) => {
+    console.log("Change status for category:", category);
+    setSelectedCategory(category);
+    setShowChangeStatusModal(true);
+  };
+
+  const handleConfirmChangeStatus = async () => {
+    try {
+      if (!selectedCategory) return;
+      setIsChangingStatus(true);
+      const response = await changeStatus({
+        endpoint: apiRoutes.categories.changeStatus(selectedCategory.id),
+        data: {
+          isActive: selectedCategory.isActive === true ? false : true,
+        },
+      });
+
+      console.log("Change Status Response:", response);
+      toast.success(
+        showChangeStatusModal
+          ? "Category status changed successfully."
+          : "Category banned status changed successfully.",
+      );
+      setShowChangeStatusModal(false);
+      setRefreshKey((prev) => prev + 1);
+    } catch (error: any) {
+      console.error("Error changing category status:", error);
+      toast.error(
+        error.message || "Failed to change category status. Please try again.",
+      );
+    } finally {
+      setIsChangingStatus(false);
     }
   };
 
@@ -80,19 +124,30 @@ export default function Categories() {
     {
       key: "sl",
       label: "SL",
-      render: (user, index) => index + 1,
+      render: (_, index) => index + 1,
     },
     { key: "name", label: "Name" },
     { key: "description", label: "Description" },
     {
       key: "isActive",
       label: "Active",
-      render: (item) => (item.isActive ? "Yes" : "No"),
+      render: (category) => (
+        <div>
+          <Badge variant={category.isActive ? "success" : "destructive"}>
+            {category.isActive ? "Yes" : "No"}
+          </Badge>
+          <Switch
+            onCheckedChange={() => handleChangeStatus(category)}
+            checked={category.isActive}
+            className="ml-2"
+          />
+        </div>
+      ),
     },
     {
       key: "createdAt",
       label: "Created At",
-      render: (item) => new Date(item.createdAt).toLocaleString(),
+      render: (category) => new Date(category.createdAt).toLocaleString(),
     },
     {
       key: "actions",
@@ -114,6 +169,7 @@ export default function Categories() {
         endpoint={apiRoutes.categories.getAll}
         columns={categoryColumns}
         getRowKey={(item) => item.id}
+        key={refreshKey}
       />
 
       {showDetailModal && selectedCategoryId !== null && (
@@ -128,6 +184,7 @@ export default function Categories() {
           open={showFormModal}
           onClose={() => setShowFormModal(false)}
           editData={editData}
+          setRefreshKey={setRefreshKey}
         />
       )}
 
@@ -141,6 +198,17 @@ export default function Categories() {
           onConfirm={handleDeleteCategory}
         />
       )}
+
+      <DeleteModal
+        open={showChangeStatusModal}
+        onClose={() => setShowChangeStatusModal(false)}
+        title="Change Category Status"
+        description={`Are you sure you want to change the Activity status of ${selectedCategory?.name}?`}
+        onConfirm={handleConfirmChangeStatus}
+        submitButtonText="Change Status"
+        isDeleting={isChangingStatus}
+        submitButtonVariant="default"
+      />
     </div>
   );
 }

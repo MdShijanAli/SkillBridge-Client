@@ -25,5 +25,6 @@ export const apiRoutes = {
     create: createUrl("categories"),
     update: (id: number) => createUrl(`categories/${id}`),
     delete: (id: number) => createUrl(`categories/${id}`),
+    changeStatus: (id: number | string) => createUrl(`categories/${id}/status`),
   },
 };

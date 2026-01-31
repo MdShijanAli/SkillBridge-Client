@@ -21,6 +21,7 @@ interface CategoryDialogProps {
   open: boolean;
   onClose: () => void;
   editData?: Category | null;
+  setRefreshKey: (prev: (prev: number) => number) => void;
 }
 
 const CategorySchema = z.object({
@@ -32,6 +33,7 @@ export default function FormModal({
   open,
   onClose,
   editData,
+  setRefreshKey,
 }: CategoryDialogProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -63,6 +65,7 @@ export default function FormModal({
         }
         console.log("Response:", response);
         onClose();
+        setRefreshKey((prev) => prev + 1);
       } catch (error) {
         toast.error("An error occurred. Please try again.");
       } finally {
