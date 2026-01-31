@@ -9,9 +9,9 @@ import {
   Sparkles,
   Shield,
   Zap,
-  EyeClosed,
   EyeIcon,
   EyeOff,
+  Copy,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -24,10 +24,12 @@ import { authClient } from "@/lib/auth-client";
 import { Field, FieldError, FieldGroup, FieldLabel } from "../ui/field";
 import { useRouter } from "next/navigation";
 import { Roles } from "@/lib/types";
+import { Checkbox } from "../ui/checkbox";
 
-const RegistrationSchema = z.object({
+const LoginFormSchema = z.object({
   email: z.string().email("Invalid email address"),
   password: z.string().min(8, "Password must be at least 8 characters"),
+  rememberMe: z.boolean().optional(),
 });
 
 export default function LoginForm() {
@@ -39,9 +41,10 @@ export default function LoginForm() {
     defaultValues: {
       email: "",
       password: "",
+      rememberMe: false,
     },
     validators: {
-      onSubmit: RegistrationSchema,
+      onSubmit: LoginFormSchema,
     },
     onSubmit: async ({ value }) => {
       console.log("Submited Values", value);
@@ -216,11 +219,26 @@ export default function LoginForm() {
                     <span className="text-sm text-muted-foreground font-mono group-hover:text-foreground transition-colors">
                       {account.email}
                     </span>
+                    <Copy
+                      className="w-3 h-3 cursor-pointer hover:text-foreground transition-colors"
+                      onClick={() => {
+                        navigator.clipboard.writeText(account.email);
+                        toast.success("Email copied to clipboard!");
+                      }}
+                    />
                   </div>
                 ))}
                 <p className="text-xs text-muted-foreground pt-2 border-t border-border/50 flex items-center gap-2">
                   <Shield className="w-3 h-3" />
-                  Use any password to login
+                  Use password to login:{" "}
+                  <span className="font-mono">Password123</span>
+                  <Copy
+                    className="w-3 h-3 cursor-pointer hover:text-foreground transition-colors"
+                    onClick={() => {
+                      navigator.clipboard.writeText("Password123");
+                      toast.success("Password copied to clipboard!");
+                    }}
+                  />
                 </p>
               </div>
             </div>
@@ -360,9 +378,29 @@ export default function LoginForm() {
 
             <div className="space-y-2">
               <div className="flex items-center justify-between">
-                <Label htmlFor="password" className="text-sm font-medium">
-                  Password
-                </Label>
+                <form.Field
+                  name="rememberMe"
+                  children={(field) => {
+                    return (
+                      <div className="flex items-center gap-3">
+                        <Checkbox
+                          id={field.name}
+                          name={field.name}
+                          checked={field.state.value || false}
+                          onCheckedChange={() =>
+                            field.handleChange(!field.state.value)
+                          }
+                        />
+                        <Label
+                          htmlFor="rememberMe"
+                          className="text-sm font-medium"
+                        >
+                          Remember Me
+                        </Label>
+                      </div>
+                    );
+                  }}
+                />
                 <Link
                   href="/forgot-password"
                   className="text-sm text-primary hover:text-primary/80 transition-colors font-medium"
@@ -430,8 +468,27 @@ export default function LoginForm() {
                   <span className="text-muted-foreground font-mono">
                     {account.email}
                   </span>
+                  <Copy
+                    className="w-3 h-3 cursor-pointer hover:text-foreground transition-colors"
+                    onClick={() => {
+                      navigator.clipboard.writeText("Password123");
+                      toast.success("Password copied to clipboard!");
+                    }}
+                  />
                 </div>
               ))}
+              <p className="text-xs text-muted-foreground pt-2 border-t border-border/50 flex items-center gap-2">
+                <Shield className="w-3 h-3" />
+                Use password to login:{" "}
+                <span className="font-mono">Password123</span>
+                <Copy
+                  className="w-3 h-3 cursor-pointer hover:text-foreground transition-colors"
+                  onClick={() => {
+                    navigator.clipboard.writeText("Password123");
+                    toast.success("Password copied to clipboard!");
+                  }}
+                />
+              </p>
             </div>
           </div>
         </div>
