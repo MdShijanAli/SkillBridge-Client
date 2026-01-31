@@ -4,12 +4,18 @@ import { apiRoutes } from "@/api/apiRoutes";
 import DeleteModal from "@/components/modals/delete-modal";
 import { Column } from "@/components/table/BaseTable";
 import { BaseTableList } from "@/components/table/BaseTableList";
+import {
+  ActionItem,
+  DropdownMenuActions,
+} from "@/components/table/DropdownMenuActions";
 import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
 import { User } from "@/lib/types";
-import { changeStatus } from "@/services/api.service";
+import { banUser, changeStatus } from "@/services/api.service";
+import { Edit, Eye, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
+import ViewModal from "./view-modal";
 
 const UserRolesStyle = (role: string) => {
   switch (role) {
@@ -26,38 +32,110 @@ const UserRolesStyle = (role: string) => {
 
 export default function Users() {
   const [showChangeStatusModal, setShowChangeStatusModal] = useState(false);
+  const [showChangeBannedModal, setShowChangeBannedModal] = useState(false);
   const [isChangingStatus, setIsChangingStatus] = useState(false);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
+  const [showDetailModal, setShowDetailModal] = useState(false);
+  const [showFormModal, setShowFormModal] = useState(false);
+  const [editData, setEditData] = useState<User | null>();
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const handleChangeStatus = (user: User) => {
     console.log("Change status for user:", user);
     setSelectedUser(user);
     setShowChangeStatusModal(true);
   };
+  const handleBannedUser = (user: User) => {
+    console.log("Change banned status for user:", user);
+    setSelectedUser(user);
+    setShowChangeBannedModal(true);
+  };
 
   const handleConfirmChangeStatus = async () => {
     try {
+      if (!selectedUser) return;
       setIsChangingStatus(true);
-      const response = await changeStatus({
-        endpoint: apiRoutes.users.changeStatus(selectedUser!.id),
-        data: {
-          is_active: selectedUser!.is_active === true ? false : true,
-        },
-      });
+      let response;
+      if (showChangeStatusModal) {
+        response = await changeStatus({
+          endpoint: apiRoutes.users.changeStatus(selectedUser!.id),
+          data: {
+            is_active: selectedUser!.is_active === true ? false : true,
+          },
+        });
+      } else {
+        response = await banUser({
+          endpoint: apiRoutes.users.bannedUser(selectedUser!.id),
+          data: {
+            is_banned: selectedUser!.is_banned === true ? false : true,
+          },
+        });
+      }
       console.log("Change Status Response:", response);
-      toast.success("User status changed successfully.");
+      toast.success(
+        showChangeStatusModal
+          ? "User status changed successfully."
+          : "User banned status changed successfully.",
+      );
       setShowChangeStatusModal(false);
+      setShowChangeBannedModal(false);
     } catch (error: any) {
       console.error("Error changing user status:", error);
       toast.error(
-        error.message || "Failed to change user status. Please try again.",
+        error.message ||
+          (showChangeStatusModal
+            ? "Failed to change user status. Please try again."
+            : "Failed to change user banned status. Please try again."),
       );
     } finally {
       setIsChangingStatus(false);
     }
   };
 
+  const handleDelete = (user: User) => {
+    setShowDeleteModal(true);
+    setSelectedUserId(user.id);
+  };
+
+  const handleView = (user: User) => {
+    setShowDetailModal(true);
+    setSelectedUserId(user.id);
+  };
+  const handleEdit = (user: User) => {
+    setShowFormModal(true);
+    setEditData(user);
+  };
+
+  const userActions = (user: User): ActionItem<User>[] => [
+    {
+      label: "View User",
+      icon: Eye,
+      onClick: handleView,
+    },
+    {
+      label: "Edit User",
+      icon: Edit,
+      onClick: handleEdit,
+      separator: true,
+      show: user.role !== "ADMIN",
+    },
+    {
+      label: "Delete User",
+      icon: Trash2,
+      onClick: handleDelete,
+      variant: "destructive",
+      show: user.role !== "ADMIN",
+    },
+  ];
+
   const userColumns: Column<User>[] = [
+    {
+      key: "sl",
+      label: "SL",
+      render: (user, index) => index + 1,
+    },
     { key: "name", label: "Name" },
     { key: "email", label: "Email" },
     {
@@ -78,11 +156,13 @@ export default function Users() {
           <Badge variant={user.is_active === true ? "success" : "destructive"}>
             {user.is_active ? "Yes" : "No"}
           </Badge>
-          <Switch
-            onCheckedChange={() => handleChangeStatus(user)}
-            checked={user.is_active}
-            className="ml-2"
-          />
+          {user.role !== "ADMIN" && (
+            <Switch
+              onCheckedChange={() => handleChangeStatus(user)}
+              checked={user.is_active}
+              className="ml-2"
+            />
+          )}
         </div>
       ),
     },
@@ -90,15 +170,32 @@ export default function Users() {
       key: "is_banned",
       label: "Banned",
       render: (user) => (
-        <Badge variant={user.is_banned ? "destructive" : "success"}>
-          {user.is_banned ? "Yes" : "No"}
-        </Badge>
+        <div>
+          <Badge variant={user.is_banned ? "destructive" : "success"}>
+            {user.is_banned ? "Yes" : "No"}
+          </Badge>
+          {user.role !== "ADMIN" && (
+            <Switch
+              onCheckedChange={() => handleBannedUser(user)}
+              checked={!user.is_banned}
+              className="ml-2"
+            />
+          )}
+        </div>
       ),
     },
     {
       key: "createdAt",
       label: "Created At",
       render: (user) => new Date(user.createdAt).toLocaleString(),
+    },
+    {
+      key: "actions",
+      label: "Actions",
+      className: "text-right",
+      render: (user) => (
+        <DropdownMenuActions item={user} actions={userActions(user)} />
+      ),
     },
   ];
   return (
@@ -114,15 +211,38 @@ export default function Users() {
       />
 
       <DeleteModal
-        open={showChangeStatusModal}
-        onClose={() => setShowChangeStatusModal(false)}
-        title="Change User Status"
-        description={`Are you sure you want to change the Activity status of ${selectedUser?.name}?`}
+        open={showChangeStatusModal || showChangeBannedModal}
+        onClose={() => {
+          setShowChangeStatusModal(false);
+          setShowChangeBannedModal(false);
+        }}
+        title={
+          showChangeStatusModal ? "Change User Status" : "Change Banned Status"
+        }
+        description={`${showChangeStatusModal ? "Are you sure you want to change the Activity status of" : "Are you sure you want to change the Banned status of"} ${selectedUser?.name}?`}
         onConfirm={handleConfirmChangeStatus}
-        submitButtonText="Yes, Change Status"
+        submitButtonText={
+          showChangeStatusModal ? "Change Status" : "Change Banned Status"
+        }
         isDeleting={isChangingStatus}
         submitButtonVariant="default"
       />
+
+      {showDetailModal && selectedUserId !== null && (
+        <ViewModal
+          open={showDetailModal}
+          onClose={setShowDetailModal}
+          userId={selectedUserId}
+        />
+      )}
+
+      {/* {showFormModal && (
+        <FormModal
+          open={showFormModal}
+          onClose={() => setShowFormModal(false)}
+          editData={editData}
+        />
+      )} */}
     </div>
   );
 }

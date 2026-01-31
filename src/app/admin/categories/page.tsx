@@ -16,7 +16,7 @@ import DeleteModal from "@/components/modals/delete-modal";
 import { deleteItem } from "@/services/api.service";
 import { toast } from "sonner";
 
-export default function Categories() {
+export default async function Categories() {
   const [showDetailModal, setShowDetailModal] = useState(false);
   const [showFormModal, setShowFormModal] = useState(false);
   const [selectedCategoryId, setSelectedCategoryId] = useState<
@@ -77,6 +77,11 @@ export default function Categories() {
   ];
 
   const categoryColumns: Column<Category>[] = [
+    {
+      key: "sl",
+      label: "SL",
+      render: (user, index) => index + 1,
+    },
     { key: "name", label: "Name" },
     { key: "description", label: "Description" },
     {

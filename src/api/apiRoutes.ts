@@ -11,11 +11,12 @@ export const apiRoutes = {
 
   users: {
     getAll: createUrl("users"),
-    getById: (id: string) => createUrl(`users/${id}`),
+    getById: (id: number | string) => createUrl(`users/${id}`),
     create: createUrl("users"),
-    update: (id: string) => createUrl(`users/${id}`),
-    delete: (id: string) => createUrl(`users/${id}`),
-    changeStatus: (id: string) => createUrl(`users/${id}/status`),
+    update: (id: number | string) => createUrl(`users/${id}`),
+    delete: (id: number | string) => createUrl(`users/${id}`),
+    changeStatus: (id: number | string) => createUrl(`users/${id}/status`),
+    bannedUser: (id: number | string) => createUrl(`users/${id}/ban`),
   },
 
   categories: {

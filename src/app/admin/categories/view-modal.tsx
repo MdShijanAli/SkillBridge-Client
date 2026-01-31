@@ -2,7 +2,6 @@
 
 import { apiRoutes } from "@/api/apiRoutes";
 import { BaseModal } from "@/components/modals/base-modal";
-import { Separator } from "@/components/ui/separator";
 import { Category } from "@/lib/types";
 import { fetchDetails } from "@/services/api.service";
 import { useEffect, useState } from "react";
