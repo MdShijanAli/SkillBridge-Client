@@ -11,7 +11,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
 import { User } from "@/lib/types";
-import { banUser, changeStatus } from "@/services/api.service";
+import { banUser, changeStatus, deleteItem } from "@/services/api.service";
 import { Edit, Eye, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -92,6 +92,24 @@ export default function Users() {
       );
     } finally {
       setIsChangingStatus(false);
+    }
+  };
+
+  const handleConfirmDelete = async () => {
+    try {
+      if (!selectedUserId) return;
+      setIsDeleting(true);
+      const response = await deleteItem({
+        endpoint: apiRoutes.users.delete(selectedUserId),
+      });
+      console.log("Delete Response:", response);
+      toast.success("User deleted successfully.");
+      setShowDeleteModal(false);
+    } catch (error: any) {
+      console.error("Error deleting user:", error);
+      toast.error(error.message || "Failed to delete user. Please try again.");
+    } finally {
+      setIsDeleting(false);
     }
   };
 
@@ -242,6 +260,17 @@ export default function Users() {
           open={showFormModal}
           onClose={() => setShowFormModal(false)}
           editData={editData}
+        />
+      )}
+
+      {showDeleteModal && selectedUserId !== null && (
+        <DeleteModal
+          open={showDeleteModal}
+          title="Delete User"
+          description="Are you sure you want to delete this user? This action cannot be undone."
+          onClose={setShowDeleteModal}
+          isDeleting={isDeleting}
+          onConfirm={handleConfirmDelete}
         />
       )}
     </div>
