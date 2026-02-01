@@ -19,6 +19,10 @@ export const apiRoutes = {
     bannedUser: (id: number | string) => createUrl(`users/${id}/ban`),
   },
 
+  tutor: {
+    profile: createUrl("tutor-profiles"),
+  },
+
   categories: {
     getAll: createUrl("categories"),
     getById: (id: number) => createUrl(`categories/${id}`),
