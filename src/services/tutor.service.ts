@@ -178,3 +178,21 @@ export const getAllTutors = async () => {
     return error;
   }
 };
+
+export const getTutorBySlug = async (slug: string) => {
+  const cookieStore = await cookies();
+  try {
+    const response = await fetch(`${apiRoutes.tutor.getById(slug)}`, {
+      headers: {
+        cookie: cookieStore.toString(),
+      },
+      cache: "no-store",
+      method: "GET",
+    });
+    console.log("Tutor by slug response status:", response);
+    return await response.json();
+  } catch (error) {
+    console.error("Error fetching tutor by slug:", error);
+    return error;
+  }
+};

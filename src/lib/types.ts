@@ -85,6 +85,7 @@ export interface TutorProfile {
   userId: string;
   title: string;
   subjects: string[];
+  languages: string[];
   hourlyRate: number;
   rating: number;
   reviewCount: number;
@@ -98,6 +99,9 @@ export interface TutorProfile {
   totalReviews: number;
   createdAt: string;
   updatedAt: string;
+  totalSessions: number;
+  education: string;
+  availability: AvailabilitySlot[];
 }
 
 export interface PaginationMeta {
