@@ -58,3 +58,101 @@ export const createTutorProfile = async (data: any) => {
     return error;
   }
 };
+
+export const createAvailabilitySlot = async (data: any) => {
+  console.log("Creating availability slot with data:", data);
+  const cookieStore = await cookies();
+  try {
+    const response = await fetch(apiRoutes.availabilities.create, {
+      headers: {
+        cookie: cookieStore.toString(),
+        "Content-Type": "application/json",
+      },
+      method: "POST",
+      body: JSON.stringify(data),
+    });
+    return await response.json();
+  } catch (error) {
+    console.error("Error creating availability slot:", error);
+    return error;
+  }
+};
+
+export const updateAvailabilitySlot = async (id: number, data: any) => {
+  console.log("Updating availability slot:", id, data);
+  const cookieStore = await cookies();
+  try {
+    const response = await fetch(`${apiRoutes.availabilities.getAll}/${id}`, {
+      headers: {
+        cookie: cookieStore.toString(),
+        "Content-Type": "application/json",
+      },
+      method: "PUT",
+      body: JSON.stringify(data),
+    });
+    return await response.json();
+  } catch (error) {
+    console.error("Error updating availability slot:", error);
+    return error;
+  }
+};
+
+export const deleteAvailabilitySlot = async (id: number) => {
+  console.log("Deleting availability slot:", id);
+  const cookieStore = await cookies();
+  try {
+    const response = await fetch(`${apiRoutes.availabilities.getAll}/${id}`, {
+      headers: {
+        cookie: cookieStore.toString(),
+      },
+      method: "DELETE",
+    });
+    return await response.json();
+  } catch (error) {
+    console.error("Error deleting availability slot:", error);
+    return error;
+  }
+};
+
+export const getAllAvailabilitySlots = async () => {
+  const cookieStore = await cookies();
+  try {
+    const response = await fetch(apiRoutes.availabilities.getAll, {
+      headers: {
+        cookie: cookieStore.toString(),
+      },
+      cache: "no-store",
+      method: "GET",
+    });
+    console.log("Availability slots response status:", response);
+    return await response.json();
+  } catch (error) {
+    console.error("Error fetching availability slots:", error);
+    return error;
+  }
+};
+
+export const changeAvailabilitySlotStatus = async (
+  id: number,
+  isActive: boolean,
+) => {
+  console.log("Changing availability slot status:", id, isActive);
+  const cookieStore = await cookies();
+  try {
+    const response = await fetch(
+      `${apiRoutes.availabilities.changeStatus(id)}`,
+      {
+        headers: {
+          cookie: cookieStore.toString(),
+          "Content-Type": "application/json",
+        },
+        method: "PATCH",
+        body: JSON.stringify({ isActive }),
+      },
+    );
+    return await response.json();
+  } catch (error) {
+    console.error("Error changing availability slot status:", error);
+    return error;
+  }
+};

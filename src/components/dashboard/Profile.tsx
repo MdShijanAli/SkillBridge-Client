@@ -52,8 +52,6 @@ const Profile = ({ userData }: { userData: UserType }) => {
         toast.error("Failed to update profile. Please try again.", {
           id: toastId,
         });
-      } finally {
-        toast.dismiss(toastId);
       }
     },
   });

@@ -31,4 +31,13 @@ export const apiRoutes = {
     delete: (id: number) => createUrl(`categories/${id}`),
     changeStatus: (id: number | string) => createUrl(`categories/${id}/status`),
   },
+
+  availabilities: {
+    getAll: createUrl("availabilities"),
+    create: createUrl("availabilities"),
+    update: (id: number | string) => createUrl(`availabilities/${id}`),
+    delete: (id: number | string) => createUrl(`availabilities/${id}`),
+    changeStatus: (id: number | string) =>
+      createUrl(`availabilities/${id}/status`),
+  },
 };

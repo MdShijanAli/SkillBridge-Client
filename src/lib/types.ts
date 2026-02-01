@@ -47,3 +47,14 @@ export interface Booking {
   status: "confirmed" | "completed" | "cancelled";
   price: number;
 }
+
+export interface AvailabilitySlot {
+  id?: string;
+  tutorProfileId: number;
+  dayOfWeek: string;
+  startTime: string;
+  endTime: string;
+  isActive?: boolean;
+  createdAt?: string;
+  updatedAt?: string;
+}
