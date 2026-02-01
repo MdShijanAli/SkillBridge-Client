@@ -58,3 +58,53 @@ export interface AvailabilitySlot {
   createdAt?: string;
   updatedAt?: string;
 }
+
+export interface TutorData {
+  bio: string;
+  createdAt: string;
+  email: string;
+  emailVerified: boolean;
+  first_name: string;
+  id: string;
+  image: string | null;
+  is_active: boolean;
+  is_banned: boolean;
+  last_name: string;
+  location: string | null;
+  name: string;
+  phone: string | null;
+  profile_image: string | null;
+  role: "TUTOR";
+  totalSessions?: number;
+  updatedAt: string;
+  tutorProfile?: TutorProfile;
+}
+
+export interface TutorProfile {
+  id: number;
+  userId: string;
+  title: string;
+  subjects: string[];
+  hourlyRate: number;
+  rating: number;
+  reviewCount: number;
+  experience: string;
+  certifications: string[];
+  categories: Category[];
+  isFeatured: boolean;
+  averageRating: number;
+  yearsExperience: number;
+  specialization: string;
+  totalReviews: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface PaginationMeta {
+  totalItems: number;
+  totalPages: number;
+  pageSize: number;
+  currentPage: number;
+  nextPage: number | null;
+  prevPage: number | null;
+}

@@ -160,3 +160,21 @@ export const changeAvailabilitySlotStatus = async (
     return error;
   }
 };
+
+export const getAllTutors = async () => {
+  const cookieStore = await cookies();
+  try {
+    const response = await fetch(apiRoutes.tutor.getAll, {
+      headers: {
+        cookie: cookieStore.toString(),
+      },
+      cache: "no-store",
+      method: "GET",
+    });
+    console.log("All tutors response status:", response);
+    return await response.json();
+  } catch (error) {
+    console.error("Error fetching all tutors:", error);
+    return error;
+  }
+};

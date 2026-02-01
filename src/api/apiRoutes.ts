@@ -21,6 +21,8 @@ export const apiRoutes = {
 
   tutor: {
     profile: createUrl("tutor-profiles"),
+    getAll: createUrl("tutors"),
+    getById: (id: number | string) => createUrl(`tutors/${id}`),
   },
 
   categories: {

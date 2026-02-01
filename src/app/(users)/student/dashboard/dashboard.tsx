@@ -126,7 +126,7 @@ const StudentDashboard = () => {
                 </Link>
 
                 <Link
-                  href="/dashboard/profile"
+                  href="/student/profile"
                   className="glass-card rounded-xl p-4 flex items-center gap-4 hover-lift block"
                 >
                   <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center">
