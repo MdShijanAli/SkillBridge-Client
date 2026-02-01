@@ -1,6 +1,6 @@
 "use client";
 
-import { User, Mail, DollarSign, GraduationCap, Globe, X } from "lucide-react";
+import { DollarSign, GraduationCap, Globe, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -16,6 +16,7 @@ import {
   createTutorProfile,
   updateTutorProfile,
 } from "@/services/tutor.service";
+import { useState } from "react";
 
 const TutorProfileFormSchema = z.object({
   specialization: z
@@ -32,11 +33,13 @@ const TutorProfileFormSchema = z.object({
 });
 
 const TutorProfile = ({ userData }: { userData: any }) => {
+  const [createdProfile, setCreatedProfile] = useState(false);
+
   const form = useForm({
     defaultValues: {
       specialization: userData?.specialization || "",
       bio: userData?.bio || "",
-      hourlyRate: userData?.hourlyRate || 20,
+      hourlyRate: userData?.hourlyRate || 0,
       education: userData?.education || "",
       yearsExperience: userData?.yearsExperience || 0,
       subjects: userData?.subjects || [],
@@ -54,18 +57,26 @@ const TutorProfile = ({ userData }: { userData: any }) => {
       const toastId = toast.loading("Updating profile...");
       try {
         let response;
-        if (userData?.userId) {
+        if (userData?.userId || createdProfile) {
           response = await updateTutorProfile(formData);
         } else {
           response = await createTutorProfile(formData);
+          if (!response?.error) {
+            setCreatedProfile(true);
+          }
         }
         console.log("Profile update/create response:", response);
+        if (response?.error) {
+          throw new Error(response.error || "Unknown error");
+        }
+
         toast.success("Profile updated successfully!", { id: toastId });
       } catch (error) {
-        toast.error("Failed to update profile.", { id: toastId });
+        toast.error(
+          error instanceof Error ? error.message : "Failed to update profile.",
+          { id: toastId },
+        );
         return;
-      } finally {
-        toast.dismiss(toastId);
       }
     },
   });
@@ -105,9 +116,11 @@ const TutorProfile = ({ userData }: { userData: any }) => {
                   </p>
                   <div className="flex items-center gap-2 mt-2">
                     <Badge className="badge-completed">Verified</Badge>
-                    <span className="text-sm text-muted-foreground">
-                      {userData?.totalSessions} sessions completed
-                    </span>
+                    {userData?.totalSessions > 0 && (
+                      <span className="text-sm text-muted-foreground">
+                        {userData?.totalSessions} sessions completed
+                      </span>
+                    )}
                   </div>
                 </div>
               </div>
