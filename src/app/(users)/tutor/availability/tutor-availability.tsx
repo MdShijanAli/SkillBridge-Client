@@ -71,16 +71,16 @@ const TutorAvailability = ({
   tutorProfileId: string;
   availabilitySlots: AvailabilitySlot[];
 }) => {
+  console.log("TutorProfileId:", tutorProfileId);
+  console.log("TutorAvailability component received slots:", availableSlots);
   const router = useRouter();
   const [slots, setSlots] = useState<AvailabilitySlot[]>(availableSlots || []);
   const [savingSlotId, setSavingSlotId] = useState<number | string | null>(
     null,
   );
-  const [isRefreshing, setIsRefreshing] = useState(false);
 
   useEffect(() => {
     setSlots(availableSlots || []);
-    setIsRefreshing(false);
   }, [availableSlots]);
 
   const addSlot = () => {
@@ -115,6 +115,7 @@ const TutorAvailability = ({
         startTime: slot.startTime,
         endTime: slot.endTime,
         isActive: slot.isActive ?? true,
+        tutorProfileId: Number(tutorProfileId) || 0,
       };
 
       let response;
@@ -136,7 +137,6 @@ const TutorAvailability = ({
         },
       );
 
-      setIsRefreshing(true);
       router.refresh();
     } catch (error) {
       console.error("Error saving slot:", error);
@@ -159,7 +159,6 @@ const TutorAvailability = ({
       setSlots(slots.filter((_, i) => i !== index));
       toast.success("Slot deleted successfully!", { id: toastId });
 
-      setIsRefreshing(true);
       router.refresh();
     } catch (error) {
       console.error("Error deleting slot:", error);
@@ -195,7 +194,6 @@ const TutorAvailability = ({
         { id: toastId },
       );
 
-      setIsRefreshing(true);
       router.refresh();
     } catch (error) {
       console.error("Error changing slot status:", error);
@@ -240,181 +238,143 @@ const TutorAvailability = ({
             className="space-y-6"
           >
             <div className="space-y-4">
-              {isRefreshing
-                ? Array.from({ length: 3 }).map((_, index) => (
-                    <div
-                      key={`skeleton-${index}`}
-                      className="glass-card rounded-xl p-6"
-                    >
-                      <div className="flex flex-col gap-4">
-                        <div className="flex flex-col lg:flex-row items-start lg:items-center gap-4">
-                          <div className="flex items-center gap-3 shrink-0">
-                            <Skeleton className="h-9 w-9 rounded-lg" />
-                            <Skeleton className="h-5 w-16 rounded-full" />
+              {slots.map((slot, index) => {
+                const dayLabel =
+                  days.find((d) => d.value === slot.dayOfWeek)?.label ||
+                  slot.dayOfWeek;
+                const isSaving = savingSlotId === slot.id;
+
+                return (
+                  <div
+                    key={slot.id}
+                    className="glass-card rounded-xl p-6 hover:shadow-lg transition-shadow"
+                  >
+                    <div className="flex flex-col gap-4">
+                      <div className="flex flex-col lg:flex-row items-start lg:items-center gap-4">
+                        <div className="flex items-center gap-3 text-muted-foreground shrink-0">
+                          <div className="bg-primary/10 p-2 rounded-lg">
+                            <Clock className="w-5 h-5 text-primary" />
                           </div>
-
-                          <div className="grid grid-cols-1 sm:grid-cols-3 lg:flex lg:flex-1 gap-3 w-full lg:w-auto">
-                            <Skeleton className="h-10 w-full lg:w-40" />
-
-                            <div className="flex items-center gap-2 col-span-2">
-                              <Skeleton className="h-10 w-full sm:w-32" />
-                              <span className="text-muted-foreground font-medium">
-                                to
-                              </span>
-                              <Skeleton className="h-10 w-full sm:w-32" />
-                            </div>
-
-                            <Skeleton className="h-10 w-32 rounded-lg" />
-                          </div>
+                          <Badge
+                            variant={slot.isNew ? "default" : "secondary"}
+                            className="hidden sm:inline-flex"
+                          >
+                            {slot.isNew ? "New" : `Slot ${index + 1}`}
+                          </Badge>
                         </div>
 
-                        <div className="flex justify-end gap-2 pt-2 border-t">
-                          <Skeleton className="h-9 w-24" />
-                          <Skeleton className="h-9 w-28" />
+                        <div className="grid grid-cols-1 sm:grid-cols-3 lg:flex lg:flex-1 gap-3 w-full lg:w-auto">
+                          <Select
+                            value={slot.dayOfWeek}
+                            onValueChange={(value) =>
+                              updateSlotField(index, "dayOfWeek", value)
+                            }
+                          >
+                            <SelectTrigger className="w-full lg:w-40">
+                              <SelectValue placeholder="Select day" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {days.map((day) => (
+                                <SelectItem key={day.value} value={day.value}>
+                                  {day.label}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+
+                          <div className="flex items-center gap-2 col-span-2">
+                            <Select
+                              value={slot.startTime}
+                              onValueChange={(value) =>
+                                updateSlotField(index, "startTime", value)
+                              }
+                            >
+                              <SelectTrigger className="w-full sm:w-32">
+                                <SelectValue placeholder="Start" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {times.map((time) => (
+                                  <SelectItem key={time} value={time}>
+                                    {time}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+
+                            <span className="text-muted-foreground font-medium">
+                              to
+                            </span>
+
+                            <Select
+                              value={slot.endTime}
+                              onValueChange={(value) =>
+                                updateSlotField(index, "endTime", value)
+                              }
+                            >
+                              <SelectTrigger className="w-full sm:w-32">
+                                <SelectValue placeholder="End" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {times.map((time) => (
+                                  <SelectItem key={time} value={time}>
+                                    {time}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          </div>
+
+                          <div className="flex items-center gap-2 bg-muted/50 px-3 py-2 rounded-lg">
+                            <Switch
+                              id={`active-${index}`}
+                              checked={slot.isActive ?? true}
+                              onCheckedChange={(checked) =>
+                                toggleSlotStatus(slot, index, checked)
+                              }
+                              disabled={savingSlotId === slot.id}
+                            />
+                            <Label
+                              htmlFor={`active-${index}`}
+                              className="text-sm font-medium cursor-pointer"
+                            >
+                              {slot.isActive ? "Active" : "Inactive"}
+                            </Label>
+                          </div>
                         </div>
+                      </div>
+
+                      <div className="flex justify-end gap-2 pt-2 border-t">
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="sm"
+                          onClick={() => removeSlot(slot, index)}
+                          disabled={isSaving}
+                          className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                        >
+                          <Trash2 className="w-4 h-4 mr-2" />
+                          Delete
+                        </Button>
+                        <Button
+                          type="button"
+                          variant="hero"
+                          size="sm"
+                          onClick={() => saveSlot(slot, index)}
+                          disabled={isSaving}
+                        >
+                          {isSaving
+                            ? "Saving..."
+                            : slot.isNew
+                              ? "Create Slot"
+                              : "Update Slot"}
+                        </Button>
                       </div>
                     </div>
-                  ))
-                : slots.map((slot, index) => {
-                    const dayLabel =
-                      days.find((d) => d.value === slot.dayOfWeek)?.label ||
-                      slot.dayOfWeek;
-                    const isSaving = savingSlotId === slot.id;
+                  </div>
+                );
+              })}
 
-                    return (
-                      <div
-                        key={slot.id}
-                        className="glass-card rounded-xl p-6 hover:shadow-lg transition-shadow"
-                      >
-                        <div className="flex flex-col gap-4">
-                          <div className="flex flex-col lg:flex-row items-start lg:items-center gap-4">
-                            <div className="flex items-center gap-3 text-muted-foreground shrink-0">
-                              <div className="bg-primary/10 p-2 rounded-lg">
-                                <Clock className="w-5 h-5 text-primary" />
-                              </div>
-                              <Badge
-                                variant={slot.isNew ? "default" : "secondary"}
-                                className="hidden sm:inline-flex"
-                              >
-                                {slot.isNew ? "New" : `Slot ${index + 1}`}
-                              </Badge>
-                            </div>
-
-                            <div className="grid grid-cols-1 sm:grid-cols-3 lg:flex lg:flex-1 gap-3 w-full lg:w-auto">
-                              <Select
-                                value={slot.dayOfWeek}
-                                onValueChange={(value) =>
-                                  updateSlotField(index, "dayOfWeek", value)
-                                }
-                              >
-                                <SelectTrigger className="w-full lg:w-40">
-                                  <SelectValue placeholder="Select day" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                  {days.map((day) => (
-                                    <SelectItem
-                                      key={day.value}
-                                      value={day.value}
-                                    >
-                                      {day.label}
-                                    </SelectItem>
-                                  ))}
-                                </SelectContent>
-                              </Select>
-
-                              <div className="flex items-center gap-2 col-span-2">
-                                <Select
-                                  value={slot.startTime}
-                                  onValueChange={(value) =>
-                                    updateSlotField(index, "startTime", value)
-                                  }
-                                >
-                                  <SelectTrigger className="w-full sm:w-32">
-                                    <SelectValue placeholder="Start" />
-                                  </SelectTrigger>
-                                  <SelectContent>
-                                    {times.map((time) => (
-                                      <SelectItem key={time} value={time}>
-                                        {time}
-                                      </SelectItem>
-                                    ))}
-                                  </SelectContent>
-                                </Select>
-
-                                <span className="text-muted-foreground font-medium">
-                                  to
-                                </span>
-
-                                <Select
-                                  value={slot.endTime}
-                                  onValueChange={(value) =>
-                                    updateSlotField(index, "endTime", value)
-                                  }
-                                >
-                                  <SelectTrigger className="w-full sm:w-32">
-                                    <SelectValue placeholder="End" />
-                                  </SelectTrigger>
-                                  <SelectContent>
-                                    {times.map((time) => (
-                                      <SelectItem key={time} value={time}>
-                                        {time}
-                                      </SelectItem>
-                                    ))}
-                                  </SelectContent>
-                                </Select>
-                              </div>
-
-                              <div className="flex items-center gap-2 bg-muted/50 px-3 py-2 rounded-lg">
-                                <Switch
-                                  id={`active-${index}`}
-                                  checked={slot.isActive ?? true}
-                                  onCheckedChange={(checked) =>
-                                    toggleSlotStatus(slot, index, checked)
-                                  }
-                                  disabled={savingSlotId === slot.id}
-                                />
-                                <Label
-                                  htmlFor={`active-${index}`}
-                                  className="text-sm font-medium cursor-pointer"
-                                >
-                                  {slot.isActive ? "Active" : "Inactive"}
-                                </Label>
-                              </div>
-                            </div>
-                          </div>
-
-                          <div className="flex justify-end gap-2 pt-2 border-t">
-                            <Button
-                              type="button"
-                              variant="outline"
-                              size="sm"
-                              onClick={() => removeSlot(slot, index)}
-                              disabled={isSaving}
-                              className="text-destructive hover:text-destructive hover:bg-destructive/10"
-                            >
-                              <Trash2 className="w-4 h-4 mr-2" />
-                              Delete
-                            </Button>
-                            <Button
-                              type="button"
-                              variant="hero"
-                              size="sm"
-                              onClick={() => saveSlot(slot, index)}
-                              disabled={isSaving}
-                            >
-                              {isSaving
-                                ? "Saving..."
-                                : slot.isNew
-                                  ? "Create Slot"
-                                  : "Update Slot"}
-                            </Button>
-                          </div>
-                        </div>
-                      </div>
-                    );
-                  })}
-
-              {!isRefreshing && slots.length === 0 && (
+              {slots.length === 0 && (
                 <div className="glass-card rounded-2xl p-12 text-center">
                   <div className="bg-primary/10 p-6 rounded-full w-fit mx-auto mb-4">
                     <Clock className="w-12 h-12 text-primary" />

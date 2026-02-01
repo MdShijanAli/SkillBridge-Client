@@ -71,6 +71,7 @@ export const createAvailabilitySlot = async (data: any) => {
       method: "POST",
       body: JSON.stringify(data),
     });
+    console.log("Create availability slot response status:", response);
     return await response.json();
   } catch (error) {
     console.error("Error creating availability slot:", error);
@@ -114,10 +115,13 @@ export const deleteAvailabilitySlot = async (id: number) => {
   }
 };
 
-export const getAllAvailabilitySlots = async () => {
+export const getAllAvailabilitySlots = async (tutorProfileId: number) => {
   const cookieStore = await cookies();
   try {
-    const response = await fetch(apiRoutes.availabilities.getAll, {
+    const url =
+      apiRoutes.availabilities.getAll + `?tutorProfileId=${tutorProfileId}`;
+    console.log("Fetching availability slots from URL:", url);
+    const response = await fetch(url, {
       headers: {
         cookie: cookieStore.toString(),
       },

@@ -9,11 +9,12 @@ import { Calendar, UserCircle, ArrowRight } from "lucide-react";
 
 export default async function TutorAvailabilityPage() {
   const tutorProfile = await getTutorProfile();
-  const availabilitySlots = await getAllAvailabilitySlots();
 
-  if (!tutorProfile.data.id) {
+  console.log("Tutor Profile in Availability Page:", tutorProfile.data.id);
+
+  if (!tutorProfile?.data?.id) {
     return (
-      <div className="min-h-[70vh] flex items-center justify-center p-8">
+      <div className="min-h-[100vh] flex items-center justify-center p-8">
         <div className="glass-card p-8 md:p-12 rounded-2xl max-w-2xl w-full text-center space-y-6">
           <div className="flex justify-center">
             <div className="relative">
@@ -36,7 +37,7 @@ export default async function TutorAvailabilityPage() {
           </div>
 
           <div className="glass-card p-6 rounded-xl bg-primary/5 border border-primary/10 space-y-3">
-            <div className="flex items-center justify-center gap-2 text-primary">
+            <div className="flex items-center gap-2 text-primary">
               <Calendar className="w-5 h-5" />
               <span className="font-semibold">What you'll set up:</span>
             </div>
@@ -67,11 +68,15 @@ export default async function TutorAvailabilityPage() {
     );
   }
 
+  const availabilitySlots = await getAllAvailabilitySlots(
+    tutorProfile?.data?.id,
+  );
+
   return (
     <div>
       <TutorAvailability
         tutorProfileId={tutorProfile?.data?.id}
-        availabilitySlots={availabilitySlots.data}
+        availabilitySlots={availabilitySlots?.data}
       />
     </div>
   );
