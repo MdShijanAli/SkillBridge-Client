@@ -353,7 +353,7 @@ const TutorProfile = ({ tutorData }: { tutorData: TutorData }) => {
                       value={selectedDate}
                       onValueChange={(date) => {
                         setSelectedDate(date);
-                        setSelectedTime(""); // Reset time when date changes
+                        setSelectedTime("");
                       }}
                     >
                       <SelectTrigger className="bg-secondary/50">
