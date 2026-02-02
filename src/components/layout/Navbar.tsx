@@ -53,9 +53,16 @@ const Navbar = ({ isLoggedIn = false, userData }: NavbarProps) => {
     }
   };
 
-  console.log("AdminTopbar userData:", userData);
+  console.log("Navbar userData:", userData);
 
-  if (userData?.role !== Roles.STUDENT && userData?.role !== Roles.TUTOR) {
+  // Only check role if user is logged in and has role
+  // Allow navbar to show for guests (no userData)
+  if (
+    isLoggedIn &&
+    userData &&
+    userData.role !== Roles.STUDENT &&
+    userData.role !== Roles.TUTOR
+  ) {
     handleLogout();
     return null;
   }
