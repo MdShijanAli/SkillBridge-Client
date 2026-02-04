@@ -25,11 +25,13 @@ export interface Roles {
 
 export interface Category {
   id: number;
+  icon?: string;
   name: string;
   description?: string;
   isActive: boolean;
   createdAt: string;
   updatedAt: string;
+  category?: Category;
 }
 
 export interface Booking {

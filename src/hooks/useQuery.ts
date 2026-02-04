@@ -16,7 +16,7 @@ interface UseQueryOptions {
 
 export function useQuery<T = any>(
   apiRoute: string,
-  search?: string,
+  params?: Record<string, any>,
   options: UseQueryOptions = {},
 ) {
   const { enabled = true, refetchOnMount = true } = options;
@@ -38,9 +38,20 @@ export function useQuery<T = any>(
       setState((prev) => ({ ...prev, isLoading: true }));
 
       try {
-        const url = search
-          ? `${apiRoute}?search=${encodeURIComponent(search)}`
-          : apiRoute;
+        // Build query string from params
+        const queryParams = new URLSearchParams();
+        if (params) {
+          Object.entries(params).forEach(([key, value]) => {
+            if (value !== undefined && value !== null && value !== "") {
+              queryParams.append(key, String(value));
+            }
+          });
+        }
+
+        const queryString = queryParams.toString();
+        const url = queryString ? `${apiRoute}?${queryString}` : apiRoute;
+
+        console.log("Fetching data from:", url);
 
         const response = await fetch(url, {
           method: "GET",
@@ -91,7 +102,7 @@ export function useQuery<T = any>(
       isMounted = false;
       controller.abort();
     };
-  }, [apiRoute, search, enabled, refetchOnMount]);
+  }, [apiRoute, JSON.stringify(params), enabled, refetchOnMount]);
 
   const refetch = () => {
     setState((prev) => ({ ...prev, isLoading: true }));

@@ -58,7 +58,7 @@ const TutorCard = ({ tutor }: TutorCardProps) => {
           </p>
 
           <div className="flex items-center gap-3 mt-2">
-            {tutor.tutorProfile?.totalReviews && (
+            {(tutor.tutorProfile?.totalReviews ?? 0) > 0 && (
               <div className="flex items-center gap-1">
                 <Star className="w-4 h-4 text-accent fill-accent" />
                 <span className="text-sm font-semibold text-foreground">
@@ -70,7 +70,7 @@ const TutorCard = ({ tutor }: TutorCardProps) => {
               </div>
             )}
 
-            {tutor?.tutorProfile?.yearsExperience && (
+            {(tutor?.tutorProfile?.yearsExperience ?? 0) > 0 && (
               <div className="flex items-center gap-1 text-muted-foreground">
                 <Clock className="w-4 h-4" />
                 <span className="text-sm">
@@ -85,6 +85,28 @@ const TutorCard = ({ tutor }: TutorCardProps) => {
       <p className="mt-4 text-sm text-muted-foreground line-clamp-2 leading-relaxed">
         {tutor.bio}
       </p>
+
+      {/* Categories */}
+      {(tutor?.tutorProfile?.categories?.length ?? 0) > 0 && (
+        <div className="mt-4 flex flex-wrap gap-1.5">
+          {tutor.tutorProfile.categories.slice(0, 2).map((categoryName) => {
+            return (
+              <div
+                key={categoryName.id}
+                className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-primary/10 text-primary text-xs font-medium hover:bg-primary/20 transition-colors"
+              >
+                <span>{categoryName?.category?.icon}</span>
+                {categoryName?.category?.name}
+              </div>
+            );
+          })}
+          {(tutor?.tutorProfile?.categories.length ?? 0) > 2 && (
+            <span className="text-xs text-muted-foreground px-2 py-0.5">
+              +{tutor.tutorProfile.categories.length - 2} more
+            </span>
+          )}
+        </div>
+      )}
 
       <div className="mt-4 flex flex-wrap gap-2">
         {tutor?.tutorProfile?.subjects?.slice(0, 3).map((subject) => (
