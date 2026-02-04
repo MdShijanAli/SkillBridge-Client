@@ -17,6 +17,9 @@ import {
   updateTutorProfile,
 } from "@/services/tutor.service";
 import { useState } from "react";
+import { apiRoutes } from "@/api/apiRoutes";
+import { useQuery } from "@/hooks/useQuery";
+import { AdvanceSelect, SelectOption } from "@/components/ui/advance-select";
 
 const TutorProfileFormSchema = z.object({
   specialization: z
@@ -28,6 +31,7 @@ const TutorProfileFormSchema = z.object({
   yearsExperience: z.coerce
     .number()
     .min(0, "Years of experience must be at least 0"),
+  categoryIds: z.array(z.number()).min(1, "At least one category is required"),
   subjects: z.array(z.string()).min(1, "At least one subject is required"),
   languages: z.array(z.string()).min(1, "At least one language is required"),
 });
@@ -35,12 +39,32 @@ const TutorProfileFormSchema = z.object({
 const TutorProfile = ({ userData }: { userData: any }) => {
   const [createdProfile, setCreatedProfile] = useState(false);
 
+  const {
+    data: categories,
+    isLoading,
+    error,
+    isError,
+  } = useQuery(apiRoutes.categories.getAll);
+
+  console.log("Categories:", categories);
+  const categoryOptions: SelectOption[] =
+    categories?.data
+      ?.filter((cat: any) => cat.isActive)
+      .map((cat: any) => ({
+        label: cat.name,
+        value: cat.id,
+      })) || [];
+
+  console.log("User Data in TutorProfile:", userData);
+
   const form = useForm({
     defaultValues: {
       specialization: userData?.specialization || "",
       bio: userData?.bio || "",
       hourlyRate: userData?.hourlyRate || 0,
       education: userData?.education || "",
+      categoryIds:
+        userData?.categories?.map((cat: any) => cat.categoryId) || [],
       yearsExperience: userData?.yearsExperience || 0,
       subjects: userData?.subjects || [],
       languages: userData?.languages || [],
@@ -203,6 +227,30 @@ const TutorProfile = ({ userData }: { userData: any }) => {
                 ))}
               </div>
             </div>
+
+            {/* Categories */}
+            <form.Field name="categoryIds">
+              {(field) => (
+                <div className="glass-card p-6 rounded-xl space-y-4 relative z-50">
+                  <h2 className="text-lg font-semibold">Categories</h2>
+                  <p className="text-sm text-muted-foreground">
+                    Select categories that match your expertise
+                  </p>
+
+                  <AdvanceSelect
+                    options={categoryOptions}
+                    value={field.state.value}
+                    onChange={(value) => field.handleChange(value as number[])}
+                    placeholder="Select categories..."
+                    searchPlaceholder="Search categories..."
+                    emptyText="No categories found."
+                    multiple={true}
+                    isLoading={isLoading}
+                  />
+                  <FieldError errors={field.state.meta.errors} />
+                </div>
+              )}
+            </form.Field>
 
             {/* Subjects */}
             <form.Field name="subjects">
