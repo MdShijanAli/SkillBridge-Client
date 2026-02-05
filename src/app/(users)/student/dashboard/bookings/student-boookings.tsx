@@ -4,11 +4,17 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import BookingCard from "../BookingCard";
 import { useQuery } from "@/hooks/useQuery";
 import { apiRoutes } from "@/api/apiRoutes";
-import { BookingStatus } from "@/lib/types";
+import { Booking, BookingStatus } from "@/lib/types";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useState } from "react";
+import ReviewDialog from "@/components/common/ReviewDialog";
+import { storeItem } from "@/services/api.service";
+import { toast } from "sonner";
 
 const StudentBookings = ({ user }: { user: any }) => {
   console.log("User prop in StudentBookings:", user);
+  const [reviewDialogOpen, setReviewDialogOpen] = useState(false);
+  const [selectedBooking, setSelectedBooking] = useState<Booking>(null);
 
   const {
     data: myBookings,
@@ -25,9 +31,16 @@ const StudentBookings = ({ user }: { user: any }) => {
   const cancelledBookings =
     myBookings?.data?.filter((b) => b.status === BookingStatus.CANCELLED) || [];
 
-  const handleBookingAction = (action: string, bookingId: string) => {
-    console.log(`Action: ${action} on Booking ID: ${bookingId}`);
-    refetch();
+  const handleBookingAction = (action: string, booking: Booking) => {
+    console.log(`Action: ${action} on Booking ID: ${booking.id}`);
+    if (action === "completed") {
+      refetch();
+    } else if (action === "review") {
+      setReviewDialogOpen(true);
+      setSelectedBooking(booking);
+    } else if (action === "cancelled") {
+      refetch();
+    }
   };
 
   return (
@@ -90,7 +103,9 @@ const StudentBookings = ({ user }: { user: any }) => {
                       key={booking.id}
                       booking={booking}
                       userType="STUDENT"
-                      onAction={(action, id) => handleBookingAction(action, id)}
+                      onAction={(action, booking) =>
+                        handleBookingAction(action, booking)
+                      }
                     />
                   ))}
                 </div>
@@ -134,7 +149,9 @@ const StudentBookings = ({ user }: { user: any }) => {
                       key={booking.id}
                       booking={booking}
                       userType="STUDENT"
-                      onAction={(action, id) => handleBookingAction(action, id)}
+                      onAction={(action, booking) =>
+                        handleBookingAction(action, booking)
+                      }
                     />
                   ))}
                 </div>
@@ -189,6 +206,16 @@ const StudentBookings = ({ user }: { user: any }) => {
             </TabsContent>
           </Tabs>
         </div>
+
+        <ReviewDialog
+          booking={selectedBooking}
+          open={reviewDialogOpen}
+          onOpenChange={setReviewDialogOpen}
+          onSuccess={() => {
+            refetch();
+            return true;
+          }}
+        />
       </main>
     </div>
   );

@@ -32,7 +32,6 @@ export function useQuery<T = any>(
     setState((prev) => ({ ...prev, isLoading: true }));
 
     try {
-      // Build query string from params
       const queryParams = new URLSearchParams();
       if (params) {
         Object.entries(params).forEach(([key, value]) => {

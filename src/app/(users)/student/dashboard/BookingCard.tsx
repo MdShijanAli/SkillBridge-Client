@@ -1,6 +1,6 @@
 "use client";
 
-import { Calendar, Clock, Video } from "lucide-react";
+import { Calendar, Clock, Video, Star } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -16,7 +16,7 @@ import { useRouter } from "next/navigation";
 interface BookingCardProps {
   booking: Booking;
   userType: "STUDENT" | "TUTOR";
-  onAction?: (action: string, bookingId: string) => void;
+  onAction?: (action: string, booking: Booking) => void;
 }
 
 const BookingCard = ({ booking, userType, onAction }: BookingCardProps) => {
@@ -28,11 +28,23 @@ const BookingCard = ({ booking, userType, onAction }: BookingCardProps) => {
   const getStatusBadge = () => {
     switch (booking.status) {
       case BookingStatus.CONFIRMED:
-        return <Badge className="badge-confirmed">Confirmed</Badge>;
+        return (
+          <Badge variant="blue" className="badge-confirmed">
+            Confirmed
+          </Badge>
+        );
       case BookingStatus.COMPLETED:
-        return <Badge className="badge-completed">Completed</Badge>;
+        return (
+          <Badge variant="success" className="badge-completed">
+            Completed
+          </Badge>
+        );
       case BookingStatus.CANCELLED:
-        return <Badge className="badge-cancelled">Cancelled</Badge>;
+        return (
+          <Badge variant="destructive" className="badge-cancelled">
+            Cancelled
+          </Badge>
+        );
       default:
         return null;
     }
@@ -60,7 +72,7 @@ const BookingCard = ({ booking, userType, onAction }: BookingCardProps) => {
         description: "You can now leave a review for your tutor.",
       });
       setIsSessionModalOpen(false);
-      onAction?.("completed", booking.id);
+      onAction?.("completed", booking);
     } catch (error) {
       toast.error("Failed to complete session", {
         description: "Please try again later.",
@@ -81,7 +93,7 @@ const BookingCard = ({ booking, userType, onAction }: BookingCardProps) => {
         description: "Your booking has been cancelled successfully.",
       });
       // Trigger refetch
-      onAction?.("cancelled", booking.id);
+      onAction?.("cancelled", booking);
     } catch (error) {
       toast.error("Failed to cancel booking", {
         description: "Please try again later.",
@@ -153,15 +165,39 @@ const BookingCard = ({ booking, userType, onAction }: BookingCardProps) => {
             </>
           )}
           {booking.status === BookingStatus.COMPLETED &&
-            userType === Roles.STUDENT && (
+            userType === Roles.STUDENT &&
+            (booking.review ? (
+              <div className="flex flex-col gap-2 max-w-xs">
+                <div className="flex items-center gap-2">
+                  <div className="flex gap-0.5">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <Star
+                        key={star}
+                        className={`w-4 h-4 ${
+                          star <= booking.review!.rating
+                            ? "text-accent fill-accent"
+                            : "text-muted-foreground"
+                        }`}
+                      />
+                    ))}
+                  </div>
+                  <Badge variant="secondary" className="text-xs">
+                    Reviewed
+                  </Badge>
+                </div>
+                <p className="text-xs text-muted-foreground line-clamp-2">
+                  {booking.review.comment}
+                </p>
+              </div>
+            ) : (
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() => onAction?.("review", booking.id)}
+                onClick={() => onAction?.("review", booking)}
               >
                 Leave Review
               </Button>
-            )}
+            ))}
         </div>
       </div>
 

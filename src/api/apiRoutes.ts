@@ -51,4 +51,8 @@ export const apiRoutes = {
     getMyBookings: (id: number | string) => createUrl(`bookings/me/${id}`),
     updateStatus: (id: number | string) => createUrl(`bookings/${id}/status`),
   },
+
+  reviews: {
+    create: createUrl("reviews"),
+  },
 };

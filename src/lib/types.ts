@@ -53,6 +53,19 @@ export interface Booking {
   tutor?: TutorData;
   student?: User;
   category?: Category;
+  review?: Review;
+}
+
+export interface Review {
+  id: number;
+  bookingId: number;
+  studentId: string;
+  tutorId: string;
+  rating: number;
+  comment: string;
+  isPublic: boolean;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface AvailabilitySlot {
