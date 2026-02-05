@@ -45,5 +45,8 @@ export const apiRoutes = {
 
   bookings: {
     create: createUrl("bookings"),
+    getAll: createUrl("bookings"),
+    delete: (id: number | string) => createUrl(`bookings/${id}`),
+    getById: (id: number | string) => createUrl(`bookings/${id}`),
   },
 };

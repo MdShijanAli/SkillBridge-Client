@@ -35,19 +35,23 @@ export interface Category {
 }
 
 export interface Booking {
-  id: string;
-  tutorId: string;
-  tutorName: string;
-  tutorAvatar: string;
+  id: number;
   studentId: string;
-  studentName: string;
-  studentAvatar: string;
-  subject: string;
-  date: string;
-  time: string;
+  tutorId: string;
+  categoryId: number;
+  scheduleDate: string;
+  scheduleTime: string;
   duration: number;
-  status: "confirmed" | "completed" | "cancelled";
-  price: number;
+  status: "CONFIRMED" | "PENDING" | "COMPLETED" | "CANCELLED";
+  price: string;
+  sessionNotes: string | null;
+  cancellationReason: string | null;
+  cancelledBy: string | null;
+  completedAt: string | null;
+  createdAt: string;
+  updatedAt: string;
+  tutor?: TutorData;
+  student?: User;
 }
 
 export interface AvailabilitySlot {
