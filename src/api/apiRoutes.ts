@@ -49,6 +49,7 @@ export const apiRoutes = {
     delete: (id: number | string) => createUrl(`bookings/${id}`),
     getById: (id: number | string) => createUrl(`bookings/${id}`),
     getMyBookings: (id: number | string) => createUrl(`bookings/me/${id}`),
+    getByTutor: (id: number | string) => createUrl(`bookings/tutor/${id}`),
     updateStatus: (id: number | string) => createUrl(`bookings/${id}/status`),
   },
 
@@ -58,5 +59,6 @@ export const apiRoutes = {
 
   dashboard: {
     studentStats: createUrl("dashboard/stats"),
+    tutorStats: createUrl("dashboard/tutor-stats"),
   },
 };

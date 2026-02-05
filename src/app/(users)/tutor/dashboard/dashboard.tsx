@@ -9,18 +9,32 @@ import BookingCard from "../../student/dashboard/BookingCard";
 import ReviewCard from "@/components/dashboard/ReviewCard";
 import StatCard from "@/components/dashboard/StatCard";
 import { Roles } from "@/constants/roles";
+import { useQuery } from "@/hooks/useQuery";
+import { apiRoutes } from "@/api/apiRoutes";
+import { BookingStatus, User } from "@/lib/types";
 
-const TutorDashboard = () => {
-  const tutorBookings = bookings.filter((b) => b.tutorId === currentTutor.id);
+const TutorDashboard = ({ userData }: { userData: User }) => {
+  const { data: myBookings, refetch } = useQuery(
+    apiRoutes.bookings.getByTutor(userData.id),
+    {},
+  );
+
+  const { data: tutorStats } = useQuery(apiRoutes.dashboard.tutorStats, {});
+
+  console.log("Tutor stats:", tutorStats);
+
+  console.log("Fetched tutor bookings:", myBookings);
+
   const tutorReviews = reviews.filter((r) => r.tutorId === currentTutor.id);
-  const upcomingBookings = tutorBookings.filter(
-    (b) => b.status === "confirmed",
+  const upcomingBookings = myBookings?.data?.filter(
+    (b) => b.status === BookingStatus.CONFIRMED,
   );
-  const completedBookings = tutorBookings.filter(
-    (b) => b.status === "completed",
+  const completedBookings = myBookings?.data?.filter(
+    (b) => b.status === BookingStatus.COMPLETED,
   );
 
-  const totalEarnings = completedBookings.reduce((sum, b) => sum + b.price, 0);
+  // const totalEarnings = completedBookings?.reduce((sum, b) => sum + b.price, 0);
+  const totalEarnings = 5;
 
   return (
     <div className="min-h-screen bg-background">
@@ -48,22 +62,22 @@ const TutorDashboard = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
             <StatCard
               title="Upcoming Sessions"
-              value={upcomingBookings.length}
+              value={tutorStats?.data?.upcomingSessions || 0}
               icon={Calendar}
             />
             <StatCard
               title="Total Earnings"
-              value={`$${totalEarnings}`}
-              change="+$320 this week"
-              changeType="positive"
+              value={`$${tutorStats?.data?.totalEarnings || 0}`}
               icon={DollarSign}
             />
-            <StatCard title="Rating" value={currentTutor.rating} icon={Star} />
+            <StatCard
+              title="Rating"
+              value={tutorStats?.data?.totalRating || 0}
+              icon={Star}
+            />
             <StatCard
               title="Total Students"
-              value={currentTutor.totalSessions}
-              change="+12 this month"
-              changeType="positive"
+              value={tutorStats?.data?.totalStudents || 0}
               icon={Users}
             />
           </div>
@@ -82,7 +96,7 @@ const TutorDashboard = () => {
                 </TabsList>
 
                 <TabsContent value="upcoming" className="mt-6">
-                  {upcomingBookings.length > 0 ? (
+                  {upcomingBookings?.length > 0 ? (
                     <div className="space-y-4">
                       {upcomingBookings.map((booking) => (
                         <BookingCard
@@ -107,7 +121,7 @@ const TutorDashboard = () => {
                 </TabsContent>
 
                 <TabsContent value="completed" className="mt-6">
-                  {completedBookings.length > 0 ? (
+                  {completedBookings?.length > 0 ? (
                     <div className="space-y-4">
                       {completedBookings.map((booking) => (
                         <BookingCard
@@ -127,7 +141,7 @@ const TutorDashboard = () => {
                 </TabsContent>
 
                 <TabsContent value="reviews" className="mt-6">
-                  {tutorReviews.length > 0 ? (
+                  {tutorReviews?.length > 0 ? (
                     <div className="space-y-4">
                       {tutorReviews.map((review) => (
                         <ReviewCard key={review.id} review={review} />
@@ -153,13 +167,13 @@ const TutorDashboard = () => {
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Hourly Rate</span>
                     <span className="font-medium text-foreground">
-                      ${currentTutor.hourlyRate}/hr
+                      ${tutorStats?.data?.hourlyRate}/hr
                     </span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Subjects</span>
                     <span className="font-medium text-foreground">
-                      {currentTutor.subjects.length}
+                      {tutorStats?.data?.subjectCount || 0}
                     </span>
                   </div>
                   <div className="flex justify-between">
@@ -167,13 +181,13 @@ const TutorDashboard = () => {
                       Total Sessions
                     </span>
                     <span className="font-medium text-foreground">
-                      {currentTutor.totalSessions}
+                      {tutorStats?.data?.totalSessions || 0}
                     </span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Reviews</span>
                     <span className="font-medium text-foreground">
-                      {currentTutor.reviewCount}
+                      {tutorStats?.data?.totalReviews || 0}
                     </span>
                   </div>
                 </div>
@@ -220,16 +234,20 @@ const TutorDashboard = () => {
                 <div className="space-y-3">
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">This Week</span>
-                    <span className="font-medium text-foreground">$320</span>
+                    <span className="font-medium text-foreground">
+                      ${tutorStats?.data?.thisWeekEarnings || 0}
+                    </span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">This Month</span>
-                    <span className="font-medium text-foreground">$1,250</span>
+                    <span className="font-medium text-foreground">
+                      ${tutorStats?.data?.thisMonthEarnings || 0}
+                    </span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Total</span>
                     <span className="font-medium text-gradient-primary">
-                      ${totalEarnings}
+                      ${tutorStats?.data?.totalEarnings || 0}
                     </span>
                   </div>
                 </div>
