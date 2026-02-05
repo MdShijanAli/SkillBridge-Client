@@ -30,11 +30,66 @@ import Link from "next/link";
 import { toast } from "sonner";
 import ReviewCard from "@/components/dashboard/ReviewCard";
 import { TutorData } from "@/lib/types";
+import { useForm } from "@tanstack/react-form";
+import { z } from "zod";
+import { apiRoutes } from "@/api/apiRoutes";
+import { storeItem } from "@/services/api.service";
+import { FieldError } from "@/components/ui/field";
+
+// Booking form schema
+const bookingSchema = z.object({
+  scheduleDate: z.string().min(1, "Please select a date"),
+  scheduleTime: z.string().min(1, "Please select a time"),
+  duration: z.number().min(30, "Minimum duration is 30 minutes"),
+  price: z.string().min(1, "Price is required"),
+  tutorId: z.string().min(1, "Tutor ID is required"),
+  categoryId: z.number().min(1, "Please select a category"),
+});
+
+type BookingFormData = z.infer<typeof bookingSchema>;
 
 const TutorProfile = ({ tutorData }: { tutorData: TutorData }) => {
-  const [selectedDate, setSelectedDate] = useState("");
-  const [selectedTime, setSelectedTime] = useState("");
-  const [duration, setDuration] = useState("60");
+  const form = useForm({
+    defaultValues: {
+      scheduleDate: "",
+      scheduleTime: "",
+      duration: 60,
+      price: String(tutorData?.tutorProfile?.hourlyRate || 0),
+      tutorId: tutorData?.id || "",
+      categoryId: 0,
+    } as BookingFormData,
+    onSubmit: async ({ value }) => {
+      const toastId = toast.loading("Booking your session...");
+      try {
+        const response = await storeItem({
+          endpoint: apiRoutes.bookings.create,
+          data: value,
+        });
+
+        console.log("Booking response:", response);
+
+        if (!response.success) {
+          throw new Error(response.message || "Failed to book session");
+        }
+
+        toast.success(
+          `Successfully booked a session with ${tutorData.name} on ${new Date(
+            value.scheduleDate,
+          ).toLocaleDateString()} at ${value.scheduleTime} for ${value.duration} minutes!`,
+          { id: toastId },
+        );
+
+        // Reset form
+        form.reset();
+      } catch (error) {
+        console.error("Booking error:", error);
+        toast.error(
+          error instanceof Error ? error.message : "Failed to book session",
+          { id: toastId },
+        );
+      }
+    },
+  });
 
   const activeSlots =
     tutorData?.tutorProfile?.availability?.filter((slot) => slot.isActive) ||
@@ -83,8 +138,6 @@ const TutorProfile = ({ tutorData }: { tutorData: TutorData }) => {
       }));
   };
 
-  const availableTimeSlots = getTimeSlotsForDate(selectedDate);
-
   if (!tutorData) {
     return (
       <div className="min-h-screen bg-background">
@@ -107,18 +160,6 @@ const TutorProfile = ({ tutorData }: { tutorData: TutorData }) => {
       </div>
     );
   }
-
-  const handleBooking = () => {
-    if (!selectedDate || !selectedTime) {
-      toast.error("Please select both a date and time for your session.");
-      return;
-    }
-    toast.success(
-      `Successfully booked a session with ${tutorData.name} on ${new Date(
-        selectedDate,
-      ).toLocaleDateString()} at ${selectedTime} for ${duration} minutes!`,
-    );
-  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -198,6 +239,27 @@ const TutorProfile = ({ tutorData }: { tutorData: TutorData }) => {
                     </div>
                   </div>
                 </div>
+
+                {/* Categories */}
+                {tutorData?.tutorProfile?.categories.length > 0 && (
+                  <div className="mt-4 flex flex-wrap gap-2">
+                    <span className="text-sm text-muted-foreground">
+                      Categories:
+                    </span>
+                    {tutorData?.tutorProfile?.categories.map((categoryName) => {
+                      return (
+                        <Link
+                          key={categoryName.id}
+                          href={`/tutors?category=${encodeURIComponent(categoryName?.category?.name)}`}
+                          className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-primary/10 text-primary text-sm font-medium hover:bg-primary/20 transition-colors"
+                        >
+                          <span>{categoryName?.category?.icon}</span>
+                          {categoryName?.category?.name}
+                        </Link>
+                      );
+                    })}
+                  </div>
+                )}
 
                 <div className="mt-6 flex flex-wrap gap-2">
                   {tutorData?.tutorProfile?.subjects.map((subject) => (
@@ -336,136 +398,303 @@ const TutorProfile = ({ tutorData }: { tutorData: TutorData }) => {
             </div>
 
             <div className="lg:col-span-1">
-              <div className="glass-card rounded-xl p-6 sticky top-24">
-                <div className="text-center mb-6 pb-6 border-b border-border">
-                  <span className="text-4xl font-bold text-gradient-primary">
-                    ${tutorData?.tutorProfile?.hourlyRate}
-                  </span>
-                  <span className="text-muted-foreground text-lg">/hour</span>
-                </div>
-
-                <div className="space-y-4">
-                  <div>
-                    <label className="text-sm font-medium text-foreground mb-2 block">
-                      Select Date
-                    </label>
-                    <Select
-                      value={selectedDate}
-                      onValueChange={(date) => {
-                        setSelectedDate(date);
-                        setSelectedTime("");
-                      }}
-                    >
-                      <SelectTrigger className="bg-secondary/50">
-                        <SelectValue placeholder="Choose a date" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {availableDates.length > 0 ? (
-                          availableDates.map((date) => (
-                            <SelectItem key={date.value} value={date.value}>
-                              {date.label}
-                            </SelectItem>
-                          ))
-                        ) : (
-                          <SelectItem value="no-dates" disabled>
-                            No available dates
-                          </SelectItem>
-                        )}
-                      </SelectContent>
-                    </Select>
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  form.handleSubmit();
+                }}
+              >
+                <div className="glass-card rounded-xl p-6 sticky top-24">
+                  <div className="text-center mb-6 pb-6 border-b border-border">
+                    <span className="text-4xl font-bold text-gradient-primary">
+                      ${tutorData?.tutorProfile?.hourlyRate}
+                    </span>
+                    <span className="text-muted-foreground text-lg">/hour</span>
                   </div>
 
-                  <div>
-                    <label className="text-sm font-medium text-foreground mb-2 block">
-                      Select Time
-                    </label>
-                    <Select
-                      value={selectedTime}
-                      onValueChange={setSelectedTime}
-                      disabled={
-                        !selectedDate || availableTimeSlots.length === 0
-                      }
-                    >
-                      <SelectTrigger className="bg-secondary/50">
-                        <SelectValue placeholder="Choose a time" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {availableTimeSlots.length > 0 ? (
-                          availableTimeSlots.map((timeSlot) => (
-                            <SelectItem
-                              key={`${timeSlot.slot.id}-${timeSlot.value}`}
-                              value={timeSlot.value}
-                            >
-                              {timeSlot.label}
-                            </SelectItem>
-                          ))
-                        ) : (
-                          <SelectItem value="no-times" disabled>
-                            {selectedDate
-                              ? "No available times"
-                              : "Select a date first"}
-                          </SelectItem>
-                        )}
-                      </SelectContent>
-                    </Select>
-                  </div>
+                  <form.Subscribe
+                    selector={(state) => ({
+                      scheduleDate: state.values.scheduleDate,
+                      scheduleTime: state.values.scheduleTime,
+                      duration: state.values.duration,
+                    })}
+                    children={({ scheduleDate, scheduleTime, duration }) => {
+                      const availableTimeSlots =
+                        getTimeSlotsForDate(scheduleDate);
+                      const totalPrice = (
+                        (tutorData?.tutorProfile?.hourlyRate ?? 0) *
+                        (duration / 60)
+                      ).toFixed(2);
 
-                  <div>
-                    <label className="text-sm font-medium text-foreground mb-2 block">
-                      Duration
-                    </label>
-                    <Select value={duration} onValueChange={setDuration}>
-                      <SelectTrigger className="bg-secondary/50">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="30">30 minutes</SelectItem>
-                        <SelectItem value="60">60 minutes</SelectItem>
-                        <SelectItem value="90">90 minutes</SelectItem>
-                        <SelectItem value="120">120 minutes</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
+                      return (
+                        <div className="space-y-4">
+                          {/* Category Selection */}
+                          <form.Field
+                            name="categoryId"
+                            validators={{
+                              onChange: bookingSchema.shape.categoryId,
+                            }}
+                            children={(field) => {
+                              const isInvalid =
+                                field.state.meta.isTouched &&
+                                !field.state.meta.isValid;
+                              return (
+                                <div>
+                                  <label className="text-sm font-medium text-foreground mb-2 block">
+                                    Select Category *
+                                  </label>
+                                  <Select
+                                    value={
+                                      field.state.value
+                                        ? String(field.state.value)
+                                        : undefined
+                                    }
+                                    onValueChange={(val) => {
+                                      field.handleChange(Number(val));
+                                      form.setFieldValue("price", totalPrice);
+                                    }}
+                                  >
+                                    <SelectTrigger className="bg-secondary/50">
+                                      <SelectValue placeholder="Choose a category" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                      {tutorData?.tutorProfile?.categories?.map(
+                                        (cat: any) => (
+                                          <SelectItem
+                                            key={cat.categoryId}
+                                            value={String(cat.categoryId)}
+                                          >
+                                            <span className="flex items-center gap-2">
+                                              <span>{cat?.category?.icon}</span>
+                                              {cat?.category?.name}
+                                            </span>
+                                          </SelectItem>
+                                        ),
+                                      )}
+                                    </SelectContent>
+                                  </Select>
+                                  {isInvalid && (
+                                    <FieldError
+                                      errors={field.state.meta.errors}
+                                    />
+                                  )}
+                                </div>
+                              );
+                            }}
+                          />
 
-                  {selectedDate && selectedTime && (
-                    <div className="p-4 bg-primary/10 rounded-lg border border-primary/20">
-                      <div className="flex justify-between items-center">
-                        <span className="text-muted-foreground">
-                          Session Total
-                        </span>
-                        <span className="text-2xl font-bold text-foreground">
-                          $
-                          {(
-                            (tutorData?.tutorProfile?.hourlyRate ?? 0) *
-                            (parseInt(duration) / 60)
-                          ).toFixed(2)}
-                        </span>
-                      </div>
+                          {/* Date Selection */}
+                          <form.Field
+                            name="scheduleDate"
+                            validators={{
+                              onChange: bookingSchema.shape.scheduleDate,
+                            }}
+                            children={(field) => {
+                              const isInvalid =
+                                field.state.meta.isTouched &&
+                                !field.state.meta.isValid;
+                              return (
+                                <div>
+                                  <label className="text-sm font-medium text-foreground mb-2 block">
+                                    Select Date *
+                                  </label>
+                                  <Select
+                                    value={field.state.value}
+                                    onValueChange={(date) => {
+                                      field.handleChange(date);
+                                      form.setFieldValue("scheduleTime", "");
+                                    }}
+                                  >
+                                    <SelectTrigger className="bg-secondary/50">
+                                      <SelectValue placeholder="Choose a date" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                      {availableDates.length > 0 ? (
+                                        availableDates.map((date) => (
+                                          <SelectItem
+                                            key={date.value}
+                                            value={date.value}
+                                          >
+                                            {date.label}
+                                          </SelectItem>
+                                        ))
+                                      ) : (
+                                        <SelectItem value="no-dates" disabled>
+                                          No available dates
+                                        </SelectItem>
+                                      )}
+                                    </SelectContent>
+                                  </Select>
+                                  {isInvalid && (
+                                    <FieldError
+                                      errors={field.state.meta.errors}
+                                    />
+                                  )}
+                                </div>
+                              );
+                            }}
+                          />
+
+                          {/* Time Selection */}
+                          <form.Field
+                            name="scheduleTime"
+                            validators={{
+                              onChange: bookingSchema.shape.scheduleTime,
+                            }}
+                            children={(field) => {
+                              const isInvalid =
+                                field.state.meta.isTouched &&
+                                !field.state.meta.isValid;
+                              return (
+                                <div>
+                                  <label className="text-sm font-medium text-foreground mb-2 block">
+                                    Select Time *
+                                  </label>
+                                  <Select
+                                    value={field.state.value}
+                                    onValueChange={field.handleChange}
+                                    disabled={
+                                      !scheduleDate ||
+                                      availableTimeSlots.length === 0
+                                    }
+                                  >
+                                    <SelectTrigger className="bg-secondary/50">
+                                      <SelectValue placeholder="Choose a time" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                      {availableTimeSlots.length > 0 ? (
+                                        availableTimeSlots.map((timeSlot) => (
+                                          <SelectItem
+                                            key={`${timeSlot.slot.id}-${timeSlot.value}`}
+                                            value={timeSlot.value}
+                                          >
+                                            {timeSlot.label}
+                                          </SelectItem>
+                                        ))
+                                      ) : (
+                                        <SelectItem value="no-times" disabled>
+                                          {scheduleDate
+                                            ? "No available times"
+                                            : "Select a date first"}
+                                        </SelectItem>
+                                      )}
+                                    </SelectContent>
+                                  </Select>
+                                  {isInvalid && (
+                                    <FieldError
+                                      errors={field.state.meta.errors}
+                                    />
+                                  )}
+                                </div>
+                              );
+                            }}
+                          />
+
+                          {/* Duration Selection */}
+                          <form.Field
+                            name="duration"
+                            validators={{
+                              onChange: bookingSchema.shape.duration,
+                            }}
+                            children={(field) => {
+                              const isInvalid =
+                                field.state.meta.isTouched &&
+                                !field.state.meta.isValid;
+                              return (
+                                <div>
+                                  <label className="text-sm font-medium text-foreground mb-2 block">
+                                    Duration *
+                                  </label>
+                                  <Select
+                                    value={String(field.state.value)}
+                                    onValueChange={(val) => {
+                                      field.handleChange(Number(val));
+                                      const newPrice = (
+                                        (tutorData?.tutorProfile?.hourlyRate ??
+                                          0) *
+                                        (Number(val) / 60)
+                                      ).toFixed(2);
+                                      form.setFieldValue("price", newPrice);
+                                    }}
+                                  >
+                                    <SelectTrigger className="bg-secondary/50">
+                                      <SelectValue />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                      <SelectItem value="30">
+                                        30 minutes
+                                      </SelectItem>
+                                      <SelectItem value="60">
+                                        60 minutes
+                                      </SelectItem>
+                                      <SelectItem value="90">
+                                        90 minutes
+                                      </SelectItem>
+                                      <SelectItem value="120">
+                                        120 minutes
+                                      </SelectItem>
+                                    </SelectContent>
+                                  </Select>
+                                  {isInvalid && (
+                                    <FieldError
+                                      errors={field.state.meta.errors}
+                                    />
+                                  )}
+                                </div>
+                              );
+                            }}
+                          />
+
+                          {/* Price Display */}
+                          {scheduleDate && scheduleTime && (
+                            <div className="p-4 bg-primary/10 rounded-lg border border-primary/20">
+                              <div className="flex justify-between items-center">
+                                <span className="text-muted-foreground">
+                                  Session Total
+                                </span>
+                                <span className="text-2xl font-bold text-foreground">
+                                  ${totalPrice}
+                                </span>
+                              </div>
+                            </div>
+                          )}
+
+                          <form.Subscribe
+                            selector={(state) => [
+                              state.canSubmit,
+                              state.isSubmitting,
+                            ]}
+                            children={([canSubmit, isSubmitting]) => (
+                              <Button
+                                type="submit"
+                                variant="hero"
+                                className="w-full"
+                                size="lg"
+                                disabled={!canSubmit || isSubmitting}
+                              >
+                                <Calendar className="w-4 h-4 mr-2" />
+                                {isSubmitting ? "Booking..." : "Book Session"}
+                              </Button>
+                            )}
+                          />
+                        </div>
+                      );
+                    }}
+                  />
+
+                  <div className="mt-6 pt-6 border-t border-border space-y-3">
+                    <div className="flex items-center gap-3 text-sm text-muted-foreground">
+                      <Video className="w-4 h-4 text-primary" />
+                      <span>Sessions conducted via video call</span>
                     </div>
-                  )}
-
-                  <Button
-                    variant="hero"
-                    className="w-full"
-                    size="lg"
-                    onClick={handleBooking}
-                  >
-                    <Calendar className="w-4 h-4 mr-2" />
-                    Book Session
-                  </Button>
-                </div>
-
-                <div className="mt-6 pt-6 border-t border-border space-y-3">
-                  <div className="flex items-center gap-3 text-sm text-muted-foreground">
-                    <Video className="w-4 h-4 text-primary" />
-                    <span>Sessions conducted via video call</span>
-                  </div>
-                  <div className="flex items-center gap-3 text-sm text-muted-foreground">
-                    <Shield className="w-4 h-4 text-primary" />
-                    <span>100% satisfaction guarantee</span>
+                    <div className="flex items-center gap-3 text-sm text-muted-foreground">
+                      <Shield className="w-4 h-4 text-primary" />
+                      <span>100% satisfaction guarantee</span>
+                    </div>
                   </div>
                 </div>
-              </div>
+              </form>
             </div>
           </div>
         </div>

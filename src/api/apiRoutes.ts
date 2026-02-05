@@ -42,4 +42,8 @@ export const apiRoutes = {
     changeStatus: (id: number | string) =>
       createUrl(`availabilities/${id}/status`),
   },
+
+  bookings: {
+    create: createUrl("bookings"),
+  },
 };
