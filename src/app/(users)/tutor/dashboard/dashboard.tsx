@@ -3,7 +3,7 @@
 import { Calendar, DollarSign, Star, Users, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { bookings, reviews, currentTutor } from "@/lib/data";
+import { reviews, currentTutor } from "@/lib/data";
 import Link from "next/link";
 import BookingCard from "../../student/dashboard/BookingCard";
 import ReviewCard from "@/components/dashboard/ReviewCard";
@@ -21,11 +21,15 @@ const TutorDashboard = ({ userData }: { userData: User }) => {
 
   const { data: tutorStats } = useQuery(apiRoutes.dashboard.tutorStats, {});
 
+  const { data: reviews } = useQuery(apiRoutes.tutor.getReviews, {});
+
   console.log("Tutor stats:", tutorStats);
+  console.log("Reviews:", reviews);
 
   console.log("Fetched tutor bookings:", myBookings);
 
-  const tutorReviews = reviews.filter((r) => r.tutorId === currentTutor.id);
+  const tutorReviews = reviews?.data;
+  console.log("Tutor reviews:", tutorReviews);
   const upcomingBookings = myBookings?.data?.filter(
     (b) => b.status === BookingStatus.CONFIRMED,
   );

@@ -23,6 +23,7 @@ export const apiRoutes = {
     profile: createUrl("tutor-profiles"),
     getAll: createUrl("tutors"),
     getById: (id: number | string) => createUrl(`tutors/${id}`),
+    getReviews: createUrl("tutors/reviews/me"),
   },
 
   categories: {

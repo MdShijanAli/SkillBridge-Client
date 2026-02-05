@@ -8,6 +8,7 @@ export interface User {
   avatar: string;
   createdAt: string;
   status: "active" | "banned";
+  image?: string;
 }
 
 export interface TutorProfile {
@@ -70,6 +71,9 @@ export interface Review {
   rating: number;
   comment: string;
   date: string;
+  booking?: Booking;
+  student?: User;
+  createdAt?: string;
 }
 
 // Categories

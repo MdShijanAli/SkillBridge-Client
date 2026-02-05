@@ -18,24 +18,24 @@ const ReviewCard = ({ review }: ReviewCardProps) => {
         {Array.from({ length: 5 }).map((_, i) => (
           <Star
             key={i}
-            className={`w-5 h-5 ${i < review.rating ? "text-accent fill-accent" : "text-muted"}`}
+            className={`w-5 h-5 ${i < review?.rating ? "text-accent fill-accent" : "text-muted"}`}
           />
         ))}
       </div>
 
       <p className="text-muted-foreground leading-relaxed mb-6">
-        "{review.comment}"
+        "{review?.comment}"
       </p>
 
       <div className="flex items-center gap-3 pt-4 border-t border-border/50">
         <Avatar className="h-10 w-10">
           <AvatarImage
-            src={review.studentAvatar}
-            alt={review.studentName}
+            src={review?.student?.image}
+            alt={review?.student?.name}
             className="object-cover"
           />
           <AvatarFallback className="bg-secondary text-secondary-foreground text-xs font-medium">
-            {review.studentName
+            {review?.student?.name
               .split(" ")
               .map((n) => n[0])
               .join("")}
@@ -44,9 +44,11 @@ const ReviewCard = ({ review }: ReviewCardProps) => {
 
         <div className="flex-1">
           <h4 className="font-medium text-foreground text-sm">
-            {review.studentName}
+            {review?.student?.name}
           </h4>
-          <span className="text-xs text-muted-foreground">{review.date}</span>
+          <span className="text-xs text-muted-foreground">
+            {review?.createdAt?.split("T")[0]}
+          </span>
         </div>
       </div>
     </div>
