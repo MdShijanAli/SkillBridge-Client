@@ -55,4 +55,8 @@ export const apiRoutes = {
   reviews: {
     create: createUrl("reviews"),
   },
+
+  dashboard: {
+    studentStats: createUrl("dashboard/stats"),
+  },
 };

@@ -2,12 +2,18 @@
 
 import { Calendar, BookOpen, Star, Clock, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { bookings, currentUser } from "@/lib/data";
+import { bookings } from "@/lib/data";
 import StatCard from "@/components/dashboard/StatCard";
 import Link from "next/link";
 import BookingCard from "./BookingCard";
+import { apiRoutes } from "@/api/apiRoutes";
+import { useQuery } from "@/hooks/useQuery";
 
 const StudentDashboard = () => {
+  const { data: stats } = useQuery(apiRoutes.dashboard.studentStats);
+
+  console.log("Dashboard stats:", stats);
+
   const userBookings = bookings.filter((b) => b.studentId === "s1");
   const upcomingBookings = userBookings.filter((b) => b.status === "confirmed");
   const completedBookings = userBookings.filter(
@@ -21,7 +27,7 @@ const StudentDashboard = () => {
           {/* Header */}
           <div className="mb-8">
             <h1 className="text-3xl font-bold text-foreground">
-              Welcome back, {currentUser.name.split(" ")[0]}! 👋
+              Welcome back, {stats?.data?.name.split(" ")[0]}! 👋
             </h1>
             <p className="text-muted-foreground mt-2">
               Here's what's happening with your learning journey.
@@ -32,18 +38,24 @@ const StudentDashboard = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
             <StatCard
               title="Upcoming Sessions"
-              value={upcomingBookings.length}
+              value={stats?.data?.upcomingSessions}
               icon={Calendar}
             />
             <StatCard
               title="Completed Sessions"
-              value={completedBookings.length}
-              change="+3 this month"
-              changeType="positive"
+              value={stats?.data?.completedSessions}
               icon={BookOpen}
             />
-            <StatCard title="Total Hours" value="12.5" icon={Clock} />
-            <StatCard title="Reviews Given" value="5" icon={Star} />
+            <StatCard
+              title="Total Hours"
+              value={stats?.data?.totalHours}
+              icon={Clock}
+            />
+            <StatCard
+              title="Reviews Given"
+              value={stats?.data?.reviewsGiven}
+              icon={Star}
+            />
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -61,9 +73,9 @@ const StudentDashboard = () => {
                 </Button>
               </div>
 
-              {upcomingBookings.length > 0 ? (
+              {stats?.data?.recentBookings?.length > 0 ? (
                 <div className="space-y-4">
-                  {upcomingBookings.map((booking) => (
+                  {stats.data.recentBookings.map((booking) => (
                     <BookingCard
                       key={booking.id}
                       booking={booking}
@@ -139,29 +151,6 @@ const StudentDashboard = () => {
                     </p>
                   </div>
                 </Link>
-              </div>
-
-              {/* Recent Activity */}
-              <h2 className="text-xl font-semibold text-foreground mt-8 mb-6">
-                Recent Activity
-              </h2>
-              <div className="glass-card rounded-xl p-4 space-y-4">
-                {completedBookings.slice(0, 3).map((booking) => (
-                  <div
-                    key={booking.id}
-                    className="flex items-center gap-3 pb-3 border-b border-border last:border-0 last:pb-0"
-                  >
-                    <div className="w-2 h-2 rounded-full bg-success" />
-                    <div className="flex-1">
-                      <p className="text-sm text-foreground">
-                        Session with {booking.tutorName}
-                      </p>
-                      <p className="text-xs text-muted-foreground">
-                        {booking.subject} • {booking.date}
-                      </p>
-                    </div>
-                  </div>
-                ))}
               </div>
             </div>
           </div>

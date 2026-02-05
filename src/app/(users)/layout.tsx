@@ -11,7 +11,7 @@ export default async function StudentDashboardLayout({
   return (
     <>
       <Navbar isLoggedIn={isLoggedIn} userData={user} />
-      {children}
+      <div className="max-w-6xl px-5 mx-auto">{children}</div>
     </>
   );
 }
