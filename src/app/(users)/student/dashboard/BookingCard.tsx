@@ -4,8 +4,14 @@ import { Calendar, Clock, Video } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Booking } from "@/lib/types";
+import { Booking, BookingStatus } from "@/lib/types";
 import { Roles } from "@/constants/roles";
+import { toast } from "sonner";
+import { useState } from "react";
+import { BaseModal } from "@/components/modals/base-modal";
+import { changeStatus } from "@/services/api.service";
+import { apiRoutes } from "@/api/apiRoutes";
+import { useRouter } from "next/navigation";
 
 interface BookingCardProps {
   booking: Booking;
@@ -14,13 +20,18 @@ interface BookingCardProps {
 }
 
 const BookingCard = ({ booking, userType, onAction }: BookingCardProps) => {
+  const [isSessionModalOpen, setIsSessionModalOpen] = useState(false);
+  const [isCompleting, setIsCompleting] = useState(false);
+  const [isCancelling, setIsCancelling] = useState(false);
+  const router = useRouter();
+
   const getStatusBadge = () => {
     switch (booking.status) {
-      case "confirmed":
+      case BookingStatus.CONFIRMED:
         return <Badge className="badge-confirmed">Confirmed</Badge>;
-      case "completed":
+      case BookingStatus.COMPLETED:
         return <Badge className="badge-completed">Completed</Badge>;
-      case "cancelled":
+      case BookingStatus.CANCELLED:
         return <Badge className="badge-cancelled">Cancelled</Badge>;
       default:
         return null;
@@ -28,9 +39,57 @@ const BookingCard = ({ booking, userType, onAction }: BookingCardProps) => {
   };
 
   const displayName =
-    userType === Roles.STUDENT ? booking.tutorName : booking.studentName;
+    userType === Roles.STUDENT ? booking?.tutor?.name : booking?.student?.name;
   const displayAvatar =
-    userType === Roles.STUDENT ? booking.tutorAvatar : booking.studentAvatar;
+    userType === Roles.STUDENT
+      ? booking?.tutor?.image
+      : booking?.student?.image;
+
+  const handleJoin = () => {
+    setIsSessionModalOpen(true);
+  };
+
+  const handleMarkAsCompleted = async () => {
+    setIsCompleting(true);
+    try {
+      await changeStatus({
+        endpoint: apiRoutes.bookings.updateStatus(booking.id),
+        data: { status: BookingStatus.COMPLETED },
+      });
+      toast.success("Session completed!", {
+        description: "You can now leave a review for your tutor.",
+      });
+      setIsSessionModalOpen(false);
+      onAction?.("completed", booking.id);
+    } catch (error) {
+      toast.error("Failed to complete session", {
+        description: "Please try again later.",
+      });
+    } finally {
+      setIsCompleting(false);
+    }
+  };
+
+  const handleCancel = async () => {
+    setIsCancelling(true);
+    try {
+      await changeStatus({
+        endpoint: apiRoutes.bookings.updateStatus(booking.id),
+        data: { status: BookingStatus.CANCELLED },
+      });
+      toast.success("Booking cancelled", {
+        description: "Your booking has been cancelled successfully.",
+      });
+      // Trigger refetch
+      onAction?.("cancelled", booking.id);
+    } catch (error) {
+      toast.error("Failed to cancel booking", {
+        description: "Please try again later.",
+      });
+    } finally {
+      setIsCancelling(false);
+    }
+  };
 
   return (
     <div className="glass-card rounded-xl p-6">
@@ -40,7 +99,7 @@ const BookingCard = ({ booking, userType, onAction }: BookingCardProps) => {
             <AvatarImage src={displayAvatar} alt={displayName} />
             <AvatarFallback className="bg-primary text-primary-foreground">
               {displayName
-                .split(" ")
+                ?.split(" ")
                 .map((n) => n[0])
                 .join("")}
             </AvatarFallback>
@@ -48,7 +107,7 @@ const BookingCard = ({ booking, userType, onAction }: BookingCardProps) => {
 
           <div>
             <h4 className="font-medium text-foreground">{displayName}</h4>
-            <p className="text-sm text-primary">{booking.subject}</p>
+            <p className="text-sm text-primary">{booking?.category?.name}</p>
           </div>
         </div>
 
@@ -58,12 +117,12 @@ const BookingCard = ({ booking, userType, onAction }: BookingCardProps) => {
       <div className="mt-4 grid grid-cols-2 gap-4">
         <div className="flex items-center gap-2 text-muted-foreground">
           <Calendar className="w-4 h-4" />
-          <span className="text-sm">{booking.date}</span>
+          <span className="text-sm">{booking.scheduleDate}</span>
         </div>
         <div className="flex items-center gap-2 text-muted-foreground">
           <Clock className="w-4 h-4" />
           <span className="text-sm">
-            {booking.time} ({booking.duration} min)
+            {booking.scheduleTime} ({booking.duration} min)
           </span>
         </div>
       </div>
@@ -74,9 +133,9 @@ const BookingCard = ({ booking, userType, onAction }: BookingCardProps) => {
         </span>
 
         <div className="flex gap-2">
-          {booking.status === "confirmed" && (
+          {booking.status === BookingStatus.CONFIRMED && (
             <>
-              <Button variant="outline" size="sm">
+              <Button onClick={handleJoin} variant="outline" size="sm">
                 <Video className="w-4 h-4 mr-1" />
                 Join
               </Button>
@@ -85,24 +144,55 @@ const BookingCard = ({ booking, userType, onAction }: BookingCardProps) => {
                   variant="ghost"
                   size="sm"
                   className="text-destructive hover:text-destructive"
-                  onClick={() => onAction("cancel", booking.id)}
+                  onClick={handleCancel}
+                  disabled={isCancelling}
                 >
-                  Cancel
+                  {isCancelling ? "Cancelling..." : "Cancel"}
                 </Button>
               )}
             </>
           )}
-          {booking.status === "completed" && userType === Roles.STUDENT && (
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => onAction?.("review", booking.id)}
-            >
-              Leave Review
-            </Button>
-          )}
+          {booking.status === BookingStatus.COMPLETED &&
+            userType === Roles.STUDENT && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => onAction?.("review", booking.id)}
+              >
+                Leave Review
+              </Button>
+            )}
         </div>
       </div>
+
+      <BaseModal
+        open={isSessionModalOpen}
+        onOpenChange={setIsSessionModalOpen}
+        title="Live Session"
+        showCloseButton={true}
+        closeButtonText="Leave Session"
+        showSubmitButton={true}
+        submitButtonText="Mark as Completed"
+        onSubmit={handleMarkAsCompleted}
+        isSubmitting={isCompleting}
+        size="md"
+      >
+        <div className="text-center py-8">
+          <div className="mb-4">
+            <Video className="w-16 h-16 mx-auto text-primary" />
+          </div>
+          <h3 className="text-2xl font-bold text-foreground mb-2">
+            Welcome to the session!
+          </h3>
+          <p className="text-lg text-muted-foreground mb-4">You&apos;re in</p>
+          <div className="glass-card p-4 rounded-lg">
+            <p className="text-sm text-muted-foreground">
+              This is a demo session. In a real application, you would be
+              connected to a video call with your tutor.
+            </p>
+          </div>
+        </div>
+      </BaseModal>
     </div>
   );
 };

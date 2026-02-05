@@ -10,7 +10,7 @@ import {
 import { Booking, Category } from "@/lib/types";
 import { Eye, Trash2 } from "lucide-react";
 import { useState } from "react";
-import ViewModal from "./view-modal";
+import BookingDetailsModal from "./view-modal";
 import DeleteModal from "@/components/modals/delete-modal";
 import { changeStatus, deleteItem } from "@/services/api.service";
 import { toast } from "sonner";
@@ -123,7 +123,7 @@ export default function BookingsPage() {
       />
 
       {showDetailModal && selectedBookingId !== null && (
-        <ViewModal
+        <BookingDetailsModal
           open={showDetailModal}
           onClose={setShowDetailModal}
           bookingId={selectedBookingId}

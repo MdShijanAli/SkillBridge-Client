@@ -52,6 +52,7 @@ export interface Booking {
   updatedAt: string;
   tutor?: TutorData;
   student?: User;
+  category?: Category;
 }
 
 export interface AvailabilitySlot {
@@ -118,3 +119,9 @@ export interface PaginationMeta {
   nextPage: number | null;
   prevPage: number | null;
 }
+
+export const BookingStatus = {
+  CONFIRMED: "CONFIRMED",
+  COMPLETED: "COMPLETED",
+  CANCELLED: "CANCELLED",
+};

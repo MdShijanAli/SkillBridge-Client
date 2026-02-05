@@ -54,7 +54,7 @@ const StudentDashboard = () => {
                   Upcoming Sessions
                 </h2>
                 <Button variant="ghost" size="sm" asChild>
-                  <Link href="/dashboard/bookings">
+                  <Link href="/student/dashboard/bookings">
                     View All
                     <ArrowRight className="w-4 h-4 ml-1" />
                   </Link>
@@ -111,7 +111,7 @@ const StudentDashboard = () => {
                 </Link>
 
                 <Link
-                  href="/dashboard/bookings"
+                  href="/student/dashboard/bookings"
                   className="glass-card rounded-xl p-4 flex items-center gap-4 hover-lift block"
                 >
                   <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center">

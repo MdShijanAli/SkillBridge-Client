@@ -7,17 +7,17 @@ import { Booking } from "@/lib/types";
 import { fetchDetails } from "@/services/api.service";
 import { useEffect, useState } from "react";
 
-interface ViewModalProps {
+interface BookingDetailsModalProps {
   open: boolean;
   onClose: (open: boolean) => void;
   bookingId: string | number | null;
 }
 
-export default function ViewModal({
+export default function BookingDetailsModal({
   open,
   onClose,
   bookingId,
-}: ViewModalProps) {
+}: BookingDetailsModalProps) {
   const [booking, setBooking] = useState<Booking | null>(null);
   const [isBookingLoading, setIsBookingLoading] = useState(false);
 

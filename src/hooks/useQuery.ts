@@ -28,84 +28,83 @@ export function useQuery<T = any>(
     isError: false,
   });
 
+  const fetchData = async (signal?: AbortSignal) => {
+    setState((prev) => ({ ...prev, isLoading: true }));
+
+    try {
+      // Build query string from params
+      const queryParams = new URLSearchParams();
+      if (params) {
+        Object.entries(params).forEach(([key, value]) => {
+          if (value !== undefined && value !== null && value !== "") {
+            queryParams.append(key, String(value));
+          }
+        });
+      }
+
+      const queryString = queryParams.toString();
+      const url = queryString ? `${apiRoute}?${queryString}` : apiRoute;
+
+      console.log("Fetching data from:", url);
+
+      const response = await fetch(url, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        signal,
+        cache: "no-store",
+      });
+
+      console.log("Received response:", response);
+
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status} ${response.statusText}`);
+      }
+
+      const data = await response.json();
+
+      setState({
+        data,
+        isLoading: false,
+        error: null,
+        isError: false,
+      });
+    } catch (error) {
+      if (error instanceof Error && error.name !== "AbortError") {
+        const errorMessage =
+          error instanceof Error ? error.message : String(error);
+        console.error("Error fetching data:", errorMessage);
+        setState({
+          data: null,
+          isLoading: false,
+          error: errorMessage,
+          isError: true,
+        });
+      }
+    }
+  };
+
   useEffect(() => {
     if (!enabled) return;
 
-    let isMounted = true;
     const controller = new AbortController();
 
-    const fetchData = async () => {
-      setState((prev) => ({ ...prev, isLoading: true }));
-
-      try {
-        // Build query string from params
-        const queryParams = new URLSearchParams();
-        if (params) {
-          Object.entries(params).forEach(([key, value]) => {
-            if (value !== undefined && value !== null && value !== "") {
-              queryParams.append(key, String(value));
-            }
-          });
-        }
-
-        const queryString = queryParams.toString();
-        const url = queryString ? `${apiRoute}?${queryString}` : apiRoute;
-
-        console.log("Fetching data from:", url);
-
-        const response = await fetch(url, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-          signal: controller.signal,
-          cache: "no-store",
-        });
-
-        if (!response.ok) {
-          throw new Error(`Error: ${response.status} ${response.statusText}`);
-        }
-
-        const data = await response.json();
-
-        if (isMounted) {
-          setState({
-            data,
-            isLoading: false,
-            error: null,
-            isError: false,
-          });
-        }
-      } catch (error) {
-        if (
-          isMounted &&
-          error instanceof Error &&
-          error.name !== "AbortError"
-        ) {
-          const errorMessage =
-            error instanceof Error ? error.message : String(error);
-          console.error("Error fetching data:", errorMessage);
-          setState({
-            data: null,
-            isLoading: false,
-            error: errorMessage,
-            isError: true,
-          });
-        }
-      }
-    };
-
-    fetchData();
+    fetchData(controller.signal);
 
     return () => {
-      isMounted = false;
       controller.abort();
     };
   }, [apiRoute, JSON.stringify(params), enabled, refetchOnMount]);
 
-  const refetch = () => {
+  const refetch = async () => {
     setState((prev) => ({ ...prev, isLoading: true }));
+    try {
+      await fetchData();
+    } catch (error) {
+      console.error("Error during refetch:", error);
+    }
   };
 
   return {
