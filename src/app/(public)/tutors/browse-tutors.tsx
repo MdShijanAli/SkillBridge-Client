@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Search, Filter, SlidersHorizontal, X, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -30,7 +30,7 @@ const BrowseTutors = () => {
   const categoryFilter = searchParams?.get("category") || "";
 
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState(categoryFilter);
+  const [selectedCategory, setSelectedCategory] = useState("");
   const [priceRange, setPriceRange] = useState([0, 200]);
   const [sortBy, setSortBy] = useState("averageRating");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
@@ -57,6 +57,23 @@ const BrowseTutors = () => {
   const { data: categories } = useQuery(apiRoutes.categories.getAll);
 
   console.log("Categories fetched:", categories);
+
+  useEffect(() => {
+    if (categoryFilter) {
+      console.log("Applying category filter from URL:", categoryFilter);
+      const selectedCategory = categories?.data?.find(
+        (cat: any) => String(cat.name) === categoryFilter,
+      );
+      if (selectedCategory) {
+        setSelectedCategory(String(selectedCategory.id));
+      } else {
+        console.warn(
+          `Category "${categoryFilter}" not found in fetched categories.`,
+        );
+        setSelectedCategory("");
+      }
+    }
+  }, [categoryFilter, categories]);
 
   console.log("Selected Category:", selectedCategory);
 

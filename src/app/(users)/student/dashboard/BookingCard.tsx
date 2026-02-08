@@ -23,7 +23,6 @@ const BookingCard = ({ booking, userType, onAction }: BookingCardProps) => {
   const [isSessionModalOpen, setIsSessionModalOpen] = useState(false);
   const [isCompleting, setIsCompleting] = useState(false);
   const [isCancelling, setIsCancelling] = useState(false);
-  const router = useRouter();
 
   const getStatusBadge = () => {
     switch (booking.status) {
