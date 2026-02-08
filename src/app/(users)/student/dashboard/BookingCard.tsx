@@ -119,7 +119,7 @@ const BookingCard = ({ booking, userType, onAction }: BookingCardProps) => {
 
           <div>
             <h4 className="font-medium text-foreground">{displayName}</h4>
-            <p className="text-sm text-primary">{booking?.category?.name}</p>
+            <p className="text-sm text-primary">{booking?.subject}</p>
           </div>
         </div>
 

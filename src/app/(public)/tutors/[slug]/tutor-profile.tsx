@@ -377,11 +377,11 @@ const TutorProfile = ({ tutorData }: { tutorData: TutorData }) => {
                 </TabsContent>
 
                 <TabsContent value="reviews" className="mt-6">
-                  {tutorData?.tutorProfile?.totalReviews?.length > 0 ? (
+                  {tutorData?.receivedReviews?.length > 0 ? (
                     <div className="space-y-4">
-                      {/* {tutorData.tutorProfile.reviews.map((review) => (
+                      {tutorData.receivedReviews.map((review) => (
                         <ReviewCard key={review.id} review={review} />
-                      ))} */}
+                      ))}
                     </div>
                   ) : (
                     <div className="text-center py-8">

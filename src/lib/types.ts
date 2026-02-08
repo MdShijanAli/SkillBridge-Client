@@ -40,6 +40,7 @@ export interface Booking {
   tutorId: string;
   categoryId: number;
   scheduleDate: string;
+  subject: string;
   scheduleTime: string;
   duration: number;
   status: "CONFIRMED" | "PENDING" | "COMPLETED" | "CANCELLED";
@@ -98,6 +99,7 @@ export interface TutorData {
   totalSessions?: number;
   updatedAt: string;
   tutorProfile?: TutorProfile;
+  receivedReviews: Review[];
 }
 
 export interface TutorProfile {
