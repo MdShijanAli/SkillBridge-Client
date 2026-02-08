@@ -49,7 +49,7 @@ export default function Error({
         }}
       />
 
-      <div className="container mx-auto px-4 relative z-10">
+      <div className="max-w-6xl px-5 mx-auto relative z-10">
         <div className="max-w-3xl mx-auto text-center">
           {/* Logo */}
           <Link href="/" className="inline-flex items-center gap-2 mb-8 group">

@@ -43,7 +43,7 @@ const TutorDashboard = ({ userData }: { userData: User }) => {
   return (
     <div className="min-h-screen bg-background">
       <main className="pt-24 pb-16">
-        <div className="container mx-auto px-4">
+        <div className="max-w-6xl px-5 mx-auto">
           {/* Header */}
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
             <div>

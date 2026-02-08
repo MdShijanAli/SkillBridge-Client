@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 export function CTASection() {
   return (
     <section className="py-20 md:py-28">
-      <div className="container mx-auto px-4">
+      <div className="max-w-6xl px-5 mx-auto">
         <div className="relative glass-card rounded-3xl p-12 md:p-20 text-center overflow-hidden border border-primary/20">
           {/* Background Effects */}
           <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-cyan-500/10" />

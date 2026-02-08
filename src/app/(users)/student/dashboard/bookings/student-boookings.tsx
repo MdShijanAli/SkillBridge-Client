@@ -46,7 +46,7 @@ const StudentBookings = ({ user }: { user: any }) => {
   return (
     <div className="min-h-screen bg-background">
       <main className="pt-24 pb-16">
-        <div className="container mx-auto px-4">
+        <div className="max-w-6xl px-5 mx-auto">
           <h1 className="text-3xl font-bold text-foreground mb-8">
             My Bookings
           </h1>

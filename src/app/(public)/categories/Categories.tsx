@@ -21,7 +21,7 @@ const Categories = () => {
     <div className="min-h-screen bg-background">
       {/* Hero Section */}
       <section className="pt-24 pb-12 hero-pattern">
-        <div className="container mx-auto px-4">
+        <div className="max-w-6xl px-5 mx-auto">
           <div className="text-center max-w-3xl mx-auto">
             <h1 className="text-4xl md:text-5xl font-bold mb-4">
               Explore <span className="text-gradient-primary">Categories</span>
@@ -68,7 +68,7 @@ const Categories = () => {
 
       {/* Categories Grid */}
       <section className="py-16">
-        <div className="container mx-auto px-4">
+        <div className="max-w-6xl px-5 mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {categories.map((category) => (
               <Link
@@ -108,7 +108,7 @@ const Categories = () => {
 
       {/* Popular Subjects Section */}
       <section className="py-16 bg-muted/30">
-        <div className="container mx-auto px-4">
+        <div className="max-w-6xl px-5 mx-auto">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold mb-4">Popular Subjects</h2>
             <p className="text-muted-foreground max-w-2xl mx-auto">
@@ -148,7 +148,7 @@ const Categories = () => {
 
       {/* CTA Section */}
       <section className="py-16">
-        <div className="container mx-auto px-4">
+        <div className="max-w-6xl px-5 mx-auto">
           <div className="glass-card rounded-3xl p-8 md:p-12 text-center max-w-4xl mx-auto border border-border/50">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
               Can't Find Your Subject?

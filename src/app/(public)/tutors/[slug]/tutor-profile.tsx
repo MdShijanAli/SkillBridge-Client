@@ -141,7 +141,7 @@ const TutorProfile = ({ tutorData }: { tutorData: TutorData }) => {
   if (!tutorData) {
     return (
       <div className="min-h-screen bg-background">
-        <div className="pt-24 pb-16 container mx-auto px-4 text-center">
+        <div className="pt-24 pb-16 max-w-6xl px-5 mx-auto text-center">
           <div className="glass-card rounded-xl p-12 max-w-md mx-auto">
             <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center mx-auto mb-4">
               <Users className="w-8 h-8 text-muted-foreground" />
@@ -164,7 +164,7 @@ const TutorProfile = ({ tutorData }: { tutorData: TutorData }) => {
   return (
     <div className="min-h-screen bg-background">
       <main className="pt-24 pb-16">
-        <div className="container mx-auto px-4">
+        <div className="max-w-6xl px-5 mx-auto">
           <Link
             href="/tutors"
             className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground mb-6 transition-colors"

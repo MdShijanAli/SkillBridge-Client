@@ -12,7 +12,7 @@ export default async function PublicLayout({
   return (
     <>
       <Navbar isLoggedIn={isLoggedIn} userData={user} />
-      <div className="max-w-6xl px-5 mx-auto">{children}</div>
+      {children}
       <Footer />
     </>
   );

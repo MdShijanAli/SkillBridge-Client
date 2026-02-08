@@ -66,8 +66,6 @@ export interface Review {
   id: string;
   tutorId: string;
   studentId: string;
-  studentName: string;
-  studentAvatar: string;
   rating: number;
   comment: string;
   date: string;

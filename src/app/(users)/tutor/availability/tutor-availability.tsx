@@ -206,7 +206,7 @@ const TutorAvailability = ({
   return (
     <div className="min-h-screen bg-background">
       <main className="pt-24 pb-16">
-        <div className="container mx-auto px-4 max-w-4xl">
+        <div className="max-w-6xl px-5 mx-auto max-w-4xl">
           <div className="glass-card rounded-2xl p-6 md:p-8 mb-8">
             <div className="flex items-start justify-between flex-col sm:flex-row gap-4">
               <div className="flex items-start gap-4">
