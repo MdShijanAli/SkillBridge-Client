@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import {
   Star,
   CheckCircle,
@@ -43,12 +42,13 @@ const bookingSchema = z.object({
   duration: z.number().min(30, "Minimum duration is 30 minutes"),
   price: z.string().min(1, "Price is required"),
   tutorId: z.string().min(1, "Tutor ID is required"),
-  categoryId: z.number().min(1, "Please select a category"),
+  subject: z.string().min(1, "Please select a subject"),
 });
 
 type BookingFormData = z.infer<typeof bookingSchema>;
 
 const TutorProfile = ({ tutorData }: { tutorData: TutorData }) => {
+  console.log("Rendering TutorProfile with data:", tutorData);
   const form = useForm({
     defaultValues: {
       scheduleDate: "",
@@ -56,7 +56,7 @@ const TutorProfile = ({ tutorData }: { tutorData: TutorData }) => {
       duration: 60,
       price: String(tutorData?.tutorProfile?.hourlyRate || 0),
       tutorId: tutorData?.id || "",
-      categoryId: 0,
+      subject: "",
     } as BookingFormData,
     onSubmit: async ({ value }) => {
       const toastId = toast.loading("Booking your session...");
@@ -429,11 +429,11 @@ const TutorProfile = ({ tutorData }: { tutorData: TutorData }) => {
 
                       return (
                         <div className="space-y-4">
-                          {/* Category Selection */}
+                          {/* Subject Selection */}
                           <form.Field
-                            name="categoryId"
+                            name="subject"
                             validators={{
-                              onChange: bookingSchema.shape.categoryId,
+                              onChange: bookingSchema.shape.subject,
                             }}
                             children={(field) => {
                               const isInvalid =
@@ -442,7 +442,7 @@ const TutorProfile = ({ tutorData }: { tutorData: TutorData }) => {
                               return (
                                 <div>
                                   <label className="text-sm font-medium text-foreground mb-2 block">
-                                    Select Category *
+                                    Select Subject *
                                   </label>
                                   <Select
                                     value={
@@ -451,23 +451,22 @@ const TutorProfile = ({ tutorData }: { tutorData: TutorData }) => {
                                         : undefined
                                     }
                                     onValueChange={(val) => {
-                                      field.handleChange(Number(val));
+                                      field.handleChange(val);
                                       form.setFieldValue("price", totalPrice);
                                     }}
                                   >
                                     <SelectTrigger className="bg-secondary/50">
-                                      <SelectValue placeholder="Choose a category" />
+                                      <SelectValue placeholder="Choose a subject" />
                                     </SelectTrigger>
                                     <SelectContent>
-                                      {tutorData?.tutorProfile?.categories?.map(
-                                        (cat: any) => (
+                                      {tutorData?.tutorProfile?.subjects?.map(
+                                        (cat: any, index: number) => (
                                           <SelectItem
-                                            key={cat.categoryId}
-                                            value={String(cat.categoryId)}
+                                            key={index}
+                                            value={String(cat)}
                                           >
                                             <span className="flex items-center gap-2">
-                                              <span>{cat?.category?.icon}</span>
-                                              {cat?.category?.name}
+                                              {cat}
                                             </span>
                                           </SelectItem>
                                         ),
