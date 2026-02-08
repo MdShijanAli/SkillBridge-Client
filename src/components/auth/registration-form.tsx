@@ -47,6 +47,7 @@ const RegistrationForm = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const searchParams = useSearchParams();
 
   const form = useForm({
     defaultValues: {
@@ -54,7 +55,7 @@ const RegistrationForm = () => {
       email: "",
       password: "",
       confirmPassword: "",
-      role: Roles.STUDENT,
+      role: searchParams.get("role") === "tutor" ? Roles.TUTOR : Roles.STUDENT,
     },
     validators: {
       onSubmit: RegistrationFormSchema,
