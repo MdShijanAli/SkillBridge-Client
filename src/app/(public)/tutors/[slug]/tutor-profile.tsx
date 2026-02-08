@@ -227,7 +227,8 @@ const TutorProfile = ({ tutorData }: { tutorData: TutorData }) => {
                       <div className="flex items-center gap-1 text-muted-foreground">
                         <Clock className="w-4 h-4" />
                         <span>
-                          {tutorData?.tutorProfile?.yearsExperience} experience
+                          {tutorData?.tutorProfile?.yearsExperience}+ years
+                          experience
                         </span>
                       </div>
                       <div className="flex items-center gap-1 text-muted-foreground">
@@ -241,7 +242,7 @@ const TutorProfile = ({ tutorData }: { tutorData: TutorData }) => {
                 </div>
 
                 {/* Categories */}
-                {tutorData?.tutorProfile?.categories.length > 0 && (
+                {(tutorData?.tutorProfile?.categories.length ?? 0) > 0 && (
                   <div className="mt-4 flex flex-wrap gap-2">
                     <span className="text-sm text-muted-foreground">
                       Categories:
@@ -250,7 +251,7 @@ const TutorProfile = ({ tutorData }: { tutorData: TutorData }) => {
                       return (
                         <Link
                           key={categoryName.id}
-                          href={`/tutors?category=${encodeURIComponent(categoryName?.category?.name)}`}
+                          href={`/tutors?category=${encodeURIComponent(categoryName?.category?.name || "")}`}
                           className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-primary/10 text-primary text-sm font-medium hover:bg-primary/20 transition-colors"
                         >
                           <span>{categoryName?.category?.icon}</span>
