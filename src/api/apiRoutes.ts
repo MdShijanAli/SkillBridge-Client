@@ -63,4 +63,8 @@ export const apiRoutes = {
     tutorStats: createUrl("dashboard/tutor-stats"),
     adminStats: createUrl("dashboard/admin-stats"),
   },
+
+  subjects: {
+    popularSubjects: createUrl("subjects/popular"),
+  },
 };

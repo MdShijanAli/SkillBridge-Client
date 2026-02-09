@@ -20,25 +20,28 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import TutorCard from "@/components/common/TutorCard";
 import { useQuery } from "@/hooks/useQuery";
 import { apiRoutes } from "@/api/apiRoutes";
 
 const BrowseTutors = () => {
   const searchParams = useSearchParams();
+  const router = useRouter();
+  const pathname = usePathname();
   const categoryFilter = searchParams?.get("category") || "";
+  const searchFilter = searchParams?.get("search") || "";
 
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState(searchFilter);
+  const [debouncedSearch, setDebouncedSearch] = useState(searchFilter);
   const [selectedCategory, setSelectedCategory] = useState("");
   const [priceRange, setPriceRange] = useState([0, 200]);
   const [sortBy, setSortBy] = useState("averageRating");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
   const [sortValue, setSortValue] = useState("rating");
 
-  // Build query params for API
   const queryParams = {
-    search: searchQuery,
+    search: debouncedSearch,
     categoryId: selectedCategory,
     minPrice: priceRange[0],
     maxPrice: priceRange[1],
@@ -57,6 +60,34 @@ const BrowseTutors = () => {
   const { data: categories } = useQuery(apiRoutes.categories.getAll);
 
   console.log("Categories fetched:", categories);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearch(searchQuery);
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, [searchQuery]);
+
+  useEffect(() => {
+    const params = new URLSearchParams(searchParams?.toString());
+
+    if (debouncedSearch) {
+      params.set("search", debouncedSearch);
+    } else {
+      params.delete("search");
+    }
+
+    const newUrl = `${pathname}?${params.toString()}`;
+    router.replace(newUrl);
+  }, [debouncedSearch, pathname, router]);
+
+  useEffect(() => {
+    if (searchFilter && searchFilter !== searchQuery) {
+      setSearchQuery(searchFilter);
+      setDebouncedSearch(searchFilter);
+    }
+  }, [searchFilter]);
 
   useEffect(() => {
     if (categoryFilter) {
@@ -97,16 +128,18 @@ const BrowseTutors = () => {
   const activeFiltersCount = [
     selectedCategory,
     priceRange[0] > 0 || priceRange[1] < 200,
+    searchQuery.trim() !== "",
   ].filter(Boolean).length;
 
   const clearFilters = () => {
     setSelectedCategory("");
     setPriceRange([0, 200]);
+    setSearchQuery("");
+    setDebouncedSearch("");
   };
 
   const FilterContent = () => (
     <div className="space-y-3">
-      {/* Category Filter */}
       <div>
         <label className="text-sm font-semibold text-foreground mb-3 block">
           Category
@@ -175,7 +208,7 @@ const BrowseTutors = () => {
             <h1 className="text-3xl md:text-4xl font-bold text-foreground">
               Find Your Perfect Tutor
             </h1>
-            <p className="text-muted-foreground mt-2 flex items-center gap-2">
+            <p className="text-muted-foreground mt-2 flex items-center gap-2 flex-wrap">
               <Users className="w-4 h-4" />
               <span>{tutorsLists.length} tutors available</span>
               {selectedCategory && (
@@ -187,6 +220,18 @@ const BrowseTutors = () => {
                         (cat: any) => String(cat.id) === selectedCategory,
                       )?.name
                     }
+                  </Badge>
+                </>
+              )}
+              {debouncedSearch && (
+                <>
+                  <span>•</span>
+                  <Badge
+                    variant="secondary"
+                    className="flex items-center gap-1"
+                  >
+                    <Search className="w-3 h-3" />
+                    {debouncedSearch}
                   </Badge>
                 </>
               )}

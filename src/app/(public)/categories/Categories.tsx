@@ -58,6 +58,16 @@ const Categories = () => {
     limit,
   });
 
+  const { data: popularSubjectsResponse, isLoading: isLoadingSubjects } =
+    useQuery<{
+      success: boolean;
+      message: string;
+      data: Array<{
+        name: string;
+        tutorCount: number;
+      }>;
+    }>(apiRoutes.subjects.popularSubjects);
+
   console.log("Fetched categories:", categoriesResponse);
 
   const categories =
@@ -212,33 +222,31 @@ const Categories = () => {
             </p>
           </div>
 
-          <div className="flex flex-wrap justify-center gap-3">
-            {[
-              "Calculus",
-              "Python",
-              "Spanish",
-              "Physics",
-              "Piano",
-              "SAT Prep",
-              "JavaScript",
-              "French",
-              "Statistics",
-              "Data Structures",
-              "Chemistry",
-              "Guitar",
-              "TOEFL",
-              "Linear Algebra",
-              "Business Strategy",
-            ].map((subject) => (
-              <Link
-                key={subject}
-                href={`/tutors?search=${encodeURIComponent(subject)}`}
-                className="px-4 py-2 rounded-full bg-background border border-border hover:border-primary hover:bg-primary/5 transition-all text-sm font-medium"
-              >
-                {subject}
-              </Link>
-            ))}
-          </div>
+          {isLoadingSubjects ? (
+            <div className="flex justify-center items-center py-10">
+              <Loader2 className="w-6 h-6 animate-spin text-primary" />
+            </div>
+          ) : popularSubjectsResponse?.data &&
+            popularSubjectsResponse.data.length > 0 ? (
+            <div className="flex flex-wrap justify-center gap-3">
+              {popularSubjectsResponse.data.map((subject) => (
+                <Link
+                  key={subject.name}
+                  href={`/tutors?search=${encodeURIComponent(subject.name)}`}
+                  className="group px-4 py-2 rounded-full bg-background border border-border hover:border-primary hover:bg-primary/5 transition-all text-sm font-medium flex items-center gap-2"
+                >
+                  <span>{subject.name}</span>
+                  <span className="text-xs text-muted-foreground group-hover:text-primary transition-colors">
+                    ({subject.tutorCount})
+                  </span>
+                </Link>
+              ))}
+            </div>
+          ) : (
+            <p className="text-center text-muted-foreground">
+              No popular subjects available
+            </p>
+          )}
         </div>
       </section>
 
