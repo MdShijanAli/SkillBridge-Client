@@ -26,6 +26,12 @@ const ReviewDialog = ({
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async () => {
+    console.log("Submitting review with data:", {
+      bookingId: booking?.id,
+      rating,
+      comment,
+      tutorId: booking?.tutor?.id,
+    });
     if (!booking) return;
 
     if (comment.trim().length < 10) {

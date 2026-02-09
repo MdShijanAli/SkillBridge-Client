@@ -2,7 +2,6 @@
 
 import { Calendar, BookOpen, Star, Clock, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { bookings } from "@/lib/data";
 import StatCard from "@/components/dashboard/StatCard";
 import Link from "next/link";
 import BookingCard from "./BookingCard";

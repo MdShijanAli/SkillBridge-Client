@@ -162,25 +162,49 @@ const BookingCard = ({ booking, userType, onAction }: BookingCardProps) => {
         </span>
 
         <div className="flex gap-2">
-          {booking.status === BookingStatus.CONFIRMED && (
-            <>
-              <Button onClick={handleJoin} variant="outline" size="sm">
-                <Video className="w-4 h-4 mr-1" />
-                Join
-              </Button>
-              {onAction && userType === Roles.STUDENT && (
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="text-destructive hover:text-destructive"
-                  onClick={handleCancel}
-                  disabled={isCancelling}
-                >
-                  {isCancelling ? "Cancelling..." : "Cancel"}
+          {booking.status === BookingStatus.CONFIRMED &&
+            (booking.review ? (
+              <div className="flex flex-col gap-2 max-w-xs">
+                <div className="flex items-center gap-2">
+                  <div className="flex gap-0.5">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <Star
+                        key={star}
+                        className={`w-4 h-4 ${
+                          star <= booking.review!.rating
+                            ? "text-accent fill-accent"
+                            : "text-muted-foreground"
+                        }`}
+                      />
+                    ))}
+                  </div>
+                  <Badge variant="secondary" className="text-xs">
+                    Reviewed
+                  </Badge>
+                </div>
+                <p className="text-xs text-muted-foreground line-clamp-2">
+                  {booking.review.comment}
+                </p>
+              </div>
+            ) : (
+              <>
+                <Button onClick={handleJoin} variant="outline" size="sm">
+                  <Video className="w-4 h-4 mr-1" />
+                  Join
                 </Button>
-              )}
-            </>
-          )}
+                {onAction && userType === Roles.STUDENT && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="text-destructive hover:text-destructive"
+                    onClick={handleCancel}
+                    disabled={isCancelling}
+                  >
+                    {isCancelling ? "Cancelling..." : "Cancel"}
+                  </Button>
+                )}
+              </>
+            ))}
           {booking.status === BookingStatus.COMPLETED &&
             userType === Roles.STUDENT &&
             (booking.review ? (
