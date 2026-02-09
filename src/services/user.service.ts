@@ -15,7 +15,7 @@ export const userService = {
         cache: "no-store",
       });
       const session = await res.json();
-      console.log("Current session:", session);
+      // console.log("Current session:", session);
       if (!session || !session.session) {
         return { data: null, message: "No active session" };
       }
