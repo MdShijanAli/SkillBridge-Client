@@ -130,7 +130,7 @@ const TutorResources = () => {
           <h2 className="text-3xl font-bold text-center mb-12">
             Popular Guides
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-w-5xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 max-w-5xl mx-auto">
             {guides.map((guide) => (
               <div
                 key={guide.title}
@@ -172,7 +172,7 @@ const TutorResources = () => {
                 key={tip.title}
                 className="glass-card p-6 rounded-xl border border-border/50"
               >
-                <div className="flex items-start gap-4">
+                <div className="flex items-start gap-3">
                   <span className="text-2xl font-bold text-primary">
                     {index + 1}
                   </span>
@@ -196,7 +196,7 @@ const TutorResources = () => {
           <p className="text-muted-foreground mb-8 max-w-xl mx-auto">
             Our support team is here to help you succeed. Reach out anytime.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <Button variant="hero" asChild>
               <Link href="/contact">
                 Contact Support <ArrowRight className="w-4 h-4 ml-2" />

@@ -183,7 +183,7 @@ const Navbar = ({ isLoggedIn = false, userData }: NavbarProps) => {
         {/* Mobile Menu */}
         {isMobileMenuOpen && (
           <div className="md:hidden py-4 border-t border-border/50 animate-fade-in">
-            <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-3">
               <Link
                 href="/tutors"
                 className="text-muted-foreground hover:text-foreground transition-colors"

@@ -61,9 +61,9 @@ export function AdminTopbar({ onMobileMenuOpen, userData }: AdminTopbarProps) {
 
   return (
     <header className="sticky top-0 z-30 h-16 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-border/50">
-      <div className="h-full px-4 flex items-center justify-between gap-4">
+      <div className="h-full px-4 flex items-center justify-between gap-3">
         {/* Left Side */}
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3">
           <Button
             variant="ghost"
             size="sm"

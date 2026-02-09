@@ -74,7 +74,7 @@ const StudentDashboard = () => {
               </div>
 
               {stats?.data?.recentBookings?.length > 0 ? (
-                <div className="space-y-4">
+                <div className="space-y-3">
                   {stats.data.recentBookings.map((booking) => (
                     <BookingCard
                       key={booking.id}
@@ -104,10 +104,10 @@ const StudentDashboard = () => {
               <h2 className="text-xl font-semibold text-foreground mb-6">
                 Quick Actions
               </h2>
-              <div className="space-y-4">
+              <div className="space-y-3">
                 <Link
                   href="/tutors"
-                  className="glass-card rounded-xl p-4 flex items-center gap-4 hover-lift block"
+                  className="glass-card rounded-xl p-4 flex items-center gap-3 hover-lift block"
                 >
                   <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center">
                     <BookOpen className="w-6 h-6 text-primary" />
@@ -124,7 +124,7 @@ const StudentDashboard = () => {
 
                 <Link
                   href="/student/dashboard/bookings"
-                  className="glass-card rounded-xl p-4 flex items-center gap-4 hover-lift block"
+                  className="glass-card rounded-xl p-4 flex items-center gap-3 hover-lift block"
                 >
                   <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center">
                     <Calendar className="w-6 h-6 text-primary" />
@@ -139,7 +139,7 @@ const StudentDashboard = () => {
 
                 <Link
                   href="/student/profile"
-                  className="glass-card rounded-xl p-4 flex items-center gap-4 hover-lift block"
+                  className="glass-card rounded-xl p-4 flex items-center gap-3 hover-lift block"
                 >
                   <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center">
                     <Star className="w-6 h-6 text-primary" />

@@ -79,7 +79,7 @@ export function FeaturedTutorsSection() {
           {featuredTutors.map((tutor) => (
             <Link key={tutor.id} href={`/tutors/${tutor.id}`} className="group">
               <div className="glass-card p-6 rounded-2xl border border-border/50 hover:border-primary/30 transition-all hover:-translate-y-2 hover:shadow-2xl hover:shadow-primary/10 h-full">
-                <div className="flex items-start gap-4 mb-4">
+                <div className="flex items-start gap-3 mb-4">
                   <div className="relative">
                     <img
                       src={tutor.image}

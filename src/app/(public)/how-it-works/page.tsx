@@ -153,7 +153,7 @@ const HowItWorks = () => {
               >
                 {/* Content */}
                 <div className="flex-1 space-y-3">
-                  <div className="flex items-center gap-4">
+                  <div className="flex items-center gap-3">
                     <span className="text-5xl md:text-6xl font-bold text-primary/20">
                       {step.number}
                     </span>
@@ -238,7 +238,7 @@ const HowItWorks = () => {
             </p>
           </div>
 
-          <div className="max-w-3xl mx-auto space-y-4">
+          <div className="max-w-3xl mx-auto space-y-3">
             {faqs.map((faq) => (
               <div key={faq.question} className="glass-card rounded-xl p-6">
                 <h3 className="font-semibold text-foreground mb-2">
@@ -262,7 +262,7 @@ const HowItWorks = () => {
               Join thousands of students who have transformed their learning
               journey with SkillBridge.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <div className="flex flex-col sm:flex-row gap-3 justify-center">
               <Button variant="hero" size="xl" asChild>
                 <Link href="/register">
                   Get Started Free

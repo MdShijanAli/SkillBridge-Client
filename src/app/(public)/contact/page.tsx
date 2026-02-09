@@ -205,7 +205,7 @@ const Contact = () => {
               </div>
 
               <form onSubmit={handleSubmit(onSubmit)} className="space-y-3">
-                <div className="grid sm:grid-cols-2 gap-4">
+                <div className="grid sm:grid-cols-2 gap-3">
                   <div className="space-y-2">
                     <Label htmlFor="name">Your Name</Label>
                     <Input

@@ -9,7 +9,7 @@ const Footer = () => {
       <div className="max-w-6xl mx-auto px-5 py-12">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* Brand */}
-          <div className="space-y-4">
+          <div className="space-y-3">
             <Link href="/" className="flex items-center gap-2">
               <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-primary to-cyan-400 flex items-center justify-center">
                 <GraduationCap className="w-5 h-5 text-primary-foreground" />
@@ -22,7 +22,7 @@ const Footer = () => {
               Connect with expert tutors and unlock your learning potential.
               Quality education, accessible anywhere.
             </p>
-            <div className="flex gap-4">
+            <div className="flex gap-3">
               <a
                 href="#"
                 className="text-muted-foreground hover:text-primary transition-colors"

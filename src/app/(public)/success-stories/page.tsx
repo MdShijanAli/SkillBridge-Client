@@ -109,7 +109,7 @@ const SuccessStories = () => {
             {stats.map((stat) => (
               <div
                 key={stat.label}
-                className="flex items-center justify-center gap-4"
+                className="flex items-center justify-center gap-3"
               >
                 <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
                   <stat.icon className="w-6 h-6 text-primary" />
@@ -201,7 +201,7 @@ const SuccessStories = () => {
             Join thousands of students who have transformed their learning with
             SkillBridge.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <Button variant="hero" size="lg" asChild>
               <Link href="/tutors">
                 Find a Tutor <ArrowRight className="w-4 h-4 ml-2" />

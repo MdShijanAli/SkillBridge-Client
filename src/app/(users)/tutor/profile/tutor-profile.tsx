@@ -231,7 +231,7 @@ const TutorProfile = ({ userData }: { userData: any }) => {
             {/* Categories */}
             <form.Field name="categoryIds">
               {(field) => (
-                <div className="glass-card p-6 rounded-xl space-y-4 relative z-50">
+                <div className="glass-card p-6 rounded-xl space-y-3 relative z-50">
                   <h2 className="text-lg font-semibold">Categories</h2>
                   <p className="text-sm text-muted-foreground">
                     Select categories that match your expertise
@@ -255,7 +255,7 @@ const TutorProfile = ({ userData }: { userData: any }) => {
             {/* Subjects */}
             <form.Field name="subjects">
               {(field) => (
-                <div className="glass-card p-6 rounded-xl space-y-4">
+                <div className="glass-card p-6 rounded-xl space-y-3">
                   <h2 className="text-lg font-semibold">Subjects</h2>
 
                   <div className="flex flex-wrap gap-2">
@@ -298,7 +298,7 @@ const TutorProfile = ({ userData }: { userData: any }) => {
             {/* Languages */}
             <form.Field name="languages">
               {(field) => (
-                <div className="glass-card p-6 rounded-xl space-y-4">
+                <div className="glass-card p-6 rounded-xl space-y-3">
                   <h2 className="text-lg font-semibold">Languages</h2>
 
                   <div className="flex flex-wrap gap-2">

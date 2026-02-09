@@ -85,7 +85,7 @@ export default function NotFound() {
           </p>
 
           {/* Action Buttons */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
+          <div className="flex flex-col sm:flex-row gap-3 justify-center mb-12">
             <Button
               className="h-12 px-8 bg-gradient-to-r from-primary to-cyan-400 hover:from-primary/90 hover:to-cyan-400/90 text-white font-semibold shadow-lg shadow-primary/25 hover:shadow-primary/40 transition-all hover:scale-105"
               asChild
@@ -114,7 +114,7 @@ export default function NotFound() {
               <BookOpen className="w-5 h-5 text-primary" />
               Popular Pages
             </h3>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
               {[
                 { label: "Home", href: "/" },
                 { label: "Find Tutors", href: "/tutors" },

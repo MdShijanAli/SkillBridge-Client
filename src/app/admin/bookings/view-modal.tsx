@@ -93,7 +93,7 @@ export default function BookingDetailsModal({
               <h3 className="text-sm font-semibold text-gray-900 mb-3">
                 Schedule Information
               </h3>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-sm">
                 <div>
                   <p className="text-gray-500 mb-1">Date</p>
                   <p className="font-medium text-gray-900">
@@ -134,7 +134,7 @@ export default function BookingDetailsModal({
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
                   <div>
                     <p className="text-gray-500 mb-1">Name</p>
                     <p className="font-medium text-gray-900">
@@ -201,9 +201,9 @@ export default function BookingDetailsModal({
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="space-y-4">
+                <div className="space-y-3">
                   {/* Basic Info */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
                     <div>
                       <p className="text-gray-500 mb-1">Name</p>
                       <p className="font-medium text-gray-900">
@@ -255,7 +255,7 @@ export default function BookingDetailsModal({
                       <h4 className="text-sm font-semibold text-gray-700 mb-3">
                         Professional Details
                       </h4>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
                         <div className="bg-gradient-to-br from-green-50 to-green-100 p-3 rounded-lg">
                           <p className="text-green-700 text-xs mb-1">
                             Hourly Rate
@@ -425,7 +425,7 @@ export default function BookingDetailsModal({
             )}
 
             {/* Timestamps */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm pt-4 border-t">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm pt-4 border-t">
               <div>
                 <p className="text-gray-500 mb-1">Booking Created</p>
                 <p className="text-gray-900">

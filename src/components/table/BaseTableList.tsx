@@ -111,21 +111,21 @@ export function BaseTableList<T = any>({
 
   return (
     <div>
-      <Card className="space-y-4">
+      <Card className="space-y-3">
         <CardHeader>
-          <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+          <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
             <div>
               <CardTitle>{tableName}</CardTitle>
               {description && <CardDescription>{description}</CardDescription>}
             </div>
-            <div className="flex gap-2 items-center">
+            <div className="flex gap-3 items-center">
               {filterComponent}
               <input
                 type="text"
                 placeholder={searchPlaceholder}
                 value={search}
                 onChange={handleSearch}
-                className="border px-3 py-1 rounded-md text-sm"
+                className="border px-3 py-1.5 rounded-md text-sm"
               />
               <Button
                 variant="outline"

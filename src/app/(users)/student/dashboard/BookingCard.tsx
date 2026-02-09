@@ -105,7 +105,7 @@ const BookingCard = ({ booking, userType, onAction }: BookingCardProps) => {
   return (
     <div className="glass-card rounded-xl p-6">
       <div className="flex items-start justify-between">
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3">
           <Avatar className="h-12 w-12">
             <AvatarImage src={displayAvatar} alt={displayName} />
             <AvatarFallback className="bg-primary text-primary-foreground">
@@ -125,7 +125,7 @@ const BookingCard = ({ booking, userType, onAction }: BookingCardProps) => {
         {getStatusBadge()}
       </div>
 
-      <div className="mt-4 grid grid-cols-2 gap-4">
+      <div className="mt-4 grid grid-cols-2 gap-3">
         <div className="flex items-center gap-2 text-muted-foreground">
           <Calendar className="w-4 h-4" />
           <span className="text-sm">{booking.scheduleDate}</span>

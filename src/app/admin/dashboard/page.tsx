@@ -213,9 +213,9 @@ const AdminDashboard = () => {
               <h3 className="font-semibold text-foreground mb-4">
                 Recent Users
               </h3>
-              <div className="space-y-4">
+              <div className="space-y-3">
                 {users.slice(0, 5).map((user) => (
-                  <div key={user.id} className="flex items-center gap-4">
+                  <div key={user.id} className="flex items-center gap-3">
                     <Avatar className="h-10 w-10">
                       <AvatarImage src={user.avatar} />
                       <AvatarFallback>{user.name[0]}</AvatarFallback>
@@ -236,7 +236,7 @@ const AdminDashboard = () => {
               <h3 className="font-semibold text-foreground mb-4">
                 Recent Bookings
               </h3>
-              <div className="space-y-4">
+              <div className="space-y-3">
                 {bookings.slice(0, 5).map((booking) => (
                   <div
                     key={booking.id}
@@ -272,7 +272,7 @@ const AdminDashboard = () => {
       {/* Users Tab */}
       {activeTab === "users" && (
         <div className="space-y-3">
-          <div className="flex flex-col sm:flex-row gap-4">
+          <div className="flex flex-col sm:flex-row gap-3">
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
               <Input
@@ -497,7 +497,7 @@ const AdminDashboard = () => {
               e.stopPropagation();
               form.handleSubmit();
             }}
-            className="space-y-4"
+            className="space-y-3"
           >
             <form.Field
               name="icon"

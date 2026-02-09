@@ -88,7 +88,7 @@ const BecomeTutor = () => {
               Join thousands of tutors on SkillBridge and turn your expertise
               into income. Teach students worldwide on your own schedule.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <div className="flex flex-col sm:flex-row gap-3 justify-center">
               <Button variant="hero" size="lg" asChild>
                 <Link href="/register?role=tutor">
                   Apply Now <ArrowRight className="w-4 h-4 ml-2" />
@@ -190,7 +190,7 @@ const BecomeTutor = () => {
               Requirements
             </h2>
             <div className="glass-card p-8 rounded-2xl">
-              <ul className="space-y-4">
+              <ul className="space-y-3">
                 {requirements.map((req) => (
                   <li key={req} className="flex items-start gap-3">
                     <CheckCircle className="w-5 h-5 text-primary shrink-0 mt-0.5" />

@@ -50,9 +50,9 @@ export function BecomeTutorSection() {
               your schedule, and make a real impact while earning on your terms.
             </p>
 
-            <ul className="space-y-4 mb-10">
+            <ul className="space-y-3 mb-10">
               {benefits.map((item, i) => (
-                <li key={i} className="flex items-center gap-4 group">
+                <li key={i} className="flex items-center gap-3 group">
                   <div className="w-10 h-10 rounded-lg bg-accent/10 flex items-center justify-center group-hover:bg-accent/20 transition-colors shrink-0">
                     <item.icon className="w-5 h-5 text-accent" />
                   </div>

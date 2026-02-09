@@ -27,7 +27,7 @@ const TutorCard = ({ tutor }: TutorCardProps) => {
         </div>
       )}
 
-      <div className="flex items-start gap-4">
+      <div className="flex items-start gap-3">
         <div className="relative">
           <Avatar className="h-16 w-16 ring-2 ring-primary/20">
             <AvatarImage

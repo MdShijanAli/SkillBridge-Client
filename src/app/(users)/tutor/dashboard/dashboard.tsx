@@ -58,7 +58,7 @@ const TutorDashboard = ({ userData }: { userData: User }) => {
     <div className="min-h-screen bg-background">
       <main className="pt-24 pb-16">
         <div className="max-w-6xl px-5 mx-auto">
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-8">
             <div>
               <h1 className="text-3xl font-bold text-foreground">
                 Tutor Dashboard
@@ -123,13 +123,13 @@ const TutorDashboard = ({ userData }: { userData: User }) => {
 
                 <TabsContent value="upcoming" className="mt-6">
                   {isLoading ? (
-                    <div className="space-y-4">
+                    <div className="space-y-3">
                       <Skeleton className="h-32 w-full" />
                       <Skeleton className="h-32 w-full" />
                       <Skeleton className="h-32 w-full" />
                     </div>
                   ) : upcomingBookings?.length > 0 ? (
-                    <div className="space-y-4">
+                    <div className="space-y-3">
                       {upcomingBookings.map((booking) => (
                         <BookingCard
                           key={booking.id}
@@ -156,12 +156,12 @@ const TutorDashboard = ({ userData }: { userData: User }) => {
 
                 <TabsContent value="completed" className="mt-6">
                   {isLoading ? (
-                    <div className="space-y-4">
+                    <div className="space-y-3">
                       <Skeleton className="h-32 w-full" />
                       <Skeleton className="h-32 w-full" />
                     </div>
                   ) : completedBookings?.length > 0 ? (
-                    <div className="space-y-4">
+                    <div className="space-y-3">
                       {completedBookings.map((booking) => (
                         <BookingCard
                           key={booking.id}
@@ -181,13 +181,13 @@ const TutorDashboard = ({ userData }: { userData: User }) => {
 
                 <TabsContent value="reviews" className="mt-6">
                   {isLoadingReviews ? (
-                    <div className="space-y-4">
+                    <div className="space-y-3">
                       <Skeleton className="h-24 w-full" />
                       <Skeleton className="h-24 w-full" />
                       <Skeleton className="h-24 w-full" />
                     </div>
                   ) : tutorReviews?.length > 0 ? (
-                    <div className="space-y-4">
+                    <div className="space-y-3">
                       {tutorReviews.map((review) => (
                         <ReviewCard key={review.id} review={review} />
                       ))}

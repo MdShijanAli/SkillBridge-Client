@@ -208,8 +208,8 @@ const TutorAvailability = ({
       <main className="pt-24 pb-16">
         <div className="max-w-6xl px-5 mx-auto max-w-4xl">
           <div className="glass-card rounded-2xl p-6 md:p-8 mb-8">
-            <div className="flex items-start justify-between flex-col sm:flex-row gap-4">
-              <div className="flex items-start gap-4">
+            <div className="flex items-start justify-between flex-col sm:flex-row gap-3">
+              <div className="flex items-start gap-3">
                 <div className="bg-primary/10 p-3 rounded-xl">
                   <Calendar className="w-6 h-6 text-primary" />
                 </div>
@@ -237,7 +237,7 @@ const TutorAvailability = ({
             }}
             className="space-y-3"
           >
-            <div className="space-y-4">
+            <div className="space-y-3">
               {slots.map((slot, index) => {
                 const dayLabel =
                   days.find((d) => d.value === slot.dayOfWeek)?.label ||
@@ -249,8 +249,8 @@ const TutorAvailability = ({
                     key={slot.id}
                     className="glass-card rounded-xl p-6 hover:shadow-lg transition-shadow"
                   >
-                    <div className="flex flex-col gap-4">
-                      <div className="flex flex-col lg:flex-row items-start lg:items-center gap-4">
+                    <div className="flex flex-col gap-3">
+                      <div className="flex flex-col lg:flex-row items-start lg:items-center gap-3">
                         <div className="flex items-center gap-3 text-muted-foreground shrink-0">
                           <div className="bg-primary/10 p-2 rounded-lg">
                             <Clock className="w-5 h-5 text-primary" />

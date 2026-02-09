@@ -69,11 +69,11 @@ const StudentBookings = ({ user }: { user: any }) => {
 
             <TabsContent value={BookingStatus.CONFIRMED} className="mt-6">
               {isLoading ? (
-                <div className="space-y-4">
+                <div className="space-y-3">
                   {[1, 2, 3].map((i) => (
                     <div key={i} className="glass-card rounded-xl p-6">
                       <div className="flex items-start justify-between">
-                        <div className="flex items-center gap-4">
+                        <div className="flex items-center gap-3">
                           <Skeleton className="h-12 w-12 rounded-full" />
                           <div className="space-y-2">
                             <Skeleton className="h-4 w-32" />
@@ -82,7 +82,7 @@ const StudentBookings = ({ user }: { user: any }) => {
                         </div>
                         <Skeleton className="h-6 w-20" />
                       </div>
-                      <div className="mt-4 grid grid-cols-2 gap-4">
+                      <div className="mt-4 grid grid-cols-2 gap-3">
                         <Skeleton className="h-4 w-full" />
                         <Skeleton className="h-4 w-full" />
                       </div>
@@ -97,7 +97,7 @@ const StudentBookings = ({ user }: { user: any }) => {
                   ))}
                 </div>
               ) : upcomingBookings.length > 0 ? (
-                <div className="space-y-4">
+                <div className="space-y-3">
                   {upcomingBookings.map((booking) => (
                     <BookingCard
                       key={booking.id}
@@ -118,11 +118,11 @@ const StudentBookings = ({ user }: { user: any }) => {
 
             <TabsContent value={BookingStatus.COMPLETED} className="mt-6">
               {isLoading ? (
-                <div className="space-y-4">
+                <div className="space-y-3">
                   {[1, 2].map((i) => (
                     <div key={i} className="glass-card rounded-xl p-6">
                       <div className="flex items-start justify-between">
-                        <div className="flex items-center gap-4">
+                        <div className="flex items-center gap-3">
                           <Skeleton className="h-12 w-12 rounded-full" />
                           <div className="space-y-2">
                             <Skeleton className="h-4 w-32" />
@@ -131,7 +131,7 @@ const StudentBookings = ({ user }: { user: any }) => {
                         </div>
                         <Skeleton className="h-6 w-20" />
                       </div>
-                      <div className="mt-4 grid grid-cols-2 gap-4">
+                      <div className="mt-4 grid grid-cols-2 gap-3">
                         <Skeleton className="h-4 w-full" />
                         <Skeleton className="h-4 w-full" />
                       </div>
@@ -143,7 +143,7 @@ const StudentBookings = ({ user }: { user: any }) => {
                   ))}
                 </div>
               ) : completedBookings.length > 0 ? (
-                <div className="space-y-4">
+                <div className="space-y-3">
                   {completedBookings.map((booking) => (
                     <BookingCard
                       key={booking.id}
@@ -164,11 +164,11 @@ const StudentBookings = ({ user }: { user: any }) => {
 
             <TabsContent value={BookingStatus.CANCELLED} className="mt-6">
               {isLoading ? (
-                <div className="space-y-4">
+                <div className="space-y-3">
                   {[1].map((i) => (
                     <div key={i} className="glass-card rounded-xl p-6">
                       <div className="flex items-start justify-between">
-                        <div className="flex items-center gap-4">
+                        <div className="flex items-center gap-3">
                           <Skeleton className="h-12 w-12 rounded-full" />
                           <div className="space-y-2">
                             <Skeleton className="h-4 w-32" />
@@ -177,7 +177,7 @@ const StudentBookings = ({ user }: { user: any }) => {
                         </div>
                         <Skeleton className="h-6 w-20" />
                       </div>
-                      <div className="mt-4 grid grid-cols-2 gap-4">
+                      <div className="mt-4 grid grid-cols-2 gap-3">
                         <Skeleton className="h-4 w-full" />
                         <Skeleton className="h-4 w-full" />
                       </div>
@@ -189,7 +189,7 @@ const StudentBookings = ({ user }: { user: any }) => {
                   ))}
                 </div>
               ) : cancelledBookings.length > 0 ? (
-                <div className="space-y-4">
+                <div className="space-y-3">
                   {cancelledBookings.map((booking) => (
                     <BookingCard
                       key={booking.id}

@@ -467,7 +467,7 @@ const RegistrationForm = () => {
             </div>
 
             {/* Heading */}
-            <div className="space-y-4">
+            <div className="space-y-3">
               <h2 className="text-4xl xl:text-5xl font-bold text-foreground leading-tight">
                 Start Your
                 <br />
@@ -481,7 +481,7 @@ const RegistrationForm = () => {
             </div>
 
             {/* Steps */}
-            <div className="space-y-4 pt-4">
+            <div className="space-y-3 pt-4">
               {[
                 {
                   step: "1",
@@ -504,7 +504,7 @@ const RegistrationForm = () => {
                   desc: "Book your first session",
                 },
               ].map((item, i) => (
-                <div key={i} className="flex items-start gap-4 group">
+                <div key={i} className="flex items-start gap-3 group">
                   <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center border border-primary/20 group-hover:bg-primary/20 group-hover:scale-110 transition-all">
                     <span className="text-primary font-bold">{item.step}</span>
                   </div>
@@ -525,7 +525,7 @@ const RegistrationForm = () => {
                 <Sparkles className="w-5 h-5 text-primary" />
                 What you'll get
               </h3>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 gap-3">
                 {benefits.map((benefit, i) => (
                   <div
                     key={i}

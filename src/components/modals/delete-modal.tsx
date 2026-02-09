@@ -42,7 +42,7 @@ export default function DeleteModal({
       closeButtonText={"Cancel"}
       size="md"
     >
-      <div className="space-y-4">
+      <div className="space-y-3">
         {description && (
           <p className="text-sm text-muted-foreground">{description}</p>
         )}

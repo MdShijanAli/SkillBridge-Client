@@ -37,7 +37,7 @@ export function CTASection() {
               SkillBridge. Your personalized learning journey starts here.
             </p>
 
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+            <div className="flex flex-col sm:flex-row gap-3 justify-center items-center">
               <Button
                 className="h-14 px-10 text-lg bg-gradient-to-r from-primary to-cyan-400 hover:from-primary/90 hover:to-cyan-400/90 text-white font-semibold shadow-xl shadow-primary/25 hover:shadow-primary/40 transition-all hover:scale-105"
                 asChild

@@ -203,7 +203,7 @@ const About = () => {
             Whether you want to learn or teach, there's a place for you at
             SkillBridge.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <Button variant="hero" size="lg" asChild>
               <Link href="/tutors">
                 Find a Tutor <ArrowRight className="w-4 h-4 ml-2" />

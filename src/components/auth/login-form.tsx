@@ -132,7 +132,7 @@ export default function LoginForm() {
             </Link>
 
             {/* Main Content */}
-            <div className="space-y-4">
+            <div className="space-y-3">
               <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 border border-primary/20">
                 <Sparkles className="w-4 h-4 text-primary" />
                 <span className="text-sm font-medium text-primary">
@@ -153,7 +153,7 @@ export default function LoginForm() {
             </div>
 
             {/* Features */}
-            <div className="grid gap-4 pt-4">
+            <div className="grid gap-3 pt-4">
               {[
                 {
                   icon: Shield,

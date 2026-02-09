@@ -214,7 +214,7 @@ const TutorProfile = ({ tutorData }: { tutorData: TutorData }) => {
                       {tutorData?.tutorProfile?.specialization}
                     </p>
 
-                    <div className="flex flex-wrap items-center gap-4 mt-4">
+                    <div className="flex flex-wrap items-center gap-3 mt-4">
                       <div className="flex items-center gap-1 bg-accent/10 px-3 py-1 rounded-full">
                         <Star className="w-5 h-5 text-accent fill-accent" />
                         <span className="font-bold text-foreground">
@@ -294,8 +294,8 @@ const TutorProfile = ({ tutorData }: { tutorData: TutorData }) => {
                     </p>
                   </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div className="flex items-center gap-4 p-4 rounded-lg bg-secondary/50">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div className="flex items-center gap-3 p-4 rounded-lg bg-secondary/50">
                       <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center">
                         <GraduationCap className="w-6 h-6 text-primary" />
                       </div>
@@ -308,7 +308,7 @@ const TutorProfile = ({ tutorData }: { tutorData: TutorData }) => {
                         </p>
                       </div>
                     </div>
-                    <div className="flex items-center gap-4 p-4 rounded-lg bg-secondary/50">
+                    <div className="flex items-center gap-3 p-4 rounded-lg bg-secondary/50">
                       <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center">
                         <Globe className="w-6 h-6 text-primary" />
                       </div>
@@ -323,7 +323,7 @@ const TutorProfile = ({ tutorData }: { tutorData: TutorData }) => {
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-3 gap-4 pt-4">
+                  <div className="grid grid-cols-3 gap-3 pt-4">
                     <div className="text-center p-4 rounded-lg bg-secondary/50">
                       <div className="text-2xl font-bold text-foreground">
                         {tutorData?.tutorProfile?.totalSessions}
@@ -352,7 +352,7 @@ const TutorProfile = ({ tutorData }: { tutorData: TutorData }) => {
                 </TabsContent>
 
                 <TabsContent value="availability" className="mt-6">
-                  <div className="space-y-4">
+                  <div className="space-y-3">
                     <p className="text-muted-foreground mb-4">
                       {tutorData?.name}'s regular availability:
                     </p>
@@ -379,7 +379,7 @@ const TutorProfile = ({ tutorData }: { tutorData: TutorData }) => {
 
                 <TabsContent value="reviews" className="mt-6">
                   {tutorData?.receivedReviews?.length > 0 ? (
-                    <div className="space-y-4">
+                    <div className="space-y-3">
                       {tutorData.receivedReviews.map((review) => (
                         <ReviewCard key={review.id} review={review} />
                       ))}
@@ -429,7 +429,7 @@ const TutorProfile = ({ tutorData }: { tutorData: TutorData }) => {
                       ).toFixed(2);
 
                       return (
-                        <div className="space-y-4">
+                        <div className="space-y-3">
                           {/* Subject Selection */}
                           <form.Field
                             name="subject"

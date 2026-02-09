@@ -254,7 +254,7 @@ const Profile = ({ userData }: { userData: UserType }) => {
               </div>
 
               {/* Save Button */}
-              <div className="flex justify-end gap-4">
+              <div className="flex justify-end gap-3">
                 <Button type="button" variant="outline">
                   Cancel
                 </Button>
