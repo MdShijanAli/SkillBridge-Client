@@ -17,6 +17,8 @@ import { useState } from "react";
 import { toast } from "sonner";
 import ViewModal from "./view-modal";
 import FormModal from "./form-modal";
+import { getSerialNumber } from "@/lib/utils";
+import { Roles } from "@/constants/roles";
 
 const UserRolesStyle = (role: string) => {
   switch (role) {
@@ -38,6 +40,7 @@ export default function Users() {
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
   const [showDetailModal, setShowDetailModal] = useState(false);
+  const [showIsFeaturedModal, setShowIsFeaturedModal] = useState(false);
   const [showFormModal, setShowFormModal] = useState(false);
   const [editData, setEditData] = useState<User | null>();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -54,6 +57,11 @@ export default function Users() {
     setSelectedUser(user);
     setShowChangeBannedModal(true);
   };
+  const handleFeaturedUser = (user: User) => {
+    console.log("Change featured status for user:", user);
+    setSelectedUser(user);
+    setShowIsFeaturedModal(true);
+  };
 
   const handleConfirmChangeStatus = async () => {
     try {
@@ -65,6 +73,13 @@ export default function Users() {
           endpoint: apiRoutes.users.changeStatus(selectedUser!.id),
           data: {
             is_active: selectedUser!.is_active === true ? false : true,
+          },
+        });
+      } else if (showIsFeaturedModal) {
+        response = await changeStatus({
+          endpoint: apiRoutes.users.changeFeaturedStatus(selectedUser!.id),
+          data: {
+            is_featured: selectedUser!.is_featured === true ? false : true,
           },
         });
       } else {
@@ -79,10 +94,13 @@ export default function Users() {
       toast.success(
         showChangeStatusModal
           ? "User status changed successfully."
-          : "User banned status changed successfully.",
+          : showChangeBannedModal
+            ? "User banned status changed successfully."
+            : "User featured status changed successfully.",
       );
       setShowChangeStatusModal(false);
       setShowChangeBannedModal(false);
+      setShowIsFeaturedModal(false);
       setRefreshKey((prev) => prev + 1);
     } catch (error: any) {
       console.error("Error changing user status:", error);
@@ -90,7 +108,9 @@ export default function Users() {
         error.message ||
           (showChangeStatusModal
             ? "Failed to change user status. Please try again."
-            : "Failed to change user banned status. Please try again."),
+            : showChangeBannedModal
+              ? "Failed to change user banned status. Please try again."
+              : "Failed to change user featured status. Please try again."),
       );
     } finally {
       setIsChangingStatus(false);
@@ -156,7 +176,7 @@ export default function Users() {
     {
       key: "sl",
       label: "SL",
-      render: (user, index) => index + 1,
+      render: (user, index) => getSerialNumber(index),
     },
     { key: "name", label: "Name" },
     { key: "email", label: "Email" },
@@ -207,6 +227,24 @@ export default function Users() {
       ),
     },
     {
+      key: "is_featured",
+      label: "Featured",
+      render: (user) => (
+        <div>
+          <Badge variant={user.is_featured ? "blue" : "secondary"}>
+            {user.is_featured ? "Yes" : "No"}
+          </Badge>
+          {user.role === Roles.TUTOR && (
+            <Switch
+              onCheckedChange={() => handleFeaturedUser(user)}
+              checked={user.is_featured}
+              className="ml-2"
+            />
+          )}
+        </div>
+      ),
+    },
+    {
       key: "createdAt",
       label: "Created At",
       render: (user) => new Date(user.createdAt).toLocaleString(),
@@ -234,18 +272,29 @@ export default function Users() {
       />
 
       <DeleteModal
-        open={showChangeStatusModal || showChangeBannedModal}
+        open={
+          showChangeStatusModal || showChangeBannedModal || showIsFeaturedModal
+        }
         onClose={() => {
           setShowChangeStatusModal(false);
           setShowChangeBannedModal(false);
+          setShowIsFeaturedModal(false);
         }}
         title={
-          showChangeStatusModal ? "Change User Status" : "Change Banned Status"
+          showChangeStatusModal
+            ? "Change User Status"
+            : showChangeBannedModal
+              ? "Change Banned Status"
+              : "Change Featured Status"
         }
-        description={`${showChangeStatusModal ? "Are you sure you want to change the Activity status of" : "Are you sure you want to change the Banned status of"} ${selectedUser?.name}?`}
+        description={`${showChangeStatusModal ? "Are you sure you want to change the Activity status of" : showChangeBannedModal ? "Are you sure you want to change the Banned status of" : "Are you sure you want to change the Featured status of"} ${selectedUser?.name}?`}
         onConfirm={handleConfirmChangeStatus}
         submitButtonText={
-          showChangeStatusModal ? "Change Status" : "Change Banned Status"
+          showChangeStatusModal
+            ? "Change Status"
+            : showChangeBannedModal
+              ? "Change Banned Status"
+              : "Change Featured Status"
         }
         isDeleting={isChangingStatus}
         submitButtonVariant="default"

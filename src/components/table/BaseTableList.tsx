@@ -106,6 +106,7 @@ export function BaseTableList<T = any>({
   };
 
   const handlePageChange = (page: number) => {
+    localStorage.setItem("currentPage", page.toString());
     fetchData(page, search);
   };
 

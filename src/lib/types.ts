@@ -15,6 +15,7 @@ export interface User {
   role: keyof Roles;
   createdAt: string;
   updatedAt: string;
+  is_featured?: boolean;
 }
 
 export interface Roles {
