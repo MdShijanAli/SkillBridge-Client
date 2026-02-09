@@ -105,7 +105,7 @@ const ReviewDialog = ({
         </p>
       </div>
 
-      <div className="space-y-6">
+      <div className="space-y-3">
         {/* Star Rating */}
         <div className="space-y-2">
           <label className="text-sm font-medium">Rating</label>

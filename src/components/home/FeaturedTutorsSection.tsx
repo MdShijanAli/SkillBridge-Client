@@ -48,7 +48,7 @@ export function FeaturedTutorsSection() {
   return (
     <section className="py-20 md:py-28">
       <div className="max-w-6xl px-5 mx-auto">
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6 mb-16">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-16">
           <div>
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-accent/10 border border-accent/20 mb-4">
               <Award className="w-4 h-4 text-accent" />

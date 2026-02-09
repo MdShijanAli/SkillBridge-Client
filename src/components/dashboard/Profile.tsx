@@ -75,7 +75,7 @@ const Profile = ({ userData }: { userData: UserType }) => {
             <FieldGroup>
               {/* Avatar Section */}
               <div className="glass-card rounded-xl p-6">
-                <div className="flex items-center gap-6">
+                <div className="flex items-center gap-3">
                   <div className="relative">
                     <Avatar className="h-24 w-24">
                       <AvatarImage src={userData.image} />
@@ -107,12 +107,12 @@ const Profile = ({ userData }: { userData: UserType }) => {
               </div>
 
               {/* Personal Information */}
-              <div className="glass-card rounded-xl p-6 space-y-6">
+              <div className="glass-card rounded-xl p-6 space-y-3">
                 <h2 className="text-lg font-semibold text-foreground">
                   Personal Information
                 </h2>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <form.Field
                     name="name"
                     children={(field) => {

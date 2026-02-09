@@ -101,7 +101,7 @@ const About = () => {
               </p>
             </div>
             <div className="glass-card p-8 rounded-2xl">
-              <div className="grid grid-cols-2 gap-6 text-center">
+              <div className="grid grid-cols-2 gap-3 text-center">
                 <div>
                   <p className="text-4xl font-bold text-primary">50K+</p>
                   <p className="text-muted-foreground text-sm">Students</p>
@@ -153,7 +153,7 @@ const About = () => {
           <h2 className="text-3xl font-bold text-center mb-12">Our Journey</h2>
           <div className="max-w-3xl mx-auto">
             {milestones.map((milestone, index) => (
-              <div key={milestone.year} className="flex gap-6 mb-8 last:mb-0">
+              <div key={milestone.year} className="flex gap-3 mb-8 last:mb-0">
                 <div className="flex flex-col items-center">
                   <div className="w-12 h-12 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-bold text-sm shrink-0">
                     {milestone.year}

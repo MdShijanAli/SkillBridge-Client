@@ -99,7 +99,7 @@ const TutorResources = () => {
       {/* Resource Cards */}
       <section className="py-16">
         <div className="max-w-6xl px-5 mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
             {resources.map((resource) => (
               <div
                 key={resource.title}
@@ -166,7 +166,7 @@ const TutorResources = () => {
           <h2 className="text-3xl font-bold text-center mb-12">
             Quick Tips for Success
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 max-w-4xl mx-auto">
             {tips.map((tip, index) => (
               <div
                 key={tip.title}

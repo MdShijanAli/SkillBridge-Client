@@ -75,7 +75,7 @@ const TutorDashboard = ({ userData }: { userData: User }) => {
             </Button>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-8">
             {isLoadingStats ? (
               <>
                 <Skeleton className="h-32 w-full" />
@@ -201,7 +201,7 @@ const TutorDashboard = ({ userData }: { userData: User }) => {
               </Tabs>
             </div>
 
-            <div className="space-y-6">
+            <div className="space-y-3">
               <div className="glass-card rounded-xl p-6">
                 <h3 className="font-semibold text-foreground mb-4">
                   Your Profile

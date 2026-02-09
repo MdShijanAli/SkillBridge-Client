@@ -121,7 +121,7 @@ const TutorProfile = ({ userData }: { userData: any }) => {
           >
             {/* Avatar */}
             <div className="glass-card p-6 rounded-xl">
-              <div className="flex items-center gap-6">
+              <div className="flex items-center gap-3">
                 <Avatar className="h-24 w-24 ring-4 ring-primary/20">
                   <AvatarImage src={userData?.user?.image || userData?.image} />
                   <AvatarFallback>
@@ -151,10 +151,10 @@ const TutorProfile = ({ userData }: { userData: any }) => {
             </div>
 
             {/* Basic Info */}
-            <div className="glass-card p-6 rounded-xl space-y-6">
+            <div className="glass-card p-6 rounded-xl space-y-3">
               <h2 className="text-lg font-semibold">Basic Information</h2>
 
-              <div className="grid sm:grid-cols-2 gap-6">
+              <div className="grid sm:grid-cols-2 gap-3">
                 {["specialization", "hourlyRate"].map((fieldName) => (
                   <form.Field key={fieldName} name={fieldName as any}>
                     {(field) => {
@@ -209,7 +209,7 @@ const TutorProfile = ({ userData }: { userData: any }) => {
                 )}
               </form.Field>
 
-              <div className="grid sm:grid-cols-2 gap-6">
+              <div className="grid sm:grid-cols-2 gap-3">
                 {["education", "yearsExperience"].map((name) => (
                   <form.Field key={name} name={name as any}>
                     {(field) => (

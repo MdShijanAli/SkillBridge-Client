@@ -105,7 +105,7 @@ const BrowseTutors = () => {
   };
 
   const FilterContent = () => (
-    <div className="space-y-6">
+    <div className="space-y-3">
       {/* Category Filter */}
       <div>
         <label className="text-sm font-semibold text-foreground mb-3 block">
@@ -274,7 +274,7 @@ const BrowseTutors = () => {
                   </h3>
                 </div>
               ) : tutorsLists.length > 0 ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                   {tutorsLists.map((tutor, index) => (
                     <div
                       key={tutor.id}

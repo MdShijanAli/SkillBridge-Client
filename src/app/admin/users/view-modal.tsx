@@ -52,7 +52,7 @@ export default function ViewModal({ open, onClose, userId }: ViewModalProps) {
       )}
 
       {user && (
-        <div className="space-y-6">
+        <div className="space-y-3">
           {/* Header */}
           <div className="flex items-center gap-4 border-b pb-4">
             <div className="h-14 w-14 rounded-full bg-gray-200 flex items-center justify-center text-lg font-semibold text-gray-700">

@@ -85,7 +85,7 @@ export default function FormModal({
       size="xl"
       closeButtonText="Cancel"
     >
-      <div className="grid gap-6">
+      <div className="grid gap-3">
         <FieldGroup>
           <form.Field
             name="name"

@@ -50,7 +50,7 @@ export default function BookingDetailsModal({
       loading={isBookingLoading}
       closeButtonText="Close"
     >
-      <div className="space-y-6">
+      <div className="space-y-3">
         {!booking && !isBookingLoading && (
           <p className="text-center text-sm text-gray-500">
             No booking data found
@@ -58,7 +58,7 @@ export default function BookingDetailsModal({
         )}
 
         {booking && (
-          <div className="space-y-6">
+          <div className="space-y-3">
             {/* Status and Price Header */}
             <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
               <div>

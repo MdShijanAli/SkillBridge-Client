@@ -15,7 +15,7 @@ export default async function TutorAvailabilityPage() {
   if (!tutorProfile?.data?.id) {
     return (
       <div className="min-h-[100vh] flex items-center justify-center p-8">
-        <div className="glass-card p-8 md:p-12 rounded-2xl max-w-2xl w-full text-center space-y-6">
+        <div className="glass-card p-8 md:p-12 rounded-2xl max-w-2xl w-full text-center space-y-3">
           <div className="flex justify-center">
             <div className="relative">
               <div className="absolute inset-0 bg-primary/20 blur-2xl rounded-full" />

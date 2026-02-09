@@ -49,7 +49,7 @@ export default function ViewModal({
       loading={isCategoryLoading}
       closeButtonText="Close"
     >
-      <div className="space-y-6">
+      <div className="space-y-3">
         {!category && !isCategoryLoading && (
           <p className="text-center text-sm text-gray-500">
             No category data found
@@ -57,7 +57,7 @@ export default function ViewModal({
         )}
 
         {category && (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
             {/* Name */}
             <div>
               <p className="text-gray-500 mb-1">Name</p>

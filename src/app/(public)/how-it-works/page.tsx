@@ -152,7 +152,7 @@ const HowItWorks = () => {
                 className={`flex flex-col ${index % 2 === 1 ? "lg:flex-row-reverse" : "lg:flex-row"} items-center gap-8 lg:gap-16`}
               >
                 {/* Content */}
-                <div className="flex-1 space-y-6">
+                <div className="flex-1 space-y-3">
                   <div className="flex items-center gap-4">
                     <span className="text-5xl md:text-6xl font-bold text-primary/20">
                       {step.number}
@@ -205,7 +205,7 @@ const HowItWorks = () => {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
             {benefits.map((benefit) => (
               <div
                 key={benefit.title}

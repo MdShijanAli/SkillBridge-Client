@@ -168,7 +168,7 @@ const Contact = () => {
       {/* Contact Methods */}
       <section className="py-12">
         <div className="max-w-6xl px-5 mx-auto">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
             {contactMethods.map((method, index) => (
               <div
                 key={index}
@@ -204,7 +204,7 @@ const Contact = () => {
                 </p>
               </div>
 
-              <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+              <form onSubmit={handleSubmit(onSubmit)} className="space-y-3">
                 <div className="grid sm:grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="name">Your Name</Label>
@@ -339,7 +339,7 @@ const Contact = () => {
             </p>
           </div>
 
-          <div className="grid sm:grid-cols-3 gap-6 max-w-4xl mx-auto">
+          <div className="grid sm:grid-cols-3 gap-3 max-w-4xl mx-auto">
             <div className="glass-card p-6 rounded-2xl text-center border border-border/50 hover:border-primary/30 transition-colors cursor-pointer">
               <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto mb-4">
                 <HelpCircle className="w-7 h-7 text-primary" />

@@ -74,7 +74,7 @@ export function BecomeTutorSection() {
 
           <div className="relative">
             <div className="glass-card rounded-3xl p-8 md:p-10 border border-border/50 backdrop-blur-xl">
-              <div className="flex items-center gap-6 mb-8 pb-8 border-b border-border/50">
+              <div className="flex items-center gap-3 mb-8 pb-8 border-b border-border/50">
                 <div className="w-16 h-16 rounded-2xl bg-accent/20 flex items-center justify-center">
                   <Users className="w-8 h-8 text-accent" />
                 </div>
@@ -88,7 +88,7 @@ export function BecomeTutorSection() {
                 </div>
               </div>
 
-              <div className="space-y-6">
+              <div className="space-y-3">
                 {stats.map((stat, i) => (
                   <div
                     key={i}

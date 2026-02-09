@@ -235,7 +235,7 @@ const TutorAvailability = ({
             onSubmit={(e) => {
               e.preventDefault();
             }}
-            className="space-y-6"
+            className="space-y-3"
           >
             <div className="space-y-4">
               {slots.map((slot, index) => {
