@@ -65,6 +65,7 @@ export default function BookingsPage() {
       icon: Trash2,
       onClick: handleDelete,
       variant: "destructive",
+      show: false,
     },
   ];
 

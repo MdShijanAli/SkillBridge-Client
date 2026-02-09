@@ -26,9 +26,14 @@ export default function AdminDashboardLayout({
 
       {/* Main Content */}
       <div
-        className="transition-all duration-300"
+        className="transition-all duration-300 lg:ml-64"
         style={{
-          marginLeft: sidebarCollapsed ? "5rem" : "16rem",
+          marginLeft:
+            typeof window !== "undefined" && window.innerWidth >= 1024
+              ? sidebarCollapsed
+                ? "5rem"
+                : "16rem"
+              : "0",
         }}
       >
         <AdminTopbar

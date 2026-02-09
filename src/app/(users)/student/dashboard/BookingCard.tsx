@@ -60,18 +60,30 @@ const BookingCard = ({ booking, userType, onAction }: BookingCardProps) => {
     setIsSessionModalOpen(true);
   };
 
+  const handleLeaveReview = () => {
+    onAction?.("review", booking);
+    setIsSessionModalOpen(false);
+  };
+
   const handleMarkAsCompleted = async () => {
     setIsCompleting(true);
     try {
-      await changeStatus({
+      const response = await changeStatus({
         endpoint: apiRoutes.bookings.updateStatus(booking.id),
         data: { status: BookingStatus.COMPLETED },
       });
-      toast.success("Session completed!", {
-        description: "You can now leave a review for your tutor.",
-      });
-      setIsSessionModalOpen(false);
-      onAction?.("completed", booking);
+      console.log("Status update response:", response);
+      if (!response.success) {
+        toast.error(response.message, {
+          description: response.error,
+        });
+      } else {
+        toast.success("Session completed!", {
+          description: "You can now leave a review for your tutor.",
+        });
+        setIsSessionModalOpen(false);
+        onAction?.("completed", booking);
+      }
     } catch (error) {
       toast.error("Failed to complete session", {
         description: "Please try again later.",
@@ -84,15 +96,21 @@ const BookingCard = ({ booking, userType, onAction }: BookingCardProps) => {
   const handleCancel = async () => {
     setIsCancelling(true);
     try {
-      await changeStatus({
+      const response = await changeStatus({
         endpoint: apiRoutes.bookings.updateStatus(booking.id),
         data: { status: BookingStatus.CANCELLED },
       });
-      toast.success("Booking cancelled", {
-        description: "Your booking has been cancelled successfully.",
-      });
-      // Trigger refetch
-      onAction?.("cancelled", booking);
+      if (!response.success) {
+        toast.error(response.message, {
+          description: response.error,
+        });
+      } else {
+        toast.success("Booking cancelled", {
+          description: "Your booking has been cancelled successfully.",
+        });
+        // Trigger refetch
+        onAction?.("cancelled", booking);
+      }
     } catch (error) {
       toast.error("Failed to cancel booking", {
         description: "Please try again later.",
@@ -150,7 +168,7 @@ const BookingCard = ({ booking, userType, onAction }: BookingCardProps) => {
                 <Video className="w-4 h-4 mr-1" />
                 Join
               </Button>
-              {onAction && (
+              {onAction && userType === Roles.STUDENT && (
                 <Button
                   variant="ghost"
                   size="sm"
@@ -207,8 +225,12 @@ const BookingCard = ({ booking, userType, onAction }: BookingCardProps) => {
         showCloseButton={true}
         closeButtonText="Leave Session"
         showSubmitButton={true}
-        submitButtonText="Mark as Completed"
-        onSubmit={handleMarkAsCompleted}
+        submitButtonText={
+          userType === Roles.TUTOR ? "Mark as Completed" : "Leave Review"
+        }
+        onSubmit={
+          userType === Roles.TUTOR ? handleMarkAsCompleted : handleLeaveReview
+        }
         isSubmitting={isCompleting}
         size="md"
       >

@@ -8,17 +8,28 @@ import Link from "next/link";
 import BookingCard from "./BookingCard";
 import { apiRoutes } from "@/api/apiRoutes";
 import { useQuery } from "@/hooks/useQuery";
+import { Booking } from "@/lib/types";
+import { useState } from "react";
+import ReviewDialog from "@/components/common/ReviewDialog";
 
 const StudentDashboard = () => {
-  const { data: stats } = useQuery(apiRoutes.dashboard.studentStats);
+  const { data: stats, refetch } = useQuery(apiRoutes.dashboard.studentStats);
+  const [reviewDialogOpen, setReviewDialogOpen] = useState(false);
+  const [selectedBooking, setSelectedBooking] = useState<Booking>(null);
 
   console.log("Dashboard stats:", stats);
 
-  const userBookings = bookings.filter((b) => b.studentId === "s1");
-  const upcomingBookings = userBookings.filter((b) => b.status === "confirmed");
-  const completedBookings = userBookings.filter(
-    (b) => b.status === "completed",
-  );
+  const handleBookingAction = (action: string, booking: Booking) => {
+    console.log(`Action: ${action} on Booking ID: ${booking.id}`);
+    if (action === "completed") {
+      refetch();
+    } else if (action === "review") {
+      setReviewDialogOpen(true);
+      setSelectedBooking(booking);
+    } else if (action === "cancelled") {
+      refetch();
+    }
+  };
 
   return (
     <div className="min-h-screen bg-backgrodund">
@@ -80,6 +91,9 @@ const StudentDashboard = () => {
                       key={booking.id}
                       booking={booking}
                       userType="STUDENT"
+                      onAction={(action, booking) =>
+                        handleBookingAction(action, booking)
+                      }
                     />
                   ))}
                 </div>
@@ -154,6 +168,16 @@ const StudentDashboard = () => {
               </div>
             </div>
           </div>
+
+          <ReviewDialog
+            booking={selectedBooking}
+            open={reviewDialogOpen}
+            onOpenChange={setReviewDialogOpen}
+            onSuccess={() => {
+              refetch();
+              return true;
+            }}
+          />
         </div>
       </main>
     </div>

@@ -14,6 +14,12 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 const navigationItems = [
   { name: "Dashboard", href: "/admin/dashboard", icon: LayoutDashboard },
@@ -75,38 +81,52 @@ export function AdminSidebar({
 
         {/* Navigation */}
         <nav className="flex-1 overflow-y-auto py-4 px-2">
-          {navigationItems.map((item) => {
-            const isActive = pathname === item.href;
-            const Icon = item.icon;
+          <TooltipProvider delayDuration={0}>
+            {navigationItems.map((item) => {
+              const isActive = pathname === item.href;
+              const Icon = item.icon;
 
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={`flex items-center gap-3 px-3 py-2.5 rounded-lg mb-1 transition-all group ${
-                  isActive
-                    ? "bg-primary/10 text-primary"
-                    : "text-muted-foreground hover:bg-secondary/50 hover:text-foreground"
-                }`}
-                title={collapsed ? item.name : undefined}
-              >
-                <Icon className="w-5 h-5 shrink-0" />
-                {!collapsed && (
-                  <>
-                    <span className="font-medium flex-1">{item.name}</span>
-                    {item.badge && (
-                      <Badge
-                        variant="secondary"
-                        className="ml-auto bg-primary/20 text-primary border-0"
-                      >
-                        {item.badge}
-                      </Badge>
-                    )}
-                  </>
-                )}
-              </Link>
-            );
-          })}
+              const linkContent = (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={`flex items-center gap-3 px-3 py-2.5 rounded-lg mb-1 transition-all group ${
+                    isActive
+                      ? "bg-primary/10 text-primary"
+                      : "text-muted-foreground hover:bg-secondary/50 hover:text-foreground"
+                  }`}
+                >
+                  <Icon className="w-5 h-5 shrink-0" />
+                  {!collapsed && (
+                    <>
+                      <span className="font-medium flex-1">{item.name}</span>
+                      {item.badge && (
+                        <Badge
+                          variant="secondary"
+                          className="ml-auto bg-primary/20 text-primary border-0"
+                        >
+                          {item.badge}
+                        </Badge>
+                      )}
+                    </>
+                  )}
+                </Link>
+              );
+
+              if (collapsed) {
+                return (
+                  <Tooltip key={item.href}>
+                    <TooltipTrigger asChild>{linkContent}</TooltipTrigger>
+                    <TooltipContent side="right" className="font-medium">
+                      {item.name}
+                    </TooltipContent>
+                  </Tooltip>
+                );
+              }
+
+              return linkContent;
+            })}
+          </TooltipProvider>
         </nav>
 
         {/* User Profile */}

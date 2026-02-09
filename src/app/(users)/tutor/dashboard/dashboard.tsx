@@ -92,12 +92,12 @@ const TutorDashboard = ({ userData }: { userData: User }) => {
                 />
                 <StatCard
                   title="Total Earnings"
-                  value={`$${tutorStats?.data?.totalEarnings?.toFixed(2) || "0.00"}`}
+                  value={`$${tutorStats?.data?.totalEarnings || "0.00"}`}
                   icon={DollarSign}
                 />
                 <StatCard
                   title="Rating"
-                  value={tutorStats?.data?.totalRating?.toFixed(2) || "0.00"}
+                  value={tutorStats?.data?.totalRating || "0.00"}
                   icon={Star}
                 />
                 <StatCard
