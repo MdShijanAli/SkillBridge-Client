@@ -78,8 +78,14 @@ const RegistrationForm = () => {
         setIsLoading(true);
         const result = await authClient.signUp.email({ ...value });
         console.log("Registration result :", result);
-        setUserEmail(value.email);
-        setShowVerificationModal(true);
+        if (!result.data?.user.name) {
+          throw new Error("Registration failed. Please try again.");
+        } else {
+          toast.success("Registration successful! Please verify your email.");
+          setUserEmail(value.email);
+          setShowVerificationModal(true);
+          form.reset();
+        }
       } catch (error: any) {
         toast.error(error.message || "Registration failed. Please try again.");
         return;
