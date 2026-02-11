@@ -101,6 +101,7 @@ export interface TutorData {
   updatedAt: string;
   tutorProfile?: TutorProfile;
   receivedReviews: Review[];
+  is_featured: boolean;
 }
 
 export interface TutorProfile {

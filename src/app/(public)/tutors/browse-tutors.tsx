@@ -24,6 +24,7 @@ import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import TutorCard from "@/components/common/TutorCard";
 import { useQuery } from "@/hooks/useQuery";
 import { apiRoutes } from "@/api/apiRoutes";
+import { TutorData } from "@/lib/types";
 
 const BrowseTutors = () => {
   const searchParams = useSearchParams();
@@ -320,7 +321,7 @@ const BrowseTutors = () => {
                 </div>
               ) : tutorsLists.length > 0 ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                  {tutorsLists.map((tutor, index) => (
+                  {tutorsLists.map((tutor: TutorData, index: number) => (
                     <div
                       key={tutor.id}
                       className="animate-fade-in-up"

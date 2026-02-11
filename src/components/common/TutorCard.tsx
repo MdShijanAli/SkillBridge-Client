@@ -13,13 +13,12 @@ interface TutorCardProps {
 
 const TutorCard = ({ tutor }: TutorCardProps) => {
   console.log("Rendering TutorCard for tutor:", tutor);
-  const isFeatured = tutor?.tutorProfile?.isFeatured;
 
   return (
     <div
-      className={`glass-card rounded-xl p-6 hover-lift transition-all duration-300 ${isFeatured ? "ring-2 ring-primary/30 shadow-lg shadow-primary/10" : ""}`}
+      className={`glass-card rounded-xl p-6 hover-lift transition-all duration-300 ${tutor?.is_featured ? "ring-2 ring-primary/30 shadow-lg shadow-primary/10" : ""}`}
     >
-      {isFeatured && (
+      {tutor.is_featured && (
         <div className="flex items-center gap-2 mb-4">
           <Badge className="bg-gradient-to-r from-accent to-orange-400 text-accent-foreground border-0">
             ⭐ Featured
