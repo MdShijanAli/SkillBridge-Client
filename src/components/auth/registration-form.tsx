@@ -145,7 +145,7 @@ const RegistrationForm = () => {
           </div>
 
           {/* Social Registration */}
-          <div className="space-y-3 mb-6">
+          {/* <div className="space-y-3 mb-6">
             <Button
               type="button"
               variant="outline"
@@ -164,10 +164,10 @@ const RegistrationForm = () => {
               <Github className="w-5 h-5 mr-2 text-muted-foreground group-hover:text-primary transition-colors" />
               <span>Sign up with GitHub</span>
             </Button>
-          </div>
+          </div> */}
 
           {/* Divider */}
-          <div className="relative my-6">
+          {/* <div className="relative my-6">
             <div className="absolute inset-0 flex items-center">
               <div className="w-full border-t border-border/50"></div>
             </div>
@@ -176,7 +176,7 @@ const RegistrationForm = () => {
                 Or continue with email
               </span>
             </div>
-          </div>
+          </div> */}
 
           {/* Registration Form */}
           <form

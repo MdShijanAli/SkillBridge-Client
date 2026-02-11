@@ -152,41 +152,6 @@ export default function LoginForm() {
               </p>
             </div>
 
-            {/* Features */}
-            <div className="grid gap-3 pt-4">
-              {[
-                {
-                  icon: Shield,
-                  label: "Secure & Private",
-                  desc: "Your data is protected with encryption",
-                },
-                {
-                  icon: Zap,
-                  label: "Instant Access",
-                  desc: "Connect with tutors in real-time",
-                },
-                {
-                  icon: Sparkles,
-                  label: "Personalized",
-                  desc: "Tailored learning experience",
-                },
-              ].map((feature, i) => (
-                <div key={i} className="flex items-start gap-3 group">
-                  <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center border border-primary/20 group-hover:bg-primary/20 transition-colors">
-                    <feature.icon className="w-5 h-5 text-primary" />
-                  </div>
-                  <div className="flex-1">
-                    <p className="font-semibold text-foreground">
-                      {feature.label}
-                    </p>
-                    <p className="text-sm text-muted-foreground">
-                      {feature.desc}
-                    </p>
-                  </div>
-                </div>
-              ))}
-            </div>
-
             {/* Demo Accounts Card */}
             <div className="glass-card rounded-2xl p-6 border border-border/50 shadow-xl backdrop-blur-xl bg-card/40">
               <div className="flex items-center gap-2 mb-4">
@@ -270,7 +235,7 @@ export default function LoginForm() {
           </div>
 
           {/* Social Login */}
-          <div className="space-y-3 mb-6">
+          {/* <div className="space-y-3 mb-6">
             <Button
               type="button"
               variant="outline"
@@ -289,10 +254,10 @@ export default function LoginForm() {
               <Github className="w-5 h-5 mr-2 text-muted-foreground group-hover:text-primary transition-colors" />
               <span>Continue with GitHub</span>
             </Button>
-          </div>
+          </div> */}
 
           {/* Divider */}
-          <div className="relative my-6">
+          {/* <div className="relative my-6">
             <div className="absolute inset-0 flex items-center">
               <div className="w-full border-t border-border/50"></div>
             </div>
@@ -301,7 +266,7 @@ export default function LoginForm() {
                 Or continue with email
               </span>
             </div>
-          </div>
+          </div> */}
 
           {/* Login Form */}
           <form
