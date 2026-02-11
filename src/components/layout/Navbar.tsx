@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { GraduationCap, Menu, X, User, LogOut } from "lucide-react";
+import { GraduationCap, Menu, X, User, LogOut, Lock } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -143,6 +143,12 @@ const Navbar = ({ isLoggedIn = false, userData }: NavbarProps) => {
                     >
                       <User className="w-4 h-4 mr-2" />
                       Profile
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link href="/change-password" className="cursor-pointer">
+                      <Lock className="w-4 h-4 mr-2" />
+                      Change Password
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />

@@ -10,6 +10,7 @@ import {
   Settings,
   Moon,
   Sun,
+  Lock,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -161,7 +162,7 @@ export function AdminTopbar({ onMobileMenuOpen, userData }: AdminTopbarProps) {
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
                 <Link href="/admin/change-password" className="cursor-pointer">
-                  <Settings className="w-4 h-4 mr-2" />
+                  <Lock className="w-4 h-4 mr-2" />
                   Change Password
                 </Link>
               </DropdownMenuItem>

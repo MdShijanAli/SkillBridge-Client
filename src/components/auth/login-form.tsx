@@ -196,11 +196,11 @@ export default function LoginForm() {
                 <p className="text-xs text-muted-foreground pt-2 border-t border-border/50 flex items-center gap-2">
                   <Shield className="w-3 h-3" />
                   Use password to login:{" "}
-                  <span className="font-mono">Password123</span>
+                  <span className="font-mono">Password123@</span>
                   <Copy
                     className="w-3 h-3 cursor-pointer hover:text-foreground transition-colors"
                     onClick={() => {
-                      navigator.clipboard.writeText("Password123");
+                      navigator.clipboard.writeText("Password123@");
                       toast.success("Password copied to clipboard!");
                     }}
                   />
@@ -436,7 +436,7 @@ export default function LoginForm() {
                   <Copy
                     className="w-3 h-3 cursor-pointer hover:text-foreground transition-colors"
                     onClick={() => {
-                      navigator.clipboard.writeText("Password123");
+                      navigator.clipboard.writeText("Password123@");
                       toast.success("Password copied to clipboard!");
                     }}
                   />
@@ -445,11 +445,11 @@ export default function LoginForm() {
               <p className="text-xs text-muted-foreground pt-2 border-t border-border/50 flex items-center gap-2">
                 <Shield className="w-3 h-3" />
                 Use password to login:{" "}
-                <span className="font-mono">Password123</span>
+                <span className="font-mono">Password123@</span>
                 <Copy
                   className="w-3 h-3 cursor-pointer hover:text-foreground transition-colors"
                   onClick={() => {
-                    navigator.clipboard.writeText("Password123");
+                    navigator.clipboard.writeText("Password123@");
                     toast.success("Password copied to clipboard!");
                   }}
                 />
