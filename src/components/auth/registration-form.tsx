@@ -17,17 +17,27 @@ import {
   TrendingUp,
   EyeIcon,
   EyeOff,
+  Mail,
+  ShieldCheck,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { toast } from "sonner";
 import * as z from "zod";
 import { Roles } from "@/constants/roles";
 import { useForm } from "@tanstack/react-form";
 import { authClient } from "@/lib/auth-client";
 import { Field, FieldError, FieldGroup, FieldLabel } from "../ui/field";
+import { BaseModal } from "../modals/base-modal";
 
 const RegistrationFormSchema = z
   .object({
@@ -47,6 +57,8 @@ const RegistrationForm = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [showVerificationModal, setShowVerificationModal] = useState(false);
+  const [userEmail, setUserEmail] = useState("");
   const searchParams = useSearchParams();
 
   const form = useForm({
@@ -66,10 +78,8 @@ const RegistrationForm = () => {
         setIsLoading(true);
         const result = await authClient.signUp.email({ ...value });
         console.log("Registration result :", result);
-        toast.success(
-          "Account created! Welcome to SkillBridge. You can now sign in.",
-        );
-        router.push("/login");
+        setUserEmail(value.email);
+        setShowVerificationModal(true);
       } catch (error: any) {
         toast.error(error.message || "Registration failed. Please try again.");
         return;
@@ -549,6 +559,81 @@ const RegistrationForm = () => {
           </div>
         </div>
       </div>
+
+      {/* Email Verification Modal */}
+
+      <BaseModal
+        title="Check Your Email!"
+        open={showVerificationModal}
+        onOpenChange={setShowVerificationModal}
+        onSubmit={() => {
+          setShowVerificationModal(false);
+          router.push("/login");
+        }}
+        submitButtonText="Go to Login"
+        className="sm:max-w-md border-border/50 bg-gradient-to-br from-card via-card to-background shadow-2xl"
+      >
+        <div className="space-y-4 py-4">
+          {/* Instructions */}
+          <div className="space-y-3 px-2">
+            <div className="flex items-start gap-3 group">
+              <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0 mt-0.5 group-hover:bg-primary/20 transition-colors">
+                <span className="text-xs font-bold text-primary">1</span>
+              </div>
+              <div className="flex-1 pt-1">
+                <p className="text-sm text-foreground font-medium">
+                  Check your inbox
+                </p>
+                <p className="text-xs text-muted-foreground">
+                  Look for an email from SkillBridge
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-start gap-3 group">
+              <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0 mt-0.5 group-hover:bg-primary/20 transition-colors">
+                <span className="text-xs font-bold text-primary">2</span>
+              </div>
+              <div className="flex-1 pt-1">
+                <p className="text-sm text-foreground font-medium">
+                  Click the verification link
+                </p>
+                <p className="text-xs text-muted-foreground">
+                  This will activate your account
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-start gap-3 group">
+              <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0 mt-0.5 group-hover:bg-primary/20 transition-colors">
+                <span className="text-xs font-bold text-primary">3</span>
+              </div>
+              <div className="flex-1 pt-1">
+                <p className="text-sm text-foreground font-medium">
+                  Sign in and start learning
+                </p>
+                <p className="text-xs text-muted-foreground">
+                  You'll be ready to explore SkillBridge
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Info Box */}
+          <div className="flex items-start gap-3 p-4 rounded-lg bg-accent/50 border border-border/50">
+            <ShieldCheck className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
+            <div className="flex-1">
+              <p className="text-xs text-muted-foreground">
+                <span className="font-semibold text-foreground">
+                  Didn't receive the email?
+                </span>
+                <br />
+                Check your spam folder or contact support if needed.
+              </p>
+            </div>
+          </div>
+        </div>
+      </BaseModal>
     </div>
   );
 };
