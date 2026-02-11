@@ -160,6 +160,7 @@ const Profile = ({ userData }: { userData: UserType }) => {
                                 field.handleChange(e.target.value)
                               }
                               className="pl-10"
+                              disabled
                             />
                             {isInvalid && (
                               <FieldError errors={field.state.meta.errors} />

@@ -160,9 +160,9 @@ export function AdminTopbar({ onMobileMenuOpen, userData }: AdminTopbarProps) {
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
-                <Link href="/admin/settings" className="cursor-pointer">
+                <Link href="/admin/change-password" className="cursor-pointer">
                   <Settings className="w-4 h-4 mr-2" />
-                  Settings
+                  Change Password
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
