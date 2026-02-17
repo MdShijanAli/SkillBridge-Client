@@ -23,13 +23,13 @@ import { useForm } from "@tanstack/react-form";
 import { authClient } from "@/lib/auth-client";
 import { Field, FieldError, FieldGroup, FieldLabel } from "../ui/field";
 import { useRouter } from "next/navigation";
-import { Roles } from "@/lib/types";
+import { Roles } from "@/constants/roles";
 import { Checkbox } from "../ui/checkbox";
 
 const LoginFormSchema = z.object({
   email: z.string().email("Invalid email address"),
   password: z.string().min(8, "Password must be at least 8 characters"),
-  rememberMe: z.boolean().optional(),
+  rememberMe: z.boolean().optional().default(false),
 });
 
 export default function LoginForm() {
@@ -44,7 +44,13 @@ export default function LoginForm() {
       rememberMe: false,
     },
     validators: {
-      onSubmit: LoginFormSchema,
+      onSubmit: ({ value }) => {
+        const result = LoginFormSchema.safeParse(value);
+        if (!result.success) {
+          return result.error.flatten().fieldErrors;
+        }
+        return undefined;
+      },
     },
     onSubmit: async ({ value }) => {
       console.log("Submited Values", value);
@@ -58,9 +64,13 @@ export default function LoginForm() {
         }
         toast.success("Logged in successfully!", { id: toastId });
         console.log("Login successful:", data);
-        if ((data.user?.role as keyof Roles) === "ADMIN") {
+
+        // Get user role from the response
+        const userRole = (data.user as any)?.role;
+
+        if (userRole === Roles.ADMIN) {
           router.push("/admin/dashboard");
-        } else if ((data.user?.role as keyof Roles) === "TUTOR") {
+        } else if (userRole === Roles.TUTOR) {
           router.push("/tutor/dashboard");
         } else {
           router.push("/student/dashboard");
@@ -436,8 +446,8 @@ export default function LoginForm() {
                   <Copy
                     className="w-3 h-3 cursor-pointer hover:text-foreground transition-colors"
                     onClick={() => {
-                      navigator.clipboard.writeText("Password123@");
-                      toast.success("Password copied to clipboard!");
+                      navigator.clipboard.writeText(account.email);
+                      toast.success("Email copied to clipboard!");
                     }}
                   />
                 </div>
