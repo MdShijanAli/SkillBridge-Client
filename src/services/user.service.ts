@@ -8,8 +8,13 @@ export const userService = {
     try {
       const cookieStore = await cookies();
 
+      console.log(
+        "Retrieving session with cookies from cookie store...",
+        cookieStore,
+      );
       // Properly format cookies for the request header
       const allCookies = cookieStore.getAll();
+      console.log("All cookies from cookie store:", allCookies);
       const cookieHeader = allCookies
         .map((cookie) => `${cookie.name}=${cookie.value}`)
         .join("; ");
@@ -27,6 +32,15 @@ export const userService = {
         credentials: "include",
         cache: "no-store",
       });
+
+      // Handle 401 Unauthorized - session is invalid or expired
+      if (res.status === 401) {
+        console.log("Session unauthorized (401) - treating as no session");
+        return {
+          data: null,
+          error: { message: "Unauthorized - Session expired", status: 401 },
+        };
+      }
 
       const session = await res.json();
       console.log("Current session:", session);

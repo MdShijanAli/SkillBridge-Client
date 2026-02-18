@@ -1,4 +1,5 @@
-const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
+// Use Next.js proxy instead of direct backend URL to ensure cookies work
+const baseUrl = "/api";
 
 const createUrl = (path: string) => `${baseUrl}/${path}`;
 

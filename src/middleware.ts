@@ -5,9 +5,14 @@ import { Roles } from "./constants/roles";
 export async function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
 
-  const { data } = await userService.getSession();
+  const { data, error } = await userService.getSession();
 
   console.log("Middleware session data:", data);
+
+  // If there's an error fetching session (including 401), treat as unauthenticated
+  if (error) {
+    console.log("Session error:", error);
+  }
 
   // Check if user is on public auth pages (login, register, forgot-password, etc.)
   const isAuthPage = [
@@ -18,9 +23,9 @@ export async function middleware(request: NextRequest) {
   ].some((page) => pathname.startsWith(page));
 
   // Check if user is trying to access protected routes
-  const isProtectedRoute = 
-    pathname.startsWith("/admin") || 
-    pathname.startsWith("/tutor") || 
+  const isProtectedRoute =
+    pathname.startsWith("/admin") ||
+    pathname.startsWith("/tutor") ||
     pathname.startsWith("/student");
 
   // If user is logged in and tries to access auth pages, redirect to their dashboard
