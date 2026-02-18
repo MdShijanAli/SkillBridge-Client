@@ -14,7 +14,7 @@ import ReviewDialog from "@/components/common/ReviewDialog";
 const StudentDashboard = () => {
   const { data: stats, refetch } = useQuery(apiRoutes.dashboard.studentStats);
   const [reviewDialogOpen, setReviewDialogOpen] = useState(false);
-  const [selectedBooking, setSelectedBooking] = useState<Booking>(null);
+  const [selectedBooking, setSelectedBooking] = useState<Booking>(null as any);
 
   console.log("Dashboard stats:", stats);
 
@@ -85,7 +85,7 @@ const StudentDashboard = () => {
 
               {stats?.data?.recentBookings?.length > 0 ? (
                 <div className="space-y-3">
-                  {stats.data.recentBookings.map((booking) => (
+                  {stats.data.recentBookings.map((booking: Booking) => (
                     <BookingCard
                       key={booking.id}
                       booking={booking}

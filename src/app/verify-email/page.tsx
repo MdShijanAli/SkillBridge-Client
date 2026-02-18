@@ -52,7 +52,7 @@ const VerifyEmailPage = () => {
 
         console.log("Email verification response:", response);
 
-        if (response.data.status) {
+        if (response.data?.status) {
           setState("success");
           const timer = setInterval(() => {
             setCountdown((prev) => {
@@ -69,8 +69,8 @@ const VerifyEmailPage = () => {
         } else {
           setState("error");
           setErrorMessage(
-            response.message ||
-              response.error ||
+            (response as any).message ||
+              (response as any).error ||
               "Verification failed. The link may be invalid or expired.",
           );
         }
@@ -105,14 +105,14 @@ const VerifyEmailPage = () => {
 
       console.log("Resend verification response:", response);
 
-      if (response.data.status) {
+      if (response.data?.status) {
         setResendSuccess(true);
         toast.success("Verification email sent! Please check your inbox.");
         setShowResendForm(false);
       } else {
         toast.error(
-          response.message ||
-            response.error ||
+          (response as any).message ||
+            (response as any).error ||
             "Failed to resend verification email. Please try again.",
         );
       }

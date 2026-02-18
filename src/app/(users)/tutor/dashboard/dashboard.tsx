@@ -11,7 +11,7 @@ import StatCard from "@/components/dashboard/StatCard";
 import { Roles } from "@/constants/roles";
 import { useQuery } from "@/hooks/useQuery";
 import { apiRoutes } from "@/api/apiRoutes";
-import { Booking, BookingStatus, User } from "@/lib/types";
+import { Booking, BookingStatus, Review, User } from "@/lib/types";
 
 const TutorDashboard = ({ userData }: { userData: User }) => {
   const {
@@ -39,11 +39,11 @@ const TutorDashboard = ({ userData }: { userData: User }) => {
   const tutorReviews = reviews?.data;
   console.log("Tutor reviews:", tutorReviews);
   const upcomingBookings = myBookings?.data?.filter(
-    (b) => b.status === BookingStatus.CONFIRMED,
+    (b: Booking) => b.status === BookingStatus.CONFIRMED,
   );
   console.log("Upcoming bookings:", upcomingBookings);
   const completedBookings = myBookings?.data?.filter(
-    (b) => b.status === BookingStatus.COMPLETED,
+    (b: Booking) => b.status === BookingStatus.COMPLETED,
   );
 
   const handleBookingAction = (action: string, booking: Booking) => {
@@ -130,7 +130,7 @@ const TutorDashboard = ({ userData }: { userData: User }) => {
                     </div>
                   ) : upcomingBookings?.length > 0 ? (
                     <div className="space-y-3">
-                      {upcomingBookings.map((booking) => (
+                      {upcomingBookings.map((booking: Booking) => (
                         <BookingCard
                           key={booking.id}
                           booking={booking}
@@ -162,7 +162,7 @@ const TutorDashboard = ({ userData }: { userData: User }) => {
                     </div>
                   ) : completedBookings?.length > 0 ? (
                     <div className="space-y-3">
-                      {completedBookings.map((booking) => (
+                      {completedBookings.map((booking: Booking) => (
                         <BookingCard
                           key={booking.id}
                           booking={booking}
@@ -188,7 +188,7 @@ const TutorDashboard = ({ userData }: { userData: User }) => {
                     </div>
                   ) : tutorReviews?.length > 0 ? (
                     <div className="space-y-3">
-                      {tutorReviews.map((review) => (
+                      {tutorReviews.map((review: Review) => (
                         <ReviewCard key={review.id} review={review} />
                       ))}
                     </div>

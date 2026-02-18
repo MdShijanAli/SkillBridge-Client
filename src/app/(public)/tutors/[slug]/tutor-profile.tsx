@@ -180,7 +180,7 @@ const TutorProfile = ({ tutorData }: { tutorData: TutorData }) => {
                   <div className="relative">
                     <Avatar className="h-28 w-28 ring-4 ring-primary/20">
                       <AvatarImage
-                        src={tutorData.image}
+                        src={tutorData.image || ""}
                         alt={tutorData.name}
                         className="object-cover"
                       />

@@ -35,7 +35,7 @@ const UserSchema = z.object({
   name: z.string().min(1, "User name is required"),
   email: z.string().email("Invalid email address"),
   phone: z.string().min(11, "Phone number must be at least 11 digits"),
-  role: z.enum([Roles.ADMIN, Roles.TUTOR, Roles.STUDENT]).optional(),
+  role: z.enum([Roles.ADMIN, Roles.TUTOR, Roles.STUDENT]),
 });
 
 export default function FormModal({
@@ -105,7 +105,7 @@ export default function FormModal({
                     name={field.name}
                     type="text"
                     placeholder="Enter user name"
-                    value={field.state.value ?? ""}
+                    value={(field.state.value as string) ?? ""}
                     onChange={(e) => field.handleChange(e.target.value)}
                   />
                   {isInvalid && <FieldError errors={field.state.meta.errors} />}
@@ -126,7 +126,7 @@ export default function FormModal({
                     id={field.name}
                     name={field.name}
                     placeholder="Enter user email"
-                    value={field.state.value ?? ""}
+                    value={(field.state.value as string) ?? ""}
                     onChange={(e) => field.handleChange(e.target.value)}
                   />
                   {isInvalid && <FieldError errors={field.state.meta.errors} />}
@@ -146,7 +146,7 @@ export default function FormModal({
                     id={field.name}
                     name={field.name}
                     placeholder="Enter user phone"
-                    value={field.state.value ?? ""}
+                    value={(field.state.value as string) ?? ""}
                     onChange={(e) => field.handleChange(e.target.value)}
                   />
                   {isInvalid && <FieldError errors={field.state.meta.errors} />}
@@ -165,7 +165,7 @@ export default function FormModal({
                   <FieldLabel htmlFor={field.name}>Role</FieldLabel>
 
                   <Select
-                    value={field.state.value}
+                    value={(field.state.value as string) ?? ""}
                     onValueChange={(value) => field.handleChange(value)}
                   >
                     <SelectTrigger id={field.name}>

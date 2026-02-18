@@ -127,7 +127,7 @@ const TutorProfile = ({ userData }: { userData: any }) => {
                   <AvatarFallback>
                     {(userData?.user?.name || userData?.name)
                       ?.split(" ")
-                      .map((n) => n[0])
+                      .map((n: string) => n[0])
                       .join("")}
                   </AvatarFallback>
                 </Avatar>
@@ -178,7 +178,9 @@ const TutorProfile = ({ userData }: { userData: any }) => {
                                 fieldName === "hourlyRate" ? "number" : "text"
                               }
                               className="pl-10"
-                              value={field.state.value ?? ""}
+                              value={
+                                (field.state.value as string | number) ?? ""
+                              }
                               onChange={(e) =>
                                 field.handleChange(e.target.value)
                               }
@@ -201,7 +203,7 @@ const TutorProfile = ({ userData }: { userData: any }) => {
                     <Label>Bio</Label>
                     <Textarea
                       rows={4}
-                      value={field.state.value ?? ""}
+                      value={(field.state.value as string) ?? ""}
                       onChange={(e) => field.handleChange(e.target.value)}
                     />
                     <FieldError errors={field.state.meta.errors} />
@@ -217,7 +219,7 @@ const TutorProfile = ({ userData }: { userData: any }) => {
                         <Label>{formatTextlabel(name)}</Label>
                         <Input
                           type={name === "yearsExperience" ? "number" : "text"}
-                          value={field.state.value ?? ""}
+                          value={(field.state.value as string | number) ?? ""}
                           onChange={(e) => field.handleChange(e.target.value)}
                         />
                         <FieldError errors={field.state.meta.errors} />
@@ -239,7 +241,7 @@ const TutorProfile = ({ userData }: { userData: any }) => {
 
                   <AdvanceSelect
                     options={categoryOptions}
-                    value={field.state.value}
+                    value={field.state.value || []}
                     onChange={(value) => field.handleChange(value as number[])}
                     placeholder="Select categories..."
                     searchPlaceholder="Search categories..."
@@ -259,7 +261,7 @@ const TutorProfile = ({ userData }: { userData: any }) => {
                   <h2 className="text-lg font-semibold">Subjects</h2>
 
                   <div className="flex flex-wrap gap-2">
-                    {field.state.value.map((s) => (
+                    {field.state.value.map((s: string) => (
                       <Badge key={s} variant="secondary">
                         {s}
                         <button
@@ -267,7 +269,7 @@ const TutorProfile = ({ userData }: { userData: any }) => {
                           className="ml-2"
                           onClick={() =>
                             field.handleChange(
-                              field.state.value.filter((x) => x !== s),
+                              field.state.value.filter((x: string) => x !== s),
                             )
                           }
                         >
@@ -302,7 +304,7 @@ const TutorProfile = ({ userData }: { userData: any }) => {
                   <h2 className="text-lg font-semibold">Languages</h2>
 
                   <div className="flex flex-wrap gap-2">
-                    {field.state.value.map((l) => (
+                    {field.state.value.map((l: string) => (
                       <Badge key={l} variant="secondary">
                         <Globe className="w-3 h-3 mr-1" />
                         {l}
@@ -311,7 +313,7 @@ const TutorProfile = ({ userData }: { userData: any }) => {
                           className="ml-2"
                           onClick={() =>
                             field.handleChange(
-                              field.state.value.filter((x) => x !== l),
+                              field.state.value.filter((x: string) => x !== l),
                             )
                           }
                         >

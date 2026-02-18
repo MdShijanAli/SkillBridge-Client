@@ -142,7 +142,7 @@ export function AdminTopbar({ onMobileMenuOpen, userData }: AdminTopbarProps) {
                   <AvatarFallback className="bg-primary text-primary-foreground text-xs">
                     {userData?.name
                       .split(" ")
-                      .map((n) => n[0])
+                      .map((n: string) => n[0])
                       .join("")}
                   </AvatarFallback>
                 </Avatar>

@@ -8,13 +8,11 @@ import { Booking, BookingStatus } from "@/lib/types";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useState } from "react";
 import ReviewDialog from "@/components/common/ReviewDialog";
-import { storeItem } from "@/services/api.service";
-import { toast } from "sonner";
 
 const StudentBookings = ({ user }: { user: any }) => {
   console.log("User prop in StudentBookings:", user);
   const [reviewDialogOpen, setReviewDialogOpen] = useState(false);
-  const [selectedBooking, setSelectedBooking] = useState<Booking>(null);
+  const [selectedBooking, setSelectedBooking] = useState<Booking>(null as any);
 
   const {
     data: myBookings,
@@ -25,11 +23,17 @@ const StudentBookings = ({ user }: { user: any }) => {
   console.log("Fetched bookings:", myBookings);
 
   const upcomingBookings =
-    myBookings?.data?.filter((b) => b.status === BookingStatus.CONFIRMED) || [];
+    myBookings?.data?.filter(
+      (b: Booking) => b.status === BookingStatus.CONFIRMED,
+    ) || [];
   const completedBookings =
-    myBookings?.data?.filter((b) => b.status === BookingStatus.COMPLETED) || [];
+    myBookings?.data?.filter(
+      (b: Booking) => b.status === BookingStatus.COMPLETED,
+    ) || [];
   const cancelledBookings =
-    myBookings?.data?.filter((b) => b.status === BookingStatus.CANCELLED) || [];
+    myBookings?.data?.filter(
+      (b: Booking) => b.status === BookingStatus.CANCELLED,
+    ) || [];
 
   const handleBookingAction = (action: string, booking: Booking) => {
     console.log(`Action: ${action} on Booking ID: ${booking.id}`);
@@ -98,7 +102,7 @@ const StudentBookings = ({ user }: { user: any }) => {
                 </div>
               ) : upcomingBookings.length > 0 ? (
                 <div className="space-y-3">
-                  {upcomingBookings.map((booking) => (
+                  {upcomingBookings.map((booking: Booking) => (
                     <BookingCard
                       key={booking.id}
                       booking={booking}
@@ -144,7 +148,7 @@ const StudentBookings = ({ user }: { user: any }) => {
                 </div>
               ) : completedBookings.length > 0 ? (
                 <div className="space-y-3">
-                  {completedBookings.map((booking) => (
+                  {completedBookings.map((booking: Booking) => (
                     <BookingCard
                       key={booking.id}
                       booking={booking}
@@ -190,7 +194,7 @@ const StudentBookings = ({ user }: { user: any }) => {
                 </div>
               ) : cancelledBookings.length > 0 ? (
                 <div className="space-y-3">
-                  {cancelledBookings.map((booking) => (
+                  {cancelledBookings.map((booking: Booking) => (
                     <BookingCard
                       key={booking.id}
                       booking={booking}

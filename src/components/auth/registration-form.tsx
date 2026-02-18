@@ -212,7 +212,9 @@ const RegistrationForm = () => {
                     return (
                       <RadioGroup
                         value={field.state.value ?? Roles.STUDENT}
-                        onValueChange={(value) => field.handleChange(value)}
+                        onValueChange={(value) =>
+                          field.handleChange(value as any)
+                        }
                         className="grid grid-cols-2 gap-3"
                       >
                         <div>

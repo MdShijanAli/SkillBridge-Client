@@ -52,6 +52,7 @@ import {
   tutors,
   Category,
 } from "@/lib/data";
+import { User as UserType, Booking, BookingStatus } from "@/lib/types";
 import { useForm } from "@tanstack/react-form";
 import { toast } from "sonner";
 import Link from "next/link";
@@ -66,7 +67,7 @@ const categorySchema = z.object({
     .string()
     .min(5, "Description must be at least 5 characters")
     .max(100),
-  tutorCount: z.coerce.number().min(0, "Must be 0 or more"),
+  tutorCount: z.number().min(0, "Must be 0 or more"),
 });
 
 const AdminDashboard = () => {
@@ -190,21 +191,25 @@ const AdminDashboard = () => {
                 Recent Users
               </h3>
               <div className="space-y-3">
-                {dashboardData?.data?.recentUsers?.slice(0, 5).map((user) => (
-                  <div key={user.id} className="flex items-center gap-3">
-                    <Avatar className="h-10 w-10">
-                      <AvatarImage src={user.image} />
-                      <AvatarFallback>{user.name[0]}</AvatarFallback>
-                    </Avatar>
-                    <div className="flex-1">
-                      <p className="font-medium text-foreground">{user.name}</p>
-                      <p className="text-sm text-muted-foreground">
-                        {user.email}
-                      </p>
+                {dashboardData?.data?.recentUsers
+                  ?.slice(0, 5)
+                  .map((user: UserType) => (
+                    <div key={user.id} className="flex items-center gap-3">
+                      <Avatar className="h-10 w-10">
+                        <AvatarImage src={user.image || undefined} />
+                        <AvatarFallback>{user.name[0]}</AvatarFallback>
+                      </Avatar>
+                      <div className="flex-1">
+                        <p className="font-medium text-foreground">
+                          {user.name}
+                        </p>
+                        <p className="text-sm text-muted-foreground">
+                          {user.email}
+                        </p>
+                      </div>
+                      <Badge variant="secondary">{user.role}</Badge>
                     </div>
-                    <Badge variant="secondary">{user.role}</Badge>
-                  </div>
-                ))}
+                  ))}
               </div>
             </div>
 
@@ -215,7 +220,7 @@ const AdminDashboard = () => {
               <div className="space-y-3">
                 {dashboardData?.data?.recentBookings
                   ?.slice(0, 5)
-                  .map((booking) => (
+                  .map((booking: Booking) => (
                     <div
                       key={booking.id}
                       className="flex items-center justify-between"
@@ -230,9 +235,9 @@ const AdminDashboard = () => {
                       </div>
                       <Badge
                         className={
-                          booking.status === "confirmed"
+                          booking.status === BookingStatus.CONFIRMED
                             ? "badge-confirmed"
-                            : booking.status === "completed"
+                            : booking.status === BookingStatus.COMPLETED
                               ? "badge-completed"
                               : "badge-cancelled"
                         }

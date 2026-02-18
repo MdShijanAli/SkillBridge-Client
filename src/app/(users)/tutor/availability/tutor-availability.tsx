@@ -238,7 +238,7 @@ const TutorAvailability = ({
             className="space-y-3"
           >
             <div className="space-y-3">
-              {slots.map((slot, index) => {
+              {slots.map((slot: any, index: number) => {
                 const dayLabel =
                   days.find((d) => d.value === slot.dayOfWeek)?.label ||
                   slot.dayOfWeek;

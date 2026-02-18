@@ -26,7 +26,7 @@ interface CategoryDialogProps {
 
 const CategorySchema = z.object({
   name: z.string().min(1, "Category name is required"),
-  description: z.string().optional(),
+  description: z.string(),
 });
 
 export default function FormModal({
@@ -105,7 +105,7 @@ export default function FormModal({
                     name={field.name}
                     type="text"
                     placeholder="Enter category name"
-                    value={field.state.value ?? ""}
+                    value={(field.state.value as string) ?? ""}
                     onChange={(e) => field.handleChange(e.target.value)}
                   />
                   {isInvalid && <FieldError errors={field.state.meta.errors} />}
@@ -126,7 +126,7 @@ export default function FormModal({
                     id={field.name}
                     name={field.name}
                     placeholder="Enter category description"
-                    value={field.state.value ?? ""}
+                    value={(field.state.value as string) ?? ""}
                     onChange={(e) => field.handleChange(e.target.value)}
                     rows={3}
                   />

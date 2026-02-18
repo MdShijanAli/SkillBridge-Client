@@ -22,10 +22,25 @@ import {
 } from "@/components/ui/tooltip";
 
 const navigationItems = [
-  { name: "Dashboard", href: "/admin/dashboard", icon: LayoutDashboard },
-  { name: "Users", href: "/admin/users", icon: Users },
-  { name: "Bookings", href: "/admin/bookings", icon: Calendar },
-  { name: "Categories", href: "/admin/categories", icon: Tag },
+  {
+    name: "Dashboard",
+    href: "/admin/dashboard",
+    icon: LayoutDashboard,
+    badge: undefined,
+  },
+  { name: "Users", href: "/admin/users", icon: Users, badge: undefined },
+  {
+    name: "Bookings",
+    href: "/admin/bookings",
+    icon: Calendar,
+    badge: undefined,
+  },
+  {
+    name: "Categories",
+    href: "/admin/categories",
+    icon: Tag,
+    badge: undefined,
+  },
 ];
 
 interface AdminSidebarProps {

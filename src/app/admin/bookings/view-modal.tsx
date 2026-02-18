@@ -339,16 +339,10 @@ export default function BookingDetailsModal({
                               </div>
                             </div>
                           )}
-                        {(booking.tutor.tutorProfile.isVerified ||
-                          booking.tutor.tutorProfile.isFeatured) && (
+                        {booking.tutor.tutorProfile.isFeatured && (
                           <div className="md:col-span-2">
                             <p className="text-gray-500 mb-2">Badges</p>
                             <div className="flex flex-wrap gap-2">
-                              {booking.tutor.tutorProfile.isVerified && (
-                                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-700">
-                                  ✓ Verified
-                                </span>
-                              )}
                               {booking.tutor.tutorProfile.isFeatured && (
                                 <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-700">
                                   ⭐ Featured

@@ -125,7 +125,7 @@ const BookingCard = ({ booking, userType, onAction }: BookingCardProps) => {
       <div className="flex items-start justify-between">
         <div className="flex items-center gap-3">
           <Avatar className="h-12 w-12">
-            <AvatarImage src={displayAvatar} alt={displayName} />
+            <AvatarImage src={displayAvatar || ""} alt={displayName} />
             <AvatarFallback className="bg-primary text-primary-foreground">
               {displayName
                 ?.split(" ")

@@ -63,12 +63,12 @@ export interface Booking {
 }
 
 export interface Review {
-  id: string;
+  id: string | number;
   tutorId: string;
   studentId: string;
   rating: number;
   comment: string;
-  date: string;
+  date?: string;
   booking?: Booking;
   student?: User;
   createdAt?: string;
