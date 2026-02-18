@@ -16,9 +16,6 @@ export const apiRoutes = {
     update: (id: number | string) => createUrl(`users/${id}`),
     delete: (id: number | string) => createUrl(`users/${id}`),
     changeStatus: (id: number | string) => createUrl(`users/${id}/status`),
-    bannedUser: (id: number | string) => createUrl(`users/${id}/ban`),
-    changeFeaturedStatus: (id: number | string) =>
-      createUrl(`users/${id}/featured`),
   },
 
   tutor: {

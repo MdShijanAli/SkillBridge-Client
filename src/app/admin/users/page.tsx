@@ -11,7 +11,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
 import { User } from "@/lib/types";
-import { banUser, changeStatus, deleteItem } from "@/services/api.service";
+import { changeStatus, deleteItem } from "@/services/api.service";
 import { Edit, Eye, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -35,86 +35,98 @@ const UserRolesStyle = (role: string) => {
 
 export default function Users() {
   const [showChangeStatusModal, setShowChangeStatusModal] = useState(false);
-  const [showChangeBannedModal, setShowChangeBannedModal] = useState(false);
   const [isChangingStatus, setIsChangingStatus] = useState(false);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
   const [showDetailModal, setShowDetailModal] = useState(false);
-  const [showIsFeaturedModal, setShowIsFeaturedModal] = useState(false);
   const [showFormModal, setShowFormModal] = useState(false);
   const [editData, setEditData] = useState<User | null>();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [refreshKey, setRefreshKey] = useState(0);
+  const [changingStatusName, setChangingStatusName] = useState<
+    "active" | "featured" | "banned" | "emailVerified"
+  >("active");
 
   const handleChangeStatus = (user: User) => {
     console.log("Change status for user:", user);
     setSelectedUser(user);
+    setChangingStatusName("active");
     setShowChangeStatusModal(true);
   };
   const handleBannedUser = (user: User) => {
     console.log("Change banned status for user:", user);
     setSelectedUser(user);
-    setShowChangeBannedModal(true);
+    setChangingStatusName("banned");
+    setShowChangeStatusModal(true);
   };
   const handleFeaturedUser = (user: User) => {
     console.log("Change featured status for user:", user);
     setSelectedUser(user);
-    setShowIsFeaturedModal(true);
+    setChangingStatusName("featured");
+    setShowChangeStatusModal(true);
+  };
+
+  const handleEmailVerified = (user: User) => {
+    console.log("Change email verified status for user:", user);
+    setSelectedUser(user);
+    setChangingStatusName("emailVerified");
+    setShowChangeStatusModal(true);
   };
 
   const handleConfirmChangeStatus = async () => {
     try {
       if (!selectedUser) return;
       setIsChangingStatus(true);
-      let response;
-      if (showChangeStatusModal) {
-        response = await changeStatus({
-          endpoint: apiRoutes.users.changeStatus(selectedUser!.id),
-          data: {
-            is_active: selectedUser!.is_active === true ? false : true,
-          },
-        });
-      } else if (showIsFeaturedModal) {
-        response = await changeStatus({
-          endpoint: apiRoutes.users.changeFeaturedStatus(selectedUser!.id),
-          data: {
-            is_featured: selectedUser!.is_featured === true ? false : true,
-          },
-        });
+      let body;
+      if (changingStatusName === "active") {
+        body = {
+          is_active: selectedUser.is_active === true ? false : true,
+        };
+      } else if (changingStatusName === "featured") {
+        body = {
+          is_featured: selectedUser.is_featured === true ? false : true,
+        };
+      } else if (changingStatusName === "banned") {
+        body = {
+          is_banned: selectedUser.is_banned === true ? false : true,
+        };
       } else {
-        response = await banUser({
-          endpoint: apiRoutes.users.bannedUser(selectedUser!.id),
-          data: {
-            is_banned: selectedUser!.is_banned === true ? false : true,
-          },
-        });
+        body = {
+          emailVerified: selectedUser.emailVerified === true ? false : true,
+        };
       }
+      const response = await changeStatus({
+        endpoint: apiRoutes.users.changeStatus(selectedUser!.id),
+        data: body,
+      });
       if (!response.success) {
         throw new Error(response.message || "Failed to change user status");
       } else {
         console.log("Change Status Response:", response);
         toast.success(
-          showChangeStatusModal
+          changingStatusName === "active"
             ? "User status changed successfully."
-            : showChangeBannedModal
-              ? "User banned status changed successfully."
-              : "User featured status changed successfully.",
+            : changingStatusName === "featured"
+              ? "User featured status changed successfully."
+              : changingStatusName === "emailVerified"
+                ? "User email verified status changed successfully."
+                : "User banned status changed successfully.",
         );
         setShowChangeStatusModal(false);
-        setShowChangeBannedModal(false);
-        setShowIsFeaturedModal(false);
         setRefreshKey((prev) => prev + 1);
       }
     } catch (error: any) {
       console.error("Error changing user status:", error);
       toast.error(
         error.message ||
-          (showChangeStatusModal
+          (changingStatusName === "active"
             ? "Failed to change user status. Please try again."
-            : showChangeBannedModal
-              ? "Failed to change user banned status. Please try again."
-              : "Failed to change user featured status. Please try again."),
+            : changingStatusName === "featured"
+              ? "Failed to change user featured status. Please try again."
+              : changingStatusName === "emailVerified"
+                ? "Failed to change user email verified status. Please try again."
+                : "Failed to change user banned status. Please try again."),
       );
     } finally {
       setIsChangingStatus(false);
@@ -231,6 +243,24 @@ export default function Users() {
       ),
     },
     {
+      key: "emailVerified",
+      label: "Email Verified",
+      render: (user) => (
+        <div>
+          <Badge variant={user.emailVerified ? "success" : "destructive"}>
+            {user.emailVerified ? "Yes" : "No"}
+          </Badge>
+          {user.role !== "ADMIN" && (
+            <Switch
+              onCheckedChange={() => handleEmailVerified(user)}
+              checked={user.emailVerified}
+              className="ml-2"
+            />
+          )}
+        </div>
+      ),
+    },
+    {
       key: "is_featured",
       label: "Featured",
       render: (user) => (
@@ -276,29 +306,27 @@ export default function Users() {
       />
 
       <DeleteModal
-        open={
-          showChangeStatusModal || showChangeBannedModal || showIsFeaturedModal
-        }
-        onClose={() => {
-          setShowChangeStatusModal(false);
-          setShowChangeBannedModal(false);
-          setShowIsFeaturedModal(false);
-        }}
+        open={showChangeStatusModal}
+        onClose={() => setShowChangeStatusModal(false)}
         title={
-          showChangeStatusModal
+          changingStatusName === "active"
             ? "Change User Status"
-            : showChangeBannedModal
+            : changingStatusName === "banned"
               ? "Change Banned Status"
-              : "Change Featured Status"
+              : changingStatusName === "emailVerified"
+                ? "Change Email Verified Status"
+                : "Change Featured Status"
         }
-        description={`${showChangeStatusModal ? "Are you sure you want to change the Activity status of" : showChangeBannedModal ? "Are you sure you want to change the Banned status of" : "Are you sure you want to change the Featured status of"} ${selectedUser?.name}?`}
+        description={`${changingStatusName === "active" ? "Are you sure you want to change the Activity status of" : changingStatusName === "banned" ? "Are you sure you want to change the Banned status of" : changingStatusName === "emailVerified" ? "Are you sure you want to change the Email Verified status of" : "Are you sure you want to change the Featured status of"} ${selectedUser?.name}?`}
         onConfirm={handleConfirmChangeStatus}
         submitButtonText={
-          showChangeStatusModal
+          changingStatusName === "active"
             ? "Change Status"
-            : showChangeBannedModal
+            : changingStatusName === "banned"
               ? "Change Banned Status"
-              : "Change Featured Status"
+              : changingStatusName === "emailVerified"
+                ? "Change Email Verified Status"
+                : "Change Featured Status"
         }
         isDeleting={isChangingStatus}
         submitButtonVariant="default"
