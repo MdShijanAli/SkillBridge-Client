@@ -67,12 +67,18 @@ async function handleRequest(request: Request, params: { path: string[] }) {
       headers["Cookie"] = cookieHeader;
     }
 
-    // Copy other headers from the original request
+    // Copy other headers from the original request (excluding ones we already set)
     const originalHeaders = request.headers;
+    const skipRequestHeaders = [
+      "host",
+      "connection",
+      "content-length",
+      "content-type", // Already set above
+      "cookie", // Already set above
+    ];
+
     originalHeaders.forEach((value, key) => {
-      if (
-        !["host", "connection", "content-length"].includes(key.toLowerCase())
-      ) {
+      if (!skipRequestHeaders.includes(key.toLowerCase())) {
         headers[key] = value;
       }
     });
@@ -90,25 +96,32 @@ async function handleRequest(request: Request, params: { path: string[] }) {
       const body = await request.text();
       if (body) {
         options.body = body;
+        console.log("Request body being sent:", body);
       }
     }
+
+    console.log("Request headers being sent:", headers);
 
     // Make the request to the backend
     const response = await fetch(targetUrl, options);
 
+    console.log("Backend response status:", response.status);
+
     // Get response data
     const data = await response.text();
 
+    console.log("Backend response data:", data);
+
     // Create the response with appropriate headers (excluding compression headers)
     const responseHeaders = new Headers();
-    const skipHeaders = [
+    const skipResponseHeaders = [
       "set-cookie",
       "content-encoding",
       "content-length",
       "transfer-encoding",
     ];
     response.headers.forEach((value, key) => {
-      if (!skipHeaders.includes(key.toLowerCase())) {
+      if (!skipResponseHeaders.includes(key.toLowerCase())) {
         responseHeaders.set(key, value);
       }
     });

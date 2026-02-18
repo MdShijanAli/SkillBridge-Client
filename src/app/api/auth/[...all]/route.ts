@@ -48,12 +48,18 @@ async function handleRequest(request: Request) {
       headers["Cookie"] = cookieHeader;
     }
 
-    // Copy other headers from the original request
+    // Copy other headers from the original request (excluding ones we already set)
     const originalHeaders = request.headers;
+    const skipRequestHeaders = [
+      "host",
+      "connection",
+      "content-length",
+      "content-type", // Already set above
+      "cookie", // Already set above
+    ];
+
     originalHeaders.forEach((value, key) => {
-      if (
-        !["host", "connection", "content-length"].includes(key.toLowerCase())
-      ) {
+      if (!skipRequestHeaders.includes(key.toLowerCase())) {
         headers[key] = value;
       }
     });
@@ -82,14 +88,14 @@ async function handleRequest(request: Request) {
 
     // Create response headers (excluding compression headers but keeping set-cookie)
     const responseHeaders = new Headers();
-    const skipHeaders = [
+    const skipResponseHeaders = [
       "content-encoding",
       "content-length",
       "transfer-encoding",
     ];
 
     response.headers.forEach((value, key) => {
-      if (!skipHeaders.includes(key.toLowerCase())) {
+      if (!skipResponseHeaders.includes(key.toLowerCase())) {
         responseHeaders.set(key, value);
       }
     });
