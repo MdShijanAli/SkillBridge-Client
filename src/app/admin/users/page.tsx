@@ -90,18 +90,22 @@ export default function Users() {
           },
         });
       }
-      console.log("Change Status Response:", response);
-      toast.success(
-        showChangeStatusModal
-          ? "User status changed successfully."
-          : showChangeBannedModal
-            ? "User banned status changed successfully."
-            : "User featured status changed successfully.",
-      );
-      setShowChangeStatusModal(false);
-      setShowChangeBannedModal(false);
-      setShowIsFeaturedModal(false);
-      setRefreshKey((prev) => prev + 1);
+      if (!response.success) {
+        throw new Error(response.message || "Failed to change user status");
+      } else {
+        console.log("Change Status Response:", response);
+        toast.success(
+          showChangeStatusModal
+            ? "User status changed successfully."
+            : showChangeBannedModal
+              ? "User banned status changed successfully."
+              : "User featured status changed successfully.",
+        );
+        setShowChangeStatusModal(false);
+        setShowChangeBannedModal(false);
+        setShowIsFeaturedModal(false);
+        setRefreshKey((prev) => prev + 1);
+      }
     } catch (error: any) {
       console.error("Error changing user status:", error);
       toast.error(

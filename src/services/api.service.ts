@@ -1,111 +1,66 @@
-"use server";
-
-import { cookies } from "next/headers";
-
 export interface ApiParams {
   endpoint: string;
   queryString?: string;
   data?: unknown;
-  id?: string | number;
 }
 
-export const fetchLists = async ({ endpoint, queryString }: ApiParams) => {
-  const cookieStore = await cookies();
-  const url = new URL(`${endpoint}${queryString ? `?${queryString}` : ""}`);
-  console.log("Fetching URL:", url.toString());
-  const res = await fetch(url.toString(), {
-    cache: "no-store",
+const buildUrl = (endpoint: string, query?: string) => {
+  return `${endpoint}${query ? `?${query}` : ""}`;
+};
 
+const baseFetch = async (url: string, options: RequestInit = {}) => {
+  const res = await fetch(url, {
+    credentials: "include",
     headers: {
-      Cookie: cookieStore.toString(),
+      "Content-Type": "application/json",
+      ...(options.headers || {}),
     },
+    ...options,
   });
-  return res.json();
+
+  const data = await res.json();
+
+  if (!res.ok) {
+    throw data;
+  }
+
+  return data;
+};
+
+export const fetchLists = async ({ endpoint, queryString }: ApiParams) => {
+  console.log("FINAL URL:", buildUrl(endpoint));
+  return baseFetch(buildUrl(endpoint, queryString));
 };
 
 export const fetchDetails = async ({ endpoint }: ApiParams) => {
-  const cookieStore = await cookies();
-  const url = `${endpoint}`;
-  console.log("Fetching URL:", url);
-  const res = await fetch(url, {
-    cache: "no-store",
-    headers: { Cookie: cookieStore.toString() },
-  });
-  return res.json();
+  return baseFetch(buildUrl(endpoint));
 };
 
 export const storeItem = async ({ endpoint, data }: ApiParams) => {
-  try {
-    const cookieStore = await cookies();
-    const res = await fetch(`${endpoint}`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Cookie: cookieStore.toString(),
-      },
-      body: JSON.stringify(data),
-    });
-    return res.json();
-  } catch (error) {
-    console.error("Error in storeItem:", error);
-    throw error;
-  }
+  console.log("FINAL URL:", buildUrl(endpoint));
+  console.log("Data being sent:", data);
+  return baseFetch(buildUrl(endpoint), {
+    method: "POST",
+    body: JSON.stringify(data),
+  });
 };
 
 export const updateItem = async ({ endpoint, data }: ApiParams) => {
-  const cookieStore = await cookies();
-  const url = `${endpoint}`;
-  console.log("Fetching URL:", url);
-  const res = await fetch(url, {
+  return baseFetch(buildUrl(endpoint), {
     method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-      Cookie: cookieStore.toString(),
-    },
     body: JSON.stringify(data),
   });
-  return res.json();
 };
 
 export const deleteItem = async ({ endpoint }: ApiParams) => {
-  const cookieStore = await cookies();
-  const url = `${endpoint}`;
-  console.log("Fetching URL:", url);
-  const res = await fetch(url, {
+  return baseFetch(buildUrl(endpoint), {
     method: "DELETE",
-    headers: {
-      Cookie: cookieStore.toString(),
-    },
   });
-  return res.json();
 };
 
 export const changeStatus = async ({ endpoint, data }: ApiParams) => {
-  const cookieStore = await cookies();
-  const url = `${endpoint}`;
-  console.log("Fetching URL:", url);
-  const res = await fetch(url, {
+  return baseFetch(buildUrl(endpoint), {
     method: "PATCH",
-    headers: {
-      "Content-Type": "application/json",
-      Cookie: cookieStore.toString(),
-    },
     body: JSON.stringify(data),
   });
-  return res.json();
-};
-
-export const banUser = async ({ endpoint, data }: ApiParams) => {
-  const cookieStore = await cookies();
-  const url = `${endpoint}`;
-  console.log("Fetching URL:", url);
-  const res = await fetch(url, {
-    method: "PATCH",
-    headers: {
-      "Content-Type": "application/json",
-      Cookie: cookieStore.toString(),
-    },
-    body: JSON.stringify(data),
-  });
-  return res.json();
 };

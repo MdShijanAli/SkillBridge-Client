@@ -11,7 +11,7 @@ import {
   CardHeader,
   CardTitle,
 } from "../ui/card";
-import { RefreshCcw } from "lucide-react";
+import { Plus, RefreshCcw } from "lucide-react";
 import { Button } from "../ui/button";
 
 interface Pagination {
@@ -139,9 +139,10 @@ export function BaseTableList<T = any>({
               {addNewButton && (
                 <button
                   onClick={addNewHandler}
-                  className="bg-blue-600 text-white px-4 py-1 rounded-md hover:bg-blue-700 text-sm"
+                  className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 text-sm"
                 >
-                  Add New
+                  Add
+                  <Plus className="w-4 h-4" />
                 </button>
               )}
             </div>

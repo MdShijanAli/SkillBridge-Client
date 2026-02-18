@@ -64,8 +64,13 @@ export default function FormModal({
           toast.success("Category created successfully");
         }
         console.log("Response:", response);
-        onClose();
-        setRefreshKey((prev) => prev + 1);
+        if (response.success) {
+          toast.success(response.message || "Operation successful");
+          onClose();
+          setRefreshKey((prev) => prev + 1);
+        } else {
+          toast.error(response.message || "Operation failed");
+        }
       } catch (error) {
         toast.error("An error occurred. Please try again.");
       } finally {

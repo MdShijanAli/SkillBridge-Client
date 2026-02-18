@@ -127,7 +127,11 @@ export default function Categories() {
       render: (_, index) => index + 1,
     },
     { key: "name", label: "Name" },
-    { key: "description", label: "Description" },
+    {
+      key: "description",
+      label: "Description",
+      className: "w-[100px] truncate max-w-[200px] ",
+    },
     {
       key: "isActive",
       label: "Active",
