@@ -1,12 +1,19 @@
 "use server";
 
 import { apiRoutes } from "@/api/apiRoutes";
-import { cookies } from "next/headers";
+import { cookies, headers } from "next/headers";
+
+// Helper to get absolute URL for server-side fetch
+const getAbsoluteUrl = (path: string) => {
+  // In server components, we need absolute URLs
+  const baseUrl = process.env.NEXT_PUBLIC_URL || "http://localhost:3000";
+  return `${baseUrl}${path}`;
+};
 
 export const getTutorProfile = async () => {
   const cookieStore = await cookies();
   try {
-    const response = await fetch(apiRoutes.tutor.profile, {
+    const response = await fetch(getAbsoluteUrl(apiRoutes.tutor.profile), {
       headers: {
         cookie: cookieStore.toString(),
       },
@@ -25,7 +32,7 @@ export const updateTutorProfile = async (data: any) => {
   console.log("Updating tutor profile with data:", data);
   const cookieStore = await cookies();
   try {
-    const response = await fetch(apiRoutes.tutor.profile, {
+    const response = await fetch(getAbsoluteUrl(apiRoutes.tutor.profile), {
       headers: {
         cookie: cookieStore.toString(),
         "Content-Type": "application/json",
@@ -44,7 +51,7 @@ export const createTutorProfile = async (data: any) => {
   console.log("Creating tutor profile with data:", data);
   const cookieStore = await cookies();
   try {
-    const response = await fetch(apiRoutes.tutor.profile, {
+    const response = await fetch(getAbsoluteUrl(apiRoutes.tutor.profile), {
       headers: {
         cookie: cookieStore.toString(),
         "Content-Type": "application/json",
@@ -63,14 +70,17 @@ export const createAvailabilitySlot = async (data: any) => {
   console.log("Creating availability slot with data:", data);
   const cookieStore = await cookies();
   try {
-    const response = await fetch(apiRoutes.availabilities.create, {
-      headers: {
-        cookie: cookieStore.toString(),
-        "Content-Type": "application/json",
+    const response = await fetch(
+      getAbsoluteUrl(apiRoutes.availabilities.create),
+      {
+        headers: {
+          cookie: cookieStore.toString(),
+          "Content-Type": "application/json",
+        },
+        method: "POST",
+        body: JSON.stringify(data),
       },
-      method: "POST",
-      body: JSON.stringify(data),
-    });
+    );
     console.log("Create availability slot response status:", response);
     return await response.json();
   } catch (error) {
@@ -83,14 +93,17 @@ export const updateAvailabilitySlot = async (id: number, data: any) => {
   console.log("Updating availability slot:", id, data);
   const cookieStore = await cookies();
   try {
-    const response = await fetch(`${apiRoutes.availabilities.getAll}/${id}`, {
-      headers: {
-        cookie: cookieStore.toString(),
-        "Content-Type": "application/json",
+    const response = await fetch(
+      getAbsoluteUrl(`${apiRoutes.availabilities.getAll}/${id}`),
+      {
+        headers: {
+          cookie: cookieStore.toString(),
+          "Content-Type": "application/json",
+        },
+        method: "PUT",
+        body: JSON.stringify(data),
       },
-      method: "PUT",
-      body: JSON.stringify(data),
-    });
+    );
     return await response.json();
   } catch (error) {
     console.error("Error updating availability slot:", error);
@@ -102,12 +115,15 @@ export const deleteAvailabilitySlot = async (id: number) => {
   console.log("Deleting availability slot:", id);
   const cookieStore = await cookies();
   try {
-    const response = await fetch(`${apiRoutes.availabilities.getAll}/${id}`, {
-      headers: {
-        cookie: cookieStore.toString(),
+    const response = await fetch(
+      getAbsoluteUrl(`${apiRoutes.availabilities.getAll}/${id}`),
+      {
+        headers: {
+          cookie: cookieStore.toString(),
+        },
+        method: "DELETE",
       },
-      method: "DELETE",
-    });
+    );
     return await response.json();
   } catch (error) {
     console.error("Error deleting availability slot:", error);
@@ -121,7 +137,7 @@ export const getAllAvailabilitySlots = async (tutorProfileId: number) => {
     const url =
       apiRoutes.availabilities.getAll + `?tutorProfileId=${tutorProfileId}`;
     console.log("Fetching availability slots from URL:", url);
-    const response = await fetch(url, {
+    const response = await fetch(getAbsoluteUrl(url), {
       headers: {
         cookie: cookieStore.toString(),
       },
@@ -144,7 +160,7 @@ export const changeAvailabilitySlotStatus = async (
   const cookieStore = await cookies();
   try {
     const response = await fetch(
-      `${apiRoutes.availabilities.changeStatus(id)}`,
+      getAbsoluteUrl(`${apiRoutes.availabilities.changeStatus(id)}`),
       {
         headers: {
           cookie: cookieStore.toString(),
@@ -164,7 +180,7 @@ export const changeAvailabilitySlotStatus = async (
 export const getAllTutors = async () => {
   const cookieStore = await cookies();
   try {
-    const response = await fetch(apiRoutes.tutor.getAll, {
+    const response = await fetch(getAbsoluteUrl(apiRoutes.tutor.getAll), {
       headers: {
         cookie: cookieStore.toString(),
       },
@@ -182,13 +198,16 @@ export const getAllTutors = async () => {
 export const getTutorBySlug = async (slug: string) => {
   const cookieStore = await cookies();
   try {
-    const response = await fetch(`${apiRoutes.tutor.getById(slug)}`, {
-      headers: {
-        cookie: cookieStore.toString(),
+    const response = await fetch(
+      getAbsoluteUrl(`${apiRoutes.tutor.getById(slug)}`),
+      {
+        headers: {
+          cookie: cookieStore.toString(),
+        },
+        cache: "no-store",
+        method: "GET",
       },
-      cache: "no-store",
-      method: "GET",
-    });
+    );
     console.log("Tutor by slug response status:", response);
     return await response.json();
   } catch (error) {

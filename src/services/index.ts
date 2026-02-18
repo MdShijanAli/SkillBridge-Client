@@ -2,6 +2,12 @@
 
 import { cookies } from "next/headers";
 
+// Helper to get absolute URL for server-side fetch
+const getAbsoluteUrl = (path: string) => {
+  const baseUrl = process.env.NEXT_PUBLIC_URL || "http://localhost:3000";
+  return `${baseUrl}${path}`;
+};
+
 export const serverQuery = async <T = any>(
   apiRoute: string,
   search?: string,
@@ -12,7 +18,7 @@ export const serverQuery = async <T = any>(
       ? `${apiRoute}?search=${encodeURIComponent(search)}`
       : apiRoute;
 
-    const response = await fetch(url, {
+    const response = await fetch(getAbsoluteUrl(url), {
       headers: {
         cookie: cookieStore.toString(),
       },
