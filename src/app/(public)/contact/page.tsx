@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -31,6 +30,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { useForm } from "@tanstack/react-form";
+import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 
 const contactSchema = z.object({
   name: z
@@ -114,15 +114,7 @@ const contactMethods = [
 ];
 
 const Contact = () => {
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
-  const {
-    register,
-    handleSubmit,
-    reset,
-    setValue,
-    formState: { errors },
-  } = useForm<ContactFormData>({
+  const form = useForm({
     defaultValues: {
       name: "",
       email: "",
@@ -132,21 +124,17 @@ const Contact = () => {
     validators: {
       onSubmit: contactSchema,
     },
+    onSubmit: async ({ value }) => {
+      // Simulate API call
+      await new Promise((resolve) => setTimeout(resolve, 1500));
+
+      toast.success(
+        "Message Sent! We've received your message and will get back to you soon.",
+      );
+
+      form.reset();
+    },
   });
-
-  const onSubmit = async (data: ContactFormData) => {
-    setIsSubmitting(true);
-
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1500));
-
-    toast.success(
-      "Message Sent! We've received your message and will get back to you soon.",
-    );
-
-    reset();
-    setIsSubmitting(false);
-  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -204,88 +192,131 @@ const Contact = () => {
                 </p>
               </div>
 
-              <form onSubmit={handleSubmit(onSubmit)} className="space-y-3">
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  form.handleSubmit();
+                }}
+                className="space-y-3"
+              >
                 <div className="grid sm:grid-cols-2 gap-3">
-                  <div className="space-y-2">
-                    <Label htmlFor="name">Your Name</Label>
-                    <Input
-                      id="name"
-                      placeholder="John Doe"
-                      {...register("name")}
-                      className={errors.name ? "border-destructive" : ""}
-                    />
-                    {errors.name && (
-                      <p className="text-sm text-destructive">
-                        {errors.name.message}
-                      </p>
-                    )}
-                  </div>
+                  <form.Field name="name">
+                    {(field) => {
+                      const isInvalid =
+                        field.state.meta.isTouched && !field.state.meta.isValid;
+                      return (
+                        <div className="space-y-2">
+                          <Label htmlFor="name">Your Name</Label>
+                          <Input
+                            id="name"
+                            placeholder="John Doe"
+                            value={field.state.value ?? ""}
+                            onChange={(e) => field.handleChange(e.target.value)}
+                            className={isInvalid ? "border-destructive" : ""}
+                          />
+                          {isInvalid && (
+                            <FieldError errors={field.state.meta.errors} />
+                          )}
+                        </div>
+                      );
+                    }}
+                  </form.Field>
 
-                  <div className="space-y-2">
-                    <Label htmlFor="email">Email Address</Label>
-                    <Input
-                      id="email"
-                      type="email"
-                      placeholder="john@example.com"
-                      {...register("email")}
-                      className={errors.email ? "border-destructive" : ""}
-                    />
-                    {errors.email && (
-                      <p className="text-sm text-destructive">
-                        {errors.email.message}
-                      </p>
-                    )}
-                  </div>
+                  <form.Field name="email">
+                    {(field) => {
+                      const isInvalid =
+                        field.state.meta.isTouched && !field.state.meta.isValid;
+                      return (
+                        <div className="space-y-2">
+                          <Label htmlFor="email">Email Address</Label>
+                          <Input
+                            id="email"
+                            type="email"
+                            placeholder="john@example.com"
+                            value={field.state.value ?? ""}
+                            onChange={(e) => field.handleChange(e.target.value)}
+                            className={isInvalid ? "border-destructive" : ""}
+                          />
+                          {isInvalid && (
+                            <FieldError errors={field.state.meta.errors} />
+                          )}
+                        </div>
+                      );
+                    }}
+                  </form.Field>
                 </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="subject">Subject</Label>
-                  <Select onValueChange={(value) => setValue("subject", value)}>
-                    <SelectTrigger
-                      className={errors.subject ? "border-destructive" : ""}
-                    >
-                      <SelectValue placeholder="Select a subject" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="general">General Inquiry</SelectItem>
-                      <SelectItem value="booking">Booking Help</SelectItem>
-                      <SelectItem value="technical">
-                        Technical Support
-                      </SelectItem>
-                      <SelectItem value="billing">Billing Question</SelectItem>
-                      <SelectItem value="tutor">Become a Tutor</SelectItem>
-                      <SelectItem value="feedback">Feedback</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  {errors.subject && (
-                    <p className="text-sm text-destructive">
-                      {errors.subject.message}
-                    </p>
-                  )}
-                </div>
+                <form.Field name="subject">
+                  {(field) => {
+                    const isInvalid =
+                      field.state.meta.isTouched && !field.state.meta.isValid;
+                    return (
+                      <div className="space-y-2">
+                        <Label htmlFor="subject">Subject</Label>
+                        <Select
+                          onValueChange={(value) => field.handleChange(value)}
+                        >
+                          <SelectTrigger
+                            className={isInvalid ? "border-destructive" : ""}
+                          >
+                            <SelectValue placeholder="Select a subject" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="general">
+                              General Inquiry
+                            </SelectItem>
+                            <SelectItem value="booking">
+                              Booking Help
+                            </SelectItem>
+                            <SelectItem value="technical">
+                              Technical Support
+                            </SelectItem>
+                            <SelectItem value="billing">
+                              Billing Question
+                            </SelectItem>
+                            <SelectItem value="tutor">
+                              Become a Tutor
+                            </SelectItem>
+                            <SelectItem value="feedback">Feedback</SelectItem>
+                          </SelectContent>
+                        </Select>
+                        {isInvalid && (
+                          <FieldError errors={field.state.meta.errors} />
+                        )}
+                      </div>
+                    );
+                  }}
+                </form.Field>
 
-                <div className="space-y-2">
-                  <Label htmlFor="message">Message</Label>
-                  <Textarea
-                    id="message"
-                    placeholder="How can we help you?"
-                    rows={5}
-                    {...register("message")}
-                    className={errors.message ? "border-destructive" : ""}
-                  />
-                  {errors.message && (
-                    <p className="text-sm text-destructive">
-                      {errors.message.message}
-                    </p>
-                  )}
-                </div>
+                <form.Field name="message">
+                  {(field) => {
+                    const isInvalid =
+                      field.state.meta.isTouched && !field.state.meta.isValid;
+                    return (
+                      <div className="space-y-2">
+                        <Label htmlFor="message">Message</Label>
+                        <Textarea
+                          id="message"
+                          placeholder="How can we help you?"
+                          rows={5}
+                          value={field.state.value ?? ""}
+                          onChange={(e) => field.handleChange(e.target.value)}
+                          className={isInvalid ? "border-destructive" : ""}
+                        />
+                        {isInvalid && (
+                          <FieldError errors={field.state.meta.errors} />
+                        )}
+                      </div>
+                    );
+                  }}
+                </form.Field>
 
                 <Button
                   type="submit"
                   className="w-full"
-                  disabled={isSubmitting}
+                  disabled={form.state.isSubmitting}
                 >
-                  {isSubmitting ? (
+                  {form.state.isSubmitting ? (
                     "Sending..."
                   ) : (
                     <>
