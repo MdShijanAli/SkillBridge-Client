@@ -79,7 +79,9 @@ const RegistrationForm = () => {
         const result = await authClient.signUp.email({ ...value });
         console.log("Registration result :", result);
         if (!result.data?.user.name) {
-          throw new Error("Registration failed. Please try again.");
+          throw new Error(
+            `${result?.error?.message || "Registration failed. Please try again."}`,
+          );
         } else {
           toast.success("Registration successful! Please verify your email.");
           setUserEmail(value.email);
