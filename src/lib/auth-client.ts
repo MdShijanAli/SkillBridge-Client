@@ -6,7 +6,7 @@ export const authClient = createAuthClient({
   baseURL:
     typeof window !== "undefined"
       ? `${window.location.origin}/api/auth`
-      : "http://localhost:3000/api/auth",
+      : process.env.AUTH_URL || "http://localhost:3000/api/auth",
   // Social providers should be configured on the SERVER side, not client
   plugins: [emailOTPClient()],
   fetchOptions: {
