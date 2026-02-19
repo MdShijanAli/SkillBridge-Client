@@ -21,8 +21,8 @@ const UserFormSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
   email: z.string().email("Invalid email address"),
   phone: z.string().min(10, "Phone number must be at least 10 digits"),
-  location: z.string().optional(),
-  bio: z.string().max(500, "Bio must be at most 500 characters").optional(),
+  location: z.string(),
+  bio: z.string().max(500, "Bio must be at most 500 characters"),
 });
 
 const Profile = ({ userData }: { userData: UserType }) => {
@@ -37,7 +37,13 @@ const Profile = ({ userData }: { userData: UserType }) => {
         "Passionate learner looking to improve my skills in programming and mathematics.",
     },
     validators: {
-      onSubmit: UserFormSchema,
+      onSubmit: ({ value }) => {
+        const result = UserFormSchema.safeParse(value);
+        if (!result.success) {
+          return result.error.flatten().fieldErrors;
+        }
+        return undefined;
+      },
     },
     onSubmit: async ({ value }) => {
       const toastId = toast.loading("Saving profile...");
@@ -78,7 +84,7 @@ const Profile = ({ userData }: { userData: UserType }) => {
                 <div className="flex items-center gap-3">
                   <div className="relative">
                     <Avatar className="h-24 w-24">
-                      <AvatarImage src={userData.image} />
+                      <AvatarImage src={userData.image || undefined} />
                       <AvatarFallback className="text-2xl">
                         {userData.name
                           .split(" ")

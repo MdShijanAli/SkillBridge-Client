@@ -30,7 +30,7 @@ const TutorCard = ({ tutor }: TutorCardProps) => {
         <div className="relative">
           <Avatar className="h-16 w-16 ring-2 ring-primary/20">
             <AvatarImage
-              src={tutor.image}
+              src={tutor.image || ""}
               alt={tutor.name}
               className="object-cover"
             />
@@ -88,7 +88,7 @@ const TutorCard = ({ tutor }: TutorCardProps) => {
       {/* Categories */}
       {(tutor?.tutorProfile?.categories?.length ?? 0) > 0 && (
         <div className="mt-4 flex flex-wrap gap-1.5">
-          {tutor.tutorProfile.categories.slice(0, 2).map((categoryName) => {
+          {tutor?.tutorProfile?.categories.slice(0, 2).map((categoryName) => {
             return (
               <div
                 key={categoryName.id}
@@ -101,7 +101,7 @@ const TutorCard = ({ tutor }: TutorCardProps) => {
           })}
           {(tutor?.tutorProfile?.categories.length ?? 0) > 2 && (
             <span className="text-xs text-muted-foreground px-2 py-0.5">
-              +{tutor.tutorProfile.categories.length - 2} more
+              +{tutor?.tutorProfile?.categories.length! - 2} more
             </span>
           )}
         </div>

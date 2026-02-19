@@ -6,12 +6,12 @@ export const env = createEnv({
     BACKEND_API: z.url(),
     API_URL: z.url(),
     AUTH_URL: z.url(),
-    NEXT_PUBLIC_URL: z.url().optional(),
   },
 
   client: {
     NEXT_PUBLIC_TEST_VALUE: z.string(),
     NEXT_PUBLIC_API_URL: z.url(),
+    NEXT_PUBLIC_URL: z.string().url().or(z.literal("")).optional(),
   },
 
   runtimeEnv: {

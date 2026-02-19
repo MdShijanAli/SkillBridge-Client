@@ -123,7 +123,9 @@ const TutorProfile = ({ userData }: { userData: any }) => {
             <div className="glass-card p-6 rounded-xl">
               <div className="flex items-center gap-3">
                 <Avatar className="h-24 w-24 ring-4 ring-primary/20">
-                  <AvatarImage src={userData?.user?.image || userData?.image} />
+                  <AvatarImage
+                    src={userData?.user?.image || userData?.image || undefined}
+                  />
                   <AvatarFallback>
                     {(userData?.user?.name || userData?.name)
                       ?.split(" ")
