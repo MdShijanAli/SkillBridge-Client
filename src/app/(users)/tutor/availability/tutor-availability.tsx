@@ -238,15 +238,15 @@ const TutorAvailability = ({
             className="space-y-3"
           >
             <div className="space-y-3">
-              {slots.map((slot: any, index: number) => {
+              {slots?.map((slot: any, index: number) => {
                 const dayLabel =
                   days.find((d) => d.value === slot.dayOfWeek)?.label ||
                   slot.dayOfWeek;
-                const isSaving = savingSlotId === slot.id;
+                const isSaving = savingSlotId === slot?.id;
 
                 return (
                   <div
-                    key={slot.id}
+                    key={slot?.id}
                     className="glass-card rounded-xl p-6 hover:shadow-lg transition-shadow"
                   >
                     <div className="flex flex-col gap-3">
@@ -331,7 +331,7 @@ const TutorAvailability = ({
                               onCheckedChange={(checked) =>
                                 toggleSlotStatus(slot, index, checked)
                               }
-                              disabled={savingSlotId === slot.id}
+                              disabled={savingSlotId === slot?.id}
                             />
                             <Label
                               htmlFor={`active-${index}`}

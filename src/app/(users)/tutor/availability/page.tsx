@@ -10,7 +10,7 @@ import { Calendar, UserCircle, ArrowRight } from "lucide-react";
 export default async function TutorAvailabilityPage() {
   const tutorProfile = await getTutorProfile();
 
-  console.log("Tutor Profile in Availability Page:", tutorProfile.data.id);
+  console.log("Tutor Profile in Availability Page:", tutorProfile?.data?.id);
 
   if (!tutorProfile?.data?.id) {
     return (
