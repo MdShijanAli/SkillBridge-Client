@@ -28,12 +28,13 @@ import {
 import Link from "next/link";
 import { toast } from "sonner";
 import ReviewCard from "@/components/dashboard/ReviewCard";
-import { TutorData } from "@/lib/types";
+import { TutorData, User } from "@/lib/types";
 import { useForm } from "@tanstack/react-form";
 import { z } from "zod";
 import { apiRoutes } from "@/api/apiRoutes";
 import { storeItem } from "@/services/api.service";
 import { FieldError } from "@/components/ui/field";
+import { Roles } from "@/constants/roles";
 
 // Booking form schema
 const bookingSchema = z.object({
@@ -47,7 +48,25 @@ const bookingSchema = z.object({
 
 type BookingFormData = z.infer<typeof bookingSchema>;
 
-const TutorProfile = ({ tutorData }: { tutorData: TutorData }) => {
+const guestUser: User = {
+  id: "",
+  name: "Guest",
+  email: "",
+  phone: "",
+  role: "STUDENT",
+  is_active: false,
+  is_banned: false,
+  createdAt: new Date().toISOString(),
+  updatedAt: new Date().toISOString(),
+};
+
+const TutorProfile = async ({
+  tutorData,
+  auth = guestUser,
+}: {
+  tutorData: TutorData;
+  auth?: User;
+}) => {
   console.log("Rendering TutorProfile with data:", tutorData);
   const form = useForm({
     defaultValues: {
@@ -81,12 +100,11 @@ const TutorProfile = ({ tutorData }: { tutorData: TutorData }) => {
 
         // Reset form
         form.reset();
-      } catch (error) {
+      } catch (error: any) {
         console.error("Booking error:", error);
-        toast.error(
-          error instanceof Error ? error.message : "Failed to book session",
-          { id: toastId },
-        );
+        toast.error(error?.message || "Failed to book session", {
+          id: toastId,
+        });
       }
     },
   });
@@ -660,24 +678,33 @@ const TutorProfile = ({ tutorData }: { tutorData: TutorData }) => {
                             </div>
                           )}
 
-                          <form.Subscribe
-                            selector={(state) => [
-                              state.canSubmit,
-                              state.isSubmitting,
-                            ]}
-                            children={([canSubmit, isSubmitting]) => (
-                              <Button
-                                type="submit"
-                                variant="hero"
-                                className="w-full"
-                                size="lg"
-                                disabled={!canSubmit || isSubmitting}
-                              >
-                                <Calendar className="w-4 h-4 mr-2" />
-                                {isSubmitting ? "Booking..." : "Book Session"}
-                              </Button>
-                            )}
-                          />
+                          {auth.role !== Roles.STUDENT ? (
+                            <div className="p-4 bg-red-50 rounded-lg border border-red-200 text-center">
+                              <span className="text-red-600 font-medium">
+                                Only students can book sessions. Please log in
+                                with a student account to book.
+                              </span>
+                            </div>
+                          ) : (
+                            <form.Subscribe
+                              selector={(state) => [
+                                state.canSubmit,
+                                state.isSubmitting,
+                              ]}
+                              children={([canSubmit, isSubmitting]) => (
+                                <Button
+                                  type="submit"
+                                  variant="hero"
+                                  className="w-full"
+                                  size="lg"
+                                  disabled={!canSubmit || isSubmitting}
+                                >
+                                  <Calendar className="w-4 h-4 mr-2" />
+                                  {isSubmitting ? "Booking..." : "Book Session"}
+                                </Button>
+                              )}
+                            />
+                          )}
                         </div>
                       );
                     }}
