@@ -290,7 +290,7 @@ const TutorProfile = ({ tutorData }: { tutorData: TutorData }) => {
                       About Me
                     </h3>
                     <p className="text-muted-foreground leading-relaxed">
-                      {tutorData?.bio}
+                      {tutorData?.tutorProfile?.bio}
                     </p>
                   </div>
 

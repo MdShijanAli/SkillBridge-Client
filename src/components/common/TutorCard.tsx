@@ -82,7 +82,7 @@ const TutorCard = ({ tutor }: TutorCardProps) => {
       </div>
 
       <p className="mt-4 text-sm text-muted-foreground line-clamp-2 leading-relaxed">
-        {tutor.bio}
+        {tutor?.tutorProfile?.bio}
       </p>
 
       {/* Categories */}
