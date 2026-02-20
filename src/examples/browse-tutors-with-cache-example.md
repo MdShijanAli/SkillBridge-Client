@@ -1,9 +1,23 @@
-// Example: Using Cache in Browse Tutors Component
+# Browse Tutors Component with Caching Example
 
+This document demonstrates how to implement intelligent caching in a tutors browsing component using the `useQuery` hook.
+
+## Benefits of Caching
+
+- **First load**: Fetches from API
+- **Subsequent loads**: Instant display from cache (within 5 minutes)
+- **Stale data**: Shows old data immediately while fetching fresh data in background
+- **Auto-refresh**: When admin adds new tutor via `invalidateTutorCache()`
+- **Better UX**: No loading spinners after first load
+
+---
+
+## Complete Component Example
+
+```typescript
 "use client";
 
-import { useEffect, useState } from "react";
-import { Search } from "lucide-react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import TutorCard from "@/components/common/TutorCard";
@@ -11,15 +25,6 @@ import { useQuery } from "@/hooks/useQuery";
 import { apiRoutes } from "@/api/apiRoutes";
 import { TutorData } from "@/lib/types";
 
-/**
- * Browse Tutors Component with Intelligent Caching
- *
- * Benefits:
- * - First load: Fetches from API
- * - Subsequent loads: Instant display from cache (within 5 minutes)
- * - Stale data: Shows old data immediately while fetching fresh data in background
- * - Auto-refresh: When admin adds new tutor via invalidateTutorCache()
- */
 const BrowseTutorsWithCache = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
@@ -105,32 +110,87 @@ const BrowseTutorsWithCache = () => {
 };
 
 export default BrowseTutorsWithCache;
+```
 
-/**
- * How the cache works in this component:
- *
- * 1. First Visit:
- *    - Fetches categories from API (10 min cache)
- *    - Fetches tutors from API (5 min cache)
- *    - Shows loading state
- *
- * 2. Subsequent Visits (within cache time):
- *    - Instantly shows cached categories
- *    - Instantly shows cached tutors
- *    - No loading state!
- *
- * 3. After Cache Expires:
- *    - Shows old (stale) data immediately
- *    - Fetches fresh data in background
- *    - Updates UI when fresh data arrives
- *    - User never sees loading state!
- *
- * 4. When Admin Adds New Tutor:
- *    - Admin calls invalidateTutorCache() after adding
- *    - This component's cache is cleared
- *    - Next fetch gets fresh data with new tutor
- *
- * 5. Manual Refresh:
- *    - User clicks "Refresh" button
- *    - Skips cache and fetches fresh data
- */
+---
+
+## How the Cache Works
+
+### 1. First Visit
+
+- Fetches categories from API (10 min cache)
+- Fetches tutors from API (5 min cache)
+- Shows loading state
+- Stores data in cache
+
+### 2. Subsequent Visits (within cache time)
+
+- ✅ Instantly shows cached categories
+- ✅ Instantly shows cached tutors
+- ✅ No loading state!
+- ✅ Instant page load
+
+### 3. After Cache Expires (Stale-While-Revalidate)
+
+- Shows old (stale) data immediately
+- Fetches fresh data in background
+- Updates UI when fresh data arrives
+- **User never sees loading state!**
+
+### 4. When Admin Adds New Tutor
+
+- Admin calls `invalidateTutorCache()` after adding
+- This component's cache is cleared
+- Next fetch gets fresh data with new tutor
+- Automatic refresh without manual intervention
+
+### 5. Manual Refresh
+
+- User clicks "Refresh" button
+- Skips cache and fetches fresh data
+- Forces immediate data reload
+
+---
+
+## Cache Configuration Options
+
+```typescript
+const { data } = useQuery(apiRoute, params, {
+  cacheTime: 5 * 60 * 1000, // How long to cache (5 minutes)
+  staleWhileRevalidate: true, // Show stale data while fetching
+  useCache: true, // Enable/disable caching
+  enabled: true, // Enable/disable query
+  refetchOnMount: true, // Refetch on component mount
+});
+```
+
+---
+
+## Best Practices
+
+### ✅ DO
+
+- Cache static data longer (categories: 10-15 min)
+- Cache dynamic data shorter (tutors: 3-5 min)
+- Use `staleWhileRevalidate` for better UX
+- Invalidate cache after mutations (add/edit/delete)
+
+### ❌ DON'T
+
+- Cache user-specific data (or use very short TTL)
+- Forget to invalidate cache after updates
+- Use very long cache times for frequently changing data
+- Disable `staleWhileRevalidate` unless necessary
+
+---
+
+## Related Functions
+
+```typescript
+// From useQuery
+const { data, refetch, invalidateCache } = useQuery(...);
+
+// From cache-utils
+import { invalidateTutorCache } from "@/lib/cache-utils";
+invalidateTutorCache(); // Clear all tutor cache
+```
