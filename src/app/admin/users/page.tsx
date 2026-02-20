@@ -192,7 +192,7 @@ export default function Users() {
     {
       key: "sl",
       label: "SL",
-      render: (user, index) => getSerialNumber(index),
+      render: (_, index) => getSerialNumber(index),
     },
     { key: "name", label: "Name" },
     { key: "email", label: "Email" },

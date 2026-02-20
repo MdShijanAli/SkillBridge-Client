@@ -97,8 +97,11 @@ export function BaseTableList<T = any>({
   };
 
   useEffect(() => {
-    fetchData(1, search);
-    // eslint-disable-next-line
+    const debounceTimer = setTimeout(() => {
+      fetchData(1, search);
+    }, 500);
+
+    return () => clearTimeout(debounceTimer);
   }, [search]);
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
