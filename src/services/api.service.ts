@@ -1,3 +1,5 @@
+"use client";
+
 import { authClient } from "@/lib/auth-client";
 import { invalidateAllCache } from "@/lib/cache-utils";
 
@@ -13,36 +15,31 @@ const buildUrl = (endpoint: string, query?: string) => {
 
 const handleUnauthorized = async () => {
   try {
-    // Clear all cache on logout
     invalidateAllCache();
 
-    // Sign out the user and clear session
     await authClient.signOut({
       fetchOptions: {
         onSuccess: () => {
-          // Redirect to login page after successful logout
           window.location.href = "/login";
         },
       },
     });
   } catch (error) {
     console.error("Error during logout:", error);
-    // Even if logout fails, redirect to login page
     window.location.href = "/login";
   }
 };
 
 const baseFetch = async (url: string, options: RequestInit = {}) => {
   const res = await fetch(url, {
+    ...options,
     credentials: "include",
     headers: {
       "Content-Type": "application/json",
       ...(options.headers || {}),
     },
-    ...options,
   });
 
-  // Check for 401 Unauthorized status
   if (res.status === 401) {
     await handleUnauthorized();
     throw { message: "Unauthorized - Session expired", status: 401 };
