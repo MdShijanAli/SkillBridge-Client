@@ -111,6 +111,7 @@ const StudentBookings = ({ user }: { user: any }) => {
                         handleBookingAction(action, booking)
                       }
                       auth={user}
+                      isUpcoming={true}
                     />
                   ))}
                 </div>

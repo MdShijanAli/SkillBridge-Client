@@ -138,6 +138,8 @@ const TutorDashboard = ({ userData }: { userData: User }) => {
                           onAction={(action, booking) =>
                             handleBookingAction(action, booking)
                           }
+                          auth={userData}
+                          isUpcoming={true}
                         />
                       ))}
                     </div>
@@ -167,6 +169,7 @@ const TutorDashboard = ({ userData }: { userData: User }) => {
                           key={booking.id}
                           booking={booking}
                           userType={Roles.TUTOR}
+                          auth={userData}
                         />
                       ))}
                     </div>

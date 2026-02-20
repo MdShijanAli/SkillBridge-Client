@@ -101,6 +101,7 @@ const StudentDashboard = ({ auth }: { auth: User }) => {
                       onAction={(action, booking) =>
                         handleBookingAction(action, booking)
                       }
+                      isUpcoming={true}
                     />
                   ))}
                 </div>
