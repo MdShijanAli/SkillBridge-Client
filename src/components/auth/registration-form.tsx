@@ -38,6 +38,8 @@ import { useForm } from "@tanstack/react-form";
 import { authClient } from "@/lib/auth-client";
 import { Field, FieldError, FieldGroup, FieldLabel } from "../ui/field";
 import { BaseModal } from "../modals/base-modal";
+import { storeItem } from "@/services/api.service";
+import { apiRoutes } from "@/api/apiRoutes";
 
 const RegistrationFormSchema = z
   .object({
@@ -76,7 +78,11 @@ const RegistrationForm = () => {
       console.log("Form Values:", value);
       try {
         setIsLoading(true);
-        const result = await authClient.signUp.email({ ...value });
+        // const result = await authClient.signUp.email({ ...value });
+        const result = await storeItem({
+          endpoint: apiRoutes.auth.register,
+          data: value,
+        });
         console.log("Registration result :", result);
         if (!result.data?.user.name) {
           throw new Error(

@@ -1,12 +1,12 @@
 // Use Next.js proxy instead of direct backend URL to ensure cookies work
-const baseUrl = "/api";
+const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api";
 
 const createUrl = (path: string) => `${baseUrl}/${path}`;
 
 export const apiRoutes = {
   auth: {
     login: createUrl("auth/login"),
-    register: createUrl("auth/register"),
+    register: createUrl("auth/sign-up/email"),
     me: createUrl("auth/me"),
   },
 
