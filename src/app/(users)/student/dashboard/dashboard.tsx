@@ -7,12 +7,19 @@ import Link from "next/link";
 import BookingCard from "./BookingCard";
 import { apiRoutes } from "@/api/apiRoutes";
 import { useQuery } from "@/hooks/useQuery";
-import { Booking } from "@/lib/types";
+import { Booking, User } from "@/lib/types";
 import { useState } from "react";
 import ReviewDialog from "@/components/common/ReviewDialog";
 
-const StudentDashboard = () => {
-  const { data: stats, refetch } = useQuery(apiRoutes.dashboard.studentStats);
+const StudentDashboard = ({ auth }: { auth: User }) => {
+  const { data: stats, refetch } = useQuery(
+    apiRoutes.dashboard.studentStats,
+    {},
+    {
+      staleWhileRevalidate: true,
+      cacheTime: 0.5 * 60 * 1000,
+    },
+  );
   const [reviewDialogOpen, setReviewDialogOpen] = useState(false);
   const [selectedBooking, setSelectedBooking] = useState<Booking>(null as any);
 
@@ -90,6 +97,7 @@ const StudentDashboard = () => {
                       key={booking.id}
                       booking={booking}
                       userType="STUDENT"
+                      auth={auth}
                       onAction={(action, booking) =>
                         handleBookingAction(action, booking)
                       }

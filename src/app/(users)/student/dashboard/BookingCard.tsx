@@ -4,25 +4,32 @@ import { Calendar, Clock, Video, Star } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Booking, BookingStatus } from "@/lib/types";
+import { Booking, BookingStatus, User } from "@/lib/types";
 import { Roles } from "@/constants/roles";
 import { toast } from "sonner";
 import { useState } from "react";
 import { BaseModal } from "@/components/modals/base-modal";
 import { changeStatus } from "@/services/api.service";
 import { apiRoutes } from "@/api/apiRoutes";
-import { useRouter } from "next/navigation";
 
 interface BookingCardProps {
   booking: Booking;
   userType: "STUDENT" | "TUTOR";
   onAction?: (action: string, booking: Booking) => void;
+  auth: User;
 }
 
-const BookingCard = ({ booking, userType, onAction }: BookingCardProps) => {
+const BookingCard = ({
+  booking,
+  userType,
+  onAction,
+  auth,
+}: BookingCardProps) => {
   const [isSessionModalOpen, setIsSessionModalOpen] = useState(false);
   const [isCompleting, setIsCompleting] = useState(false);
   const [isCancelling, setIsCancelling] = useState(false);
+
+  console.log("Current User in BookingCard:", auth);
 
   const getStatusBadge = () => {
     switch (booking.status) {
