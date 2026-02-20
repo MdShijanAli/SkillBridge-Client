@@ -24,11 +24,11 @@ const StudentBookings = ({ user }: { user: any }) => {
 
   const upcomingBookings =
     myBookings?.data?.filter(
-      (b: Booking) => b.status === BookingStatus.CONFIRMED,
+      (b: Booking) => b.status === BookingStatus.CONFIRMED && b.review === null,
     ) || [];
   const completedBookings =
     myBookings?.data?.filter(
-      (b: Booking) => b.status === BookingStatus.COMPLETED,
+      (b: Booking) => b.status === BookingStatus.COMPLETED || b.review !== null,
     ) || [];
   const cancelledBookings =
     myBookings?.data?.filter(
@@ -110,6 +110,8 @@ const StudentBookings = ({ user }: { user: any }) => {
                       onAction={(action, booking) =>
                         handleBookingAction(action, booking)
                       }
+                      auth={user}
+                      isUpcoming={true}
                     />
                   ))}
                 </div>
@@ -156,6 +158,7 @@ const StudentBookings = ({ user }: { user: any }) => {
                       onAction={(action, booking) =>
                         handleBookingAction(action, booking)
                       }
+                      auth={user}
                     />
                   ))}
                 </div>
@@ -199,6 +202,7 @@ const StudentBookings = ({ user }: { user: any }) => {
                       key={booking.id}
                       booking={booking}
                       userType="STUDENT"
+                      auth={user}
                     />
                   ))}
                 </div>

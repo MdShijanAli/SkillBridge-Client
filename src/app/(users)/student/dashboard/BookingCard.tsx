@@ -4,25 +4,34 @@ import { Calendar, Clock, Video, Star } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Booking, BookingStatus } from "@/lib/types";
+import { Booking, BookingStatus, User } from "@/lib/types";
 import { Roles } from "@/constants/roles";
 import { toast } from "sonner";
 import { useState } from "react";
 import { BaseModal } from "@/components/modals/base-modal";
 import { changeStatus } from "@/services/api.service";
 import { apiRoutes } from "@/api/apiRoutes";
-import { useRouter } from "next/navigation";
 
 interface BookingCardProps {
   booking: Booking;
   userType: "STUDENT" | "TUTOR";
   onAction?: (action: string, booking: Booking) => void;
+  auth?: User;
+  isUpcoming?: boolean;
 }
 
-const BookingCard = ({ booking, userType, onAction }: BookingCardProps) => {
+const BookingCard = ({
+  booking,
+  userType,
+  onAction,
+  auth,
+  isUpcoming = false,
+}: BookingCardProps) => {
   const [isSessionModalOpen, setIsSessionModalOpen] = useState(false);
   const [isCompleting, setIsCompleting] = useState(false);
   const [isCancelling, setIsCancelling] = useState(false);
+
+  console.log("Current User in BookingCard:", auth);
 
   const getStatusBadge = () => {
     switch (booking.status) {
@@ -79,7 +88,7 @@ const BookingCard = ({ booking, userType, onAction }: BookingCardProps) => {
         });
       } else {
         toast.success("Session completed!", {
-          description: "You can now leave a review for your tutor.",
+          description: "This session has been marked as completed.",
         });
         setIsSessionModalOpen(false);
         onAction?.("completed", booking);
@@ -162,37 +171,44 @@ const BookingCard = ({ booking, userType, onAction }: BookingCardProps) => {
         </span>
 
         <div className="flex gap-2">
-          {booking.status === BookingStatus.CONFIRMED &&
-            (booking.review ? (
-              <div className="flex flex-col gap-2 max-w-xs">
-                <div className="flex items-center gap-2">
-                  <div className="flex gap-0.5">
-                    {[1, 2, 3, 4, 5].map((star) => (
-                      <Star
-                        key={star}
-                        className={`w-4 h-4 ${
-                          star <= booking.review!.rating
-                            ? "text-accent fill-accent"
-                            : "text-muted-foreground"
-                        }`}
-                      />
-                    ))}
-                  </div>
-                  <Badge variant="secondary" className="text-xs">
-                    Reviewed
-                  </Badge>
+          {(booking.status === BookingStatus.CONFIRMED ||
+            booking.status === BookingStatus.COMPLETED) &&
+          !isUpcoming &&
+          booking.review ? (
+            <div className="flex flex-col gap-2 max-w-xs">
+              <div className="flex items-center gap-2">
+                <div className="flex gap-0.5">
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <Star
+                      key={star}
+                      className={`w-4 h-4 ${
+                        star <= booking.review!.rating
+                          ? "text-accent fill-accent"
+                          : "text-muted-foreground"
+                      }`}
+                    />
+                  ))}
                 </div>
-                <p className="text-xs text-muted-foreground line-clamp-2">
-                  {booking.review.comment}
-                </p>
+                <Badge variant="secondary" className="text-xs">
+                  Reviewed
+                </Badge>
               </div>
-            ) : (
-              <>
+              <p className="text-xs text-muted-foreground line-clamp-2">
+                {booking.review.comment}
+              </p>
+            </div>
+          ) : (
+            <>
+              {booking.status === BookingStatus.CONFIRMED && isUpcoming && (
                 <Button onClick={handleJoin} variant="outline" size="sm">
                   <Video className="w-4 h-4 mr-1" />
                   Join
                 </Button>
-                {onAction && userType === Roles.STUDENT && (
+              )}
+
+              {onAction &&
+                userType === Roles.STUDENT &&
+                booking.status !== BookingStatus.COMPLETED && (
                   <Button
                     variant="ghost"
                     size="sm"
@@ -203,34 +219,11 @@ const BookingCard = ({ booking, userType, onAction }: BookingCardProps) => {
                     {isCancelling ? "Cancelling..." : "Cancel"}
                   </Button>
                 )}
-              </>
-            ))}
+            </>
+          )}
           {booking.status === BookingStatus.COMPLETED &&
             userType === Roles.STUDENT &&
-            (booking.review ? (
-              <div className="flex flex-col gap-2 max-w-xs">
-                <div className="flex items-center gap-2">
-                  <div className="flex gap-0.5">
-                    {[1, 2, 3, 4, 5].map((star) => (
-                      <Star
-                        key={star}
-                        className={`w-4 h-4 ${
-                          star <= booking.review!.rating
-                            ? "text-accent fill-accent"
-                            : "text-muted-foreground"
-                        }`}
-                      />
-                    ))}
-                  </div>
-                  <Badge variant="secondary" className="text-xs">
-                    Reviewed
-                  </Badge>
-                </div>
-                <p className="text-xs text-muted-foreground line-clamp-2">
-                  {booking.review.comment}
-                </p>
-              </div>
-            ) : (
+            booking.review === null && (
               <Button
                 variant="outline"
                 size="sm"
@@ -238,7 +231,7 @@ const BookingCard = ({ booking, userType, onAction }: BookingCardProps) => {
               >
                 Leave Review
               </Button>
-            ))}
+            )}
         </div>
       </div>
 
