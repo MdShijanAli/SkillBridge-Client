@@ -84,7 +84,7 @@ const RegistrationForm = () => {
           data: value,
         });
         console.log("Registration result :", result);
-        if (!result.data?.user.name) {
+        if (!result?.user?.name) {
           throw new Error(
             `${result?.error?.message || "Registration failed. Please try again."}`,
           );
