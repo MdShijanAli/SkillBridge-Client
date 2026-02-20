@@ -14,6 +14,7 @@ import BookingDetailsModal from "./view-modal";
 import DeleteModal from "@/components/modals/delete-modal";
 import { changeStatus, deleteItem } from "@/services/api.service";
 import { toast } from "sonner";
+import { getSerialNumber } from "@/lib/utils";
 
 export default function BookingsPage() {
   const [showDetailModal, setShowDetailModal] = useState(false);
@@ -73,7 +74,7 @@ export default function BookingsPage() {
     {
       key: "sl",
       label: "SL",
-      render: (_, index) => index + 1,
+      render: (_, index) => getSerialNumber(index),
     },
     {
       key: "tutor",

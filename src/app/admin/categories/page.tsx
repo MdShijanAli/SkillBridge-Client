@@ -17,6 +17,7 @@ import { changeStatus, deleteItem } from "@/services/api.service";
 import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
+import { getSerialNumber } from "@/lib/utils";
 
 export default function Categories() {
   const [showDetailModal, setShowDetailModal] = useState(false);
@@ -124,7 +125,7 @@ export default function Categories() {
     {
       key: "sl",
       label: "SL",
-      render: (_, index) => index + 1,
+      render: (_, index) => getSerialNumber(index),
     },
     { key: "name", label: "Name" },
     {

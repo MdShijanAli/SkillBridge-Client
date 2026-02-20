@@ -89,7 +89,9 @@ const RegistrationForm = () => {
             `${result?.error?.message || "Registration failed. Please try again."}`,
           );
         } else {
-          toast.success("Registration successful! Please verify your email.");
+          toast.success(
+            "Registration successful! Please Check your email for verification.",
+          );
           setUserEmail(value.email);
           setShowVerificationModal(true);
           form.reset();
