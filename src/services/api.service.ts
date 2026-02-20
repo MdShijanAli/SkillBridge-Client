@@ -1,4 +1,5 @@
 import { authClient } from "@/lib/auth-client";
+import { invalidateAllCache } from "@/lib/cache-utils";
 
 export interface ApiParams {
   endpoint: string;
@@ -12,6 +13,9 @@ const buildUrl = (endpoint: string, query?: string) => {
 
 const handleUnauthorized = async () => {
   try {
+    // Clear all cache on logout
+    invalidateAllCache();
+
     // Sign out the user and clear session
     await authClient.signOut({
       fetchOptions: {
