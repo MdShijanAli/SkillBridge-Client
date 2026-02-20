@@ -108,6 +108,7 @@ export interface TutorProfile {
   id: number;
   userId: string;
   title: string;
+  bio: string;
   subjects: string[];
   languages: string[];
   hourlyRate: number;
