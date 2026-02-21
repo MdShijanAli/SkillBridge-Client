@@ -678,32 +678,43 @@ const TutorProfile = async ({
                             </div>
                           )}
 
-                          {auth.role !== Roles.STUDENT ? (
-                            <div className="p-4 bg-red-50 rounded-lg border border-red-200 text-center">
-                              <span className="text-red-600 font-medium">
-                                Only students can book sessions. Please log in
-                                with a student account to book.
+                          {auth?.id ? (
+                            auth.role !== Roles.STUDENT ? (
+                              <div className="p-4 bg-red-50 rounded-lg border border-red-200 text-center">
+                                <span className="text-red-600 font-medium">
+                                  Only students can book sessions. Please log in
+                                  with a student account to book.
+                                </span>
+                              </div>
+                            ) : (
+                              <form.Subscribe
+                                selector={(state) => [
+                                  state.canSubmit,
+                                  state.isSubmitting,
+                                ]}
+                                children={([canSubmit, isSubmitting]) => (
+                                  <Button
+                                    type="submit"
+                                    variant="hero"
+                                    className="w-full"
+                                    size="lg"
+                                    disabled={!canSubmit || isSubmitting}
+                                  >
+                                    <Calendar className="w-4 h-4 mr-2" />
+                                    {isSubmitting
+                                      ? "Booking..."
+                                      : "Book Session"}
+                                  </Button>
+                                )}
+                              />
+                            )
+                          ) : (
+                            <div className="p-4 bg-yellow-50 rounded-lg border border-yellow-200 text-center">
+                              <span className="text-yellow-600 font-medium">
+                                Please log in to book a session with{" "}
+                                {tutorData.name}.
                               </span>
                             </div>
-                          ) : (
-                            <form.Subscribe
-                              selector={(state) => [
-                                state.canSubmit,
-                                state.isSubmitting,
-                              ]}
-                              children={([canSubmit, isSubmitting]) => (
-                                <Button
-                                  type="submit"
-                                  variant="hero"
-                                  className="w-full"
-                                  size="lg"
-                                  disabled={!canSubmit || isSubmitting}
-                                >
-                                  <Calendar className="w-4 h-4 mr-2" />
-                                  {isSubmitting ? "Booking..." : "Book Session"}
-                                </Button>
-                              )}
-                            />
                           )}
                         </div>
                       );
