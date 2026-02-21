@@ -13,6 +13,7 @@ import {
 } from "../ui/card";
 import { Plus, RefreshCcw } from "lucide-react";
 import { Button } from "../ui/button";
+import { useRouter } from "next/navigation";
 
 interface Pagination {
   currentPage: number;
@@ -64,6 +65,7 @@ export function BaseTableList<T = any>({
   const [search, setSearch] = useState("");
   const [pagination, setPagination] = useState<Pagination | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
 
   const fetchData = async (page = 1, searchValue = "", limit = 10) => {
     setLoading(true);
@@ -109,7 +111,7 @@ export function BaseTableList<T = any>({
   };
 
   const handlePageChange = (page: number) => {
-    localStorage.setItem("currentPage", page.toString());
+    router.push(`?page=${page}`);
     fetchData(page, search);
   };
 

@@ -18,8 +18,11 @@ import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
 import { getSerialNumber } from "@/lib/utils";
+import { useSearchParams } from "next/navigation";
 
 export default function Categories() {
+  const searchParams = useSearchParams();
+  const currentPage = parseInt(searchParams.get("page") || "1");
   const [showDetailModal, setShowDetailModal] = useState(false);
   const [showFormModal, setShowFormModal] = useState(false);
   const [selectedCategoryId, setSelectedCategoryId] = useState<
@@ -125,7 +128,7 @@ export default function Categories() {
     {
       key: "sl",
       label: "SL",
-      render: (_, index) => getSerialNumber(index),
+      render: (_, index) => getSerialNumber(index, currentPage),
     },
     { key: "name", label: "Name" },
     {
