@@ -7,16 +7,19 @@ import {
   ActionItem,
   DropdownMenuActions,
 } from "@/components/table/DropdownMenuActions";
-import { Booking, Category } from "@/lib/types";
+import { Booking } from "@/lib/types";
 import { Eye, Trash2 } from "lucide-react";
 import { useState } from "react";
 import BookingDetailsModal from "./view-modal";
 import DeleteModal from "@/components/modals/delete-modal";
-import { changeStatus, deleteItem } from "@/services/api.service";
+import { deleteItem } from "@/services/api.service";
 import { toast } from "sonner";
 import { getSerialNumber } from "@/lib/utils";
+import { useSearchParams } from "next/navigation";
 
 export default function BookingsPage() {
+  const searchParams = useSearchParams();
+  const currentPage = parseInt(searchParams.get("page") || "1");
   const [showDetailModal, setShowDetailModal] = useState(false);
   const [selectedBookingId, setselectedBookingId] = useState<
     string | number | null
@@ -74,7 +77,7 @@ export default function BookingsPage() {
     {
       key: "sl",
       label: "SL",
-      render: (_, index) => getSerialNumber(index),
+      render: (_, index) => getSerialNumber(index, currentPage),
     },
     {
       key: "tutor",

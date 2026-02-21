@@ -1,4 +1,5 @@
 import { clsx, type ClassValue } from "clsx";
+import { useSearchParams } from "next/navigation";
 import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs: ClassValue[]) {
@@ -20,7 +21,10 @@ export function formatTextlabel(label: string): string {
     .replace(/^./, (str) => str.toUpperCase());
 }
 
-export function getSerialNumber(index: number): number {
-  const currentPage = localStorage.getItem("currentPage");
-  return currentPage ? (parseInt(currentPage) - 1) * 10 + index + 1 : index + 1;
+export function getSerialNumber(
+  index: number,
+  currentPage: number = 1,
+  pageSize: number = 10,
+): number {
+  return (currentPage - 1) * pageSize + index + 1;
 }

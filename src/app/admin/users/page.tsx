@@ -19,6 +19,7 @@ import ViewModal from "./view-modal";
 import FormModal from "./form-modal";
 import { getSerialNumber } from "@/lib/utils";
 import { Roles } from "@/constants/roles";
+import { useSearchParams } from "next/navigation";
 
 const UserRolesStyle = (role: string) => {
   switch (role) {
@@ -34,6 +35,8 @@ const UserRolesStyle = (role: string) => {
 };
 
 export default function Users() {
+  const searchParams = useSearchParams();
+  const currentPage = parseInt(searchParams.get("page") || "1");
   const [showChangeStatusModal, setShowChangeStatusModal] = useState(false);
   const [isChangingStatus, setIsChangingStatus] = useState(false);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
@@ -192,7 +195,7 @@ export default function Users() {
     {
       key: "sl",
       label: "SL",
-      render: (_, index) => getSerialNumber(index),
+      render: (_, index) => getSerialNumber(index, currentPage),
     },
     { key: "name", label: "Name" },
     { key: "email", label: "Email" },
