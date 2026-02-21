@@ -714,6 +714,9 @@ const TutorProfile = async ({
                                 Please log in to book a session with{" "}
                                 {tutorData.name}.
                               </span>
+                              <Button variant="link" className="ml-2">
+                                <Link href="/login">Log In</Link>
+                              </Button>
                             </div>
                           )}
                         </div>
